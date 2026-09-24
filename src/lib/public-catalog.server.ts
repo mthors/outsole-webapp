@@ -22,7 +22,8 @@ const OUTSOLE_SELECT = `
   outsole_traction_types ( traction_types ( id, name, description ) )
 `;
 
-type RawOutsole = Record<string, any>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type RawOutsole = any;
 
 async function signImages(
   client: ReturnType<typeof publicClient>,
@@ -105,7 +106,7 @@ export async function fetchOutsoleBySlug(slug: string): Promise<Outsole | null> 
   if (!data) return null;
   const rows = [data as RawOutsole];
   const urls = await signImages(client, rows);
-  return shape(rows[0], urls);
+  return shape(rows[0]!, urls);
 }
 
 export async function fetchTaxonomy(): Promise<Taxonomy> {
