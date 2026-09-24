@@ -8,6 +8,10 @@ import { hardnessLabel, primaryImage, type Outsole } from "@/lib/catalog-types";
 const featuredQuery = queryOptions({
   queryKey: ["home-featured"],
   queryFn: () => getFeatured(),
+  // Signed image URLs differ per fetch; keep SSR-hydrated data fresh so the
+  // client doesn't refetch on mount and hydration-mismatch the img src.
+  staleTime: 5 * 60 * 1000,
+  refetchOnMount: false,
 });
 
 export const Route = createFileRoute("/")({
