@@ -186,10 +186,8 @@
   margin-inline: auto;
   max-width: 88rem;
   padding-inline: 1.25rem;
-}
 
-@media (min-width: 1024px) {
-  @utility shell {
+  @media (min-width: 1024px) {
     padding-inline: 2.5rem;
   }
 }
