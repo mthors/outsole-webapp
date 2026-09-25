@@ -102,7 +102,15 @@ function Home() {
             <p className="mt-3 text-sm text-muted-foreground">Featured models will appear here once published.</p>
           </div>
         ) : (
-          <div className="mt-12 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">
+          <div
+            className={`mt-12 grid gap-px bg-border ${
+              data.featured.length === 1
+                ? "max-w-xl"
+                : data.featured.length === 2
+                  ? "sm:grid-cols-2"
+                  : "sm:grid-cols-2 lg:grid-cols-3"
+            }`}
+          >
             {data.featured.map((o) => <OutsoleCard key={o.id} o={o} />)}
           </div>
         )}
