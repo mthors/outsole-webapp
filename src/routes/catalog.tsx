@@ -19,13 +19,13 @@ const HARDNESS = [
 ] as const;
 
 type CatalogSearch = {
-  q?: string;
-  category?: string;
-  material?: string;
-  traction?: string;
-  hardness?: string;
-  sampling?: boolean;
-  featured?: boolean;
+  q?: string | undefined;
+  category?: string | undefined;
+  material?: string | undefined;
+  traction?: string | undefined;
+  hardness?: string | undefined;
+  sampling?: boolean | undefined;
+  featured?: boolean | undefined;
 };
 
 const str = (v: unknown) => (typeof v === "string" && v.length > 0 ? v.slice(0, 150) : undefined);
@@ -235,7 +235,7 @@ function filterOutsoles(list: Outsole[], s: CatalogSearch): Outsole[] {
   });
 }
 
-function FilterSelect({ label, value, terms, onChange }: { label: string; value?: string; terms: TaxonomyTerm[]; onChange: (v: string | undefined) => void }) {
+function FilterSelect({ label, value, terms, onChange }: { label: string; value?: string | undefined; terms: TaxonomyTerm[]; onChange: (v: string | undefined) => void }) {
   return (
     <label className="block">
       <span className="label-tech">{label}</span>
