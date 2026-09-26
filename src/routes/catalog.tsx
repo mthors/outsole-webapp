@@ -33,13 +33,13 @@ const bool = (v: unknown) => (v === true || v === "true" ? true : undefined);
 
 export const Route = createFileRoute("/catalog")({
   validateSearch: (s: Record<string, unknown>): CatalogSearch => ({
-    q: str(s.q),
-    category: str(s.category),
-    material: str(s.material),
-    traction: str(s.traction),
-    hardness: str(s.hardness),
-    sampling: bool(s.sampling),
-    featured: bool(s.featured),
+    q: str(s["q"]),
+    category: str(s["category"]),
+    material: str(s["material"]),
+    traction: str(s["traction"]),
+    hardness: str(s["hardness"]),
+    sampling: bool(s["sampling"]),
+    featured: bool(s["featured"]),
   }),
   head: () => ({
     meta: [
