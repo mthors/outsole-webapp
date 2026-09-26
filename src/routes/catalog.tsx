@@ -204,7 +204,7 @@ function CatalogPage() {
                 )}
               </div>
             ) : (
-              <div className="grid gap-px bg-border sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid pl-px pt-px sm:grid-cols-2 xl:grid-cols-3">
                 {results.map((o) => <CatalogCard key={o.id} o={o} />)}
               </div>
             )}
@@ -266,7 +266,7 @@ function CatalogCard({ o }: { o: Outsole }) {
   const img = primaryImage(o);
   const hard = hardnessLabel(o);
   return (
-    <Link to="/outsoles/$slug" params={{ slug: o.slug }} className="group flex flex-col bg-background">
+    <Link to="/outsoles/$slug" params={{ slug: o.slug }} className="group -ml-px -mt-px flex flex-col border border-border bg-background">
       <div className="aspect-[4/3] overflow-hidden bg-surface">
         {img?.url ? (
           <img src={img.url} alt={img.alt_text ?? o.name} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
