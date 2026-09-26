@@ -14,6 +14,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as CatalogRouteImport } from './routes/catalog'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as RequestSampleRouteImport } from './routes/request-sample'
+import { Route as OutsolesSlugRouteImport } from './routes/outsoles.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,6 +41,11 @@ const RequestSampleRoute = RequestSampleRouteImport.update({
   path: '/request-sample',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OutsolesSlugRoute = OutsolesSlugRouteImport.update({
+  id: '/outsoles/$slug',
+  path: '/outsoles/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/catalog': typeof CatalogRoute
   '/contact': typeof ContactRoute
   '/request-sample': typeof RequestSampleRoute
+  '/outsoles/$slug': typeof OutsolesSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/catalog': typeof CatalogRoute
   '/contact': typeof ContactRoute
   '/request-sample': typeof RequestSampleRoute
+  '/outsoles/$slug': typeof OutsolesSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +70,33 @@ export interface FileRoutesById {
   '/catalog': typeof CatalogRoute
   '/contact': typeof ContactRoute
   '/request-sample': typeof RequestSampleRoute
+  '/outsoles/$slug': typeof OutsolesSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/catalog' | '/contact' | '/request-sample'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/catalog'
+    | '/contact'
+    | '/request-sample'
+    | '/outsoles/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/catalog' | '/contact' | '/request-sample'
-  id: '__root__' | '/' | '/about' | '/catalog' | '/contact' | '/request-sample'
+  to:
+    | '/'
+    | '/about'
+    | '/catalog'
+    | '/contact'
+    | '/request-sample'
+    | '/outsoles/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/catalog'
+    | '/contact'
+    | '/request-sample'
+    | '/outsoles/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,6 +105,7 @@ export interface RootRouteChildren {
   CatalogRoute: typeof CatalogRoute
   ContactRoute: typeof ContactRoute
   RequestSampleRoute: typeof RequestSampleRoute
+  OutsolesSlugRoute: typeof OutsolesSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -116,6 +145,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RequestSampleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/outsoles/$slug': {
+      id: '/outsoles/$slug'
+      path: '/outsoles/$slug'
+      fullPath: '/outsoles/$slug'
+      preLoaderRoute: typeof OutsolesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -125,6 +161,7 @@ const rootRouteChildren: RootRouteChildren = {
   CatalogRoute: CatalogRoute,
   ContactRoute: ContactRoute,
   RequestSampleRoute: RequestSampleRoute,
+  OutsolesSlugRoute: OutsolesSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
