@@ -169,6 +169,7 @@ function OutsoleDetail() {
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <Link
               to="/request-sample"
+              search={{ product: o.slug }}
               className="inline-flex items-center justify-center gap-2 bg-primary px-6 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-primary-foreground hover:opacity-90"
             >
               Request a Sample <ArrowRight className="h-4 w-4" />
