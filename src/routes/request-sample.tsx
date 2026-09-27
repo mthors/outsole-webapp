@@ -4,7 +4,7 @@ import { getOutsole } from "@/lib/public-catalog.functions";
 
 export const Route = createFileRoute("/request-sample")({
   validateSearch: (search: Record<string, unknown>): { product?: string } => {
-    const p = search.product;
+    const p = search["product"];
     return typeof p === "string" && p.trim() ? { product: p.trim().slice(0, 150) } : {};
   },
   loaderDeps: ({ search }) => ({ product: search.product }),
