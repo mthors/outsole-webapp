@@ -20,6 +20,7 @@ import { Route as OutsolesSlugRouteImport } from './routes/outsoles.$slug'
 import { Route as AdminLayoutIndexRouteImport } from './routes/admin/_layout/index'
 import { Route as AdminLayoutOutsolesIndexRouteImport } from './routes/admin/_layout/outsoles/index'
 import { Route as AdminLayoutOutsolesNewRouteImport } from './routes/admin/_layout/outsoles/new'
+import { Route as AdminLayoutTaxonomyIndexRouteImport } from './routes/admin/_layout/taxonomy/index'
 import { Route as AdminLayoutOutsolesIdEditRouteImport } from './routes/admin/_layout/outsoles/$id.edit'
 
 const IndexRoute = IndexRouteImport.update({
@@ -78,6 +79,12 @@ const AdminLayoutOutsolesNewRoute = AdminLayoutOutsolesNewRouteImport.update({
   path: '/outsoles/new',
   getParentRoute: () => AdminLayoutRoute,
 } as any)
+const AdminLayoutTaxonomyIndexRoute =
+  AdminLayoutTaxonomyIndexRouteImport.update({
+    id: '/taxonomy/',
+    path: '/taxonomy/',
+    getParentRoute: () => AdminLayoutRoute,
+  } as any)
 const AdminLayoutOutsolesIdEditRoute =
   AdminLayoutOutsolesIdEditRouteImport.update({
     id: '/outsoles/$id/edit',
@@ -97,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminLayoutIndexRoute
   '/admin/outsoles/new': typeof AdminLayoutOutsolesNewRoute
   '/admin/outsoles/': typeof AdminLayoutOutsolesIndexRoute
+  '/admin/taxonomy/': typeof AdminLayoutTaxonomyIndexRoute
   '/admin/outsoles/$id/edit': typeof AdminLayoutOutsolesIdEditRoute
 }
 export interface FileRoutesByTo {
@@ -110,6 +118,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminLayoutIndexRoute
   '/admin/outsoles/new': typeof AdminLayoutOutsolesNewRoute
   '/admin/outsoles': typeof AdminLayoutOutsolesIndexRoute
+  '/admin/taxonomy': typeof AdminLayoutTaxonomyIndexRoute
   '/admin/outsoles/$id/edit': typeof AdminLayoutOutsolesIdEditRoute
 }
 export interface FileRoutesById {
@@ -125,6 +134,7 @@ export interface FileRoutesById {
   '/admin/_layout/': typeof AdminLayoutIndexRoute
   '/admin/_layout/outsoles/new': typeof AdminLayoutOutsolesNewRoute
   '/admin/_layout/outsoles/': typeof AdminLayoutOutsolesIndexRoute
+  '/admin/_layout/taxonomy/': typeof AdminLayoutTaxonomyIndexRoute
   '/admin/_layout/outsoles/$id/edit': typeof AdminLayoutOutsolesIdEditRoute
 }
 export interface FileRouteTypes {
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/outsoles/new'
     | '/admin/outsoles/'
+    | '/admin/taxonomy/'
     | '/admin/outsoles/$id/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/outsoles/new'
     | '/admin/outsoles'
+    | '/admin/taxonomy'
     | '/admin/outsoles/$id/edit'
   id:
     | '__root__'
@@ -168,6 +180,7 @@ export interface FileRouteTypes {
     | '/admin/_layout/'
     | '/admin/_layout/outsoles/new'
     | '/admin/_layout/outsoles/'
+    | '/admin/_layout/taxonomy/'
     | '/admin/_layout/outsoles/$id/edit'
   fileRoutesById: FileRoutesById
 }
@@ -261,6 +274,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLayoutOutsolesNewRouteImport
       parentRoute: typeof AdminLayoutRoute
     }
+    '/admin/_layout/taxonomy/': {
+      id: '/admin/_layout/taxonomy/'
+      path: '/taxonomy'
+      fullPath: '/admin/taxonomy/'
+      preLoaderRoute: typeof AdminLayoutTaxonomyIndexRouteImport
+      parentRoute: typeof AdminLayoutRoute
+    }
     '/admin/_layout/outsoles/$id/edit': {
       id: '/admin/_layout/outsoles/$id/edit'
       path: '/outsoles/$id/edit'
@@ -275,6 +295,7 @@ interface AdminLayoutRouteChildren {
   AdminLayoutIndexRoute: typeof AdminLayoutIndexRoute
   AdminLayoutOutsolesNewRoute: typeof AdminLayoutOutsolesNewRoute
   AdminLayoutOutsolesIndexRoute: typeof AdminLayoutOutsolesIndexRoute
+  AdminLayoutTaxonomyIndexRoute: typeof AdminLayoutTaxonomyIndexRoute
   AdminLayoutOutsolesIdEditRoute: typeof AdminLayoutOutsolesIdEditRoute
 }
 
@@ -282,6 +303,7 @@ const AdminLayoutRouteChildren: AdminLayoutRouteChildren = {
   AdminLayoutIndexRoute: AdminLayoutIndexRoute,
   AdminLayoutOutsolesNewRoute: AdminLayoutOutsolesNewRoute,
   AdminLayoutOutsolesIndexRoute: AdminLayoutOutsolesIndexRoute,
+  AdminLayoutTaxonomyIndexRoute: AdminLayoutTaxonomyIndexRoute,
   AdminLayoutOutsolesIdEditRoute: AdminLayoutOutsolesIdEditRoute,
 }
 
