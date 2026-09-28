@@ -1,26 +1,4 @@
 import { createServerFn } from "@tanstack/react-start";
-import { supabase } from "@/integrations/supabase/client";
-
-async function getAuthenticatedUserId(): Promise<string> {
-  const { getRequest, getCookie } = await import("@tanstack/react-start/server");
-  const request = getRequest();
-  const authHeader = request?.headers?.get("authorization");
-  let token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
-  if (!token) {
-    token = getCookie("sb-access-token") ?? null;
-  }
-  if (!token) {
-    throw new Error("Unauthorized: No token provided");
-  }
-
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
-  if (error || !user) {
-    throw new Error("Unauthorized: Invalid token");
-  }
-
-  return user.id;
-}
 
 /**
  * Grants the admin role to the first staff member who signs in while the
@@ -29,6 +7,7 @@ async function getAuthenticatedUserId(): Promise<string> {
  */
 export const bootstrapFirstAdmin = createServerFn({ method: "POST" })
   .handler(async () => {
+    const { getAuthenticatedUserId } = await import("./admin-auth.server");
     const userId = await getAuthenticatedUserId();
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
@@ -57,18 +36,7 @@ export const bootstrapFirstAdmin = createServerFn({ method: "POST" })
  */
 export const requireAdminRole = createServerFn({ method: "GET" })
   .handler(async () => {
-    const userId = await getAuthenticatedUserId();
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-
-    const { count } = await supabaseAdmin
-      .from("user_roles")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", userId)
-      .eq("role", "admin");
-
-    if ((count ?? 0) === 0) {
-      throw new Error("Forbidden: admin role required");
-    }
-
+    const { assertAdminRole } = await import("./admin-auth.server");
+    const { userId } = await assertAdminRole();
     return { userId };
   });

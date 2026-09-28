@@ -18,6 +18,8 @@ import { Route as AdminLayoutRouteImport } from './routes/admin/_layout'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as OutsolesSlugRouteImport } from './routes/outsoles.$slug'
 import { Route as AdminLayoutIndexRouteImport } from './routes/admin/_layout/index'
+import { Route as AdminLayoutOutsolesIndexRouteImport } from './routes/admin/_layout/outsoles/index'
+import { Route as AdminLayoutOutsolesNewRouteImport } from './routes/admin/_layout/outsoles/new'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -64,6 +66,17 @@ const AdminLayoutIndexRoute = AdminLayoutIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminLayoutRoute,
 } as any)
+const AdminLayoutOutsolesIndexRoute =
+  AdminLayoutOutsolesIndexRouteImport.update({
+    id: '/outsoles/',
+    path: '/outsoles/',
+    getParentRoute: () => AdminLayoutRoute,
+  } as any)
+const AdminLayoutOutsolesNewRoute = AdminLayoutOutsolesNewRouteImport.update({
+  id: '/outsoles/new',
+  path: '/outsoles/new',
+  getParentRoute: () => AdminLayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -75,6 +88,8 @@ export interface FileRoutesByFullPath {
   '/admin/login': typeof AdminLoginRoute
   '/outsoles/$slug': typeof OutsolesSlugRoute
   '/admin/': typeof AdminLayoutIndexRoute
+  '/admin/outsoles/new': typeof AdminLayoutOutsolesNewRoute
+  '/admin/outsoles/': typeof AdminLayoutOutsolesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -85,6 +100,8 @@ export interface FileRoutesByTo {
   '/admin/login': typeof AdminLoginRoute
   '/outsoles/$slug': typeof OutsolesSlugRoute
   '/admin': typeof AdminLayoutIndexRoute
+  '/admin/outsoles/new': typeof AdminLayoutOutsolesNewRoute
+  '/admin/outsoles': typeof AdminLayoutOutsolesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -97,6 +114,8 @@ export interface FileRoutesById {
   '/admin/login': typeof AdminLoginRoute
   '/outsoles/$slug': typeof OutsolesSlugRoute
   '/admin/_layout/': typeof AdminLayoutIndexRoute
+  '/admin/_layout/outsoles/new': typeof AdminLayoutOutsolesNewRoute
+  '/admin/_layout/outsoles/': typeof AdminLayoutOutsolesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -110,6 +129,8 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/outsoles/$slug'
     | '/admin/'
+    | '/admin/outsoles/new'
+    | '/admin/outsoles/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -120,6 +141,8 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/outsoles/$slug'
     | '/admin'
+    | '/admin/outsoles/new'
+    | '/admin/outsoles'
   id:
     | '__root__'
     | '/'
@@ -131,6 +154,8 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/outsoles/$slug'
     | '/admin/_layout/'
+    | '/admin/_layout/outsoles/new'
+    | '/admin/_layout/outsoles/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -209,15 +234,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLayoutIndexRouteImport
       parentRoute: typeof AdminLayoutRoute
     }
+    '/admin/_layout/outsoles/': {
+      id: '/admin/_layout/outsoles/'
+      path: '/outsoles'
+      fullPath: '/admin/outsoles/'
+      preLoaderRoute: typeof AdminLayoutOutsolesIndexRouteImport
+      parentRoute: typeof AdminLayoutRoute
+    }
+    '/admin/_layout/outsoles/new': {
+      id: '/admin/_layout/outsoles/new'
+      path: '/outsoles/new'
+      fullPath: '/admin/outsoles/new'
+      preLoaderRoute: typeof AdminLayoutOutsolesNewRouteImport
+      parentRoute: typeof AdminLayoutRoute
+    }
   }
 }
 
 interface AdminLayoutRouteChildren {
   AdminLayoutIndexRoute: typeof AdminLayoutIndexRoute
+  AdminLayoutOutsolesNewRoute: typeof AdminLayoutOutsolesNewRoute
+  AdminLayoutOutsolesIndexRoute: typeof AdminLayoutOutsolesIndexRoute
 }
 
 const AdminLayoutRouteChildren: AdminLayoutRouteChildren = {
   AdminLayoutIndexRoute: AdminLayoutIndexRoute,
+  AdminLayoutOutsolesNewRoute: AdminLayoutOutsolesNewRoute,
+  AdminLayoutOutsolesIndexRoute: AdminLayoutOutsolesIndexRoute,
 }
 
 const AdminLayoutRouteWithChildren = AdminLayoutRoute._addFileChildren(
