@@ -632,3 +632,54 @@ export const updateAdminOutsole = createServerFn({ method: "POST" })
       name: updatedOutsole.name,
     };
   });
+
+/**
+ * Server function: Archives an existing outsole product.
+ * Sets status = "archived" without touching any other field,
+ * taxonomy junctions, image metadata, or Storage objects.
+ */
+export const archiveAdminOutsole = createServerFn({ method: "POST" })
+  .validator((data: unknown) =>
+    z.object({ id: z.string().uuid("Invalid product ID") }).parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { assertStaffRole } = await import("./admin-auth.server");
+    await assertStaffRole();
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // 1. Verify the product exists
+    const { data: existing, error: lookupError } = await supabaseAdmin
+      .from("outsoles")
+      .select("id, name, status")
+      .eq("id", data.id)
+      .maybeSingle();
+
+    if (lookupError) {
+      throw new Error("Failed to verify product existence");
+    }
+
+    if (!existing) {
+      throw new Error("Product not found");
+    }
+
+    // 2. Idempotent: already archived is fine
+    if (existing.status === "archived") {
+      return { success: true, id: existing.id, name: existing.name, alreadyArchived: true };
+    }
+
+    // 3. Update ONLY the status field
+    const { data: updated, error: updateError } = await supabaseAdmin
+      .from("outsoles")
+      .update({ status: "archived" })
+      .eq("id", data.id)
+      .select("id, name, slug")
+      .single();
+
+    if (updateError || !updated) {
+      throw new Error("Failed to archive product. Please try again.");
+    }
+
+    return { success: true, id: updated.id, name: updated.name, alreadyArchived: false };
+  });
+
