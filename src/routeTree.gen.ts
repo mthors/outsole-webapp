@@ -18,6 +18,7 @@ import { Route as AdminLayoutRouteImport } from './routes/admin/_layout'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as OutsolesSlugRouteImport } from './routes/outsoles.$slug'
 import { Route as AdminLayoutIndexRouteImport } from './routes/admin/_layout/index'
+import { Route as AdminLayoutInquiriesIndexRouteImport } from './routes/admin/_layout/inquiries/index'
 import { Route as AdminLayoutOutsolesIndexRouteImport } from './routes/admin/_layout/outsoles/index'
 import { Route as AdminLayoutOutsolesNewRouteImport } from './routes/admin/_layout/outsoles/new'
 import { Route as AdminLayoutTaxonomyIndexRouteImport } from './routes/admin/_layout/taxonomy/index'
@@ -68,6 +69,12 @@ const AdminLayoutIndexRoute = AdminLayoutIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminLayoutRoute,
 } as any)
+const AdminLayoutInquiriesIndexRoute =
+  AdminLayoutInquiriesIndexRouteImport.update({
+    id: '/inquiries/',
+    path: '/inquiries/',
+    getParentRoute: () => AdminLayoutRoute,
+  } as any)
 const AdminLayoutOutsolesIndexRoute =
   AdminLayoutOutsolesIndexRouteImport.update({
     id: '/outsoles/',
@@ -103,6 +110,7 @@ export interface FileRoutesByFullPath {
   '/outsoles/$slug': typeof OutsolesSlugRoute
   '/admin/': typeof AdminLayoutIndexRoute
   '/admin/outsoles/new': typeof AdminLayoutOutsolesNewRoute
+  '/admin/inquiries/': typeof AdminLayoutInquiriesIndexRoute
   '/admin/outsoles/': typeof AdminLayoutOutsolesIndexRoute
   '/admin/taxonomy/': typeof AdminLayoutTaxonomyIndexRoute
   '/admin/outsoles/$id/edit': typeof AdminLayoutOutsolesIdEditRoute
@@ -117,6 +125,7 @@ export interface FileRoutesByTo {
   '/outsoles/$slug': typeof OutsolesSlugRoute
   '/admin': typeof AdminLayoutIndexRoute
   '/admin/outsoles/new': typeof AdminLayoutOutsolesNewRoute
+  '/admin/inquiries': typeof AdminLayoutInquiriesIndexRoute
   '/admin/outsoles': typeof AdminLayoutOutsolesIndexRoute
   '/admin/taxonomy': typeof AdminLayoutTaxonomyIndexRoute
   '/admin/outsoles/$id/edit': typeof AdminLayoutOutsolesIdEditRoute
@@ -133,6 +142,7 @@ export interface FileRoutesById {
   '/outsoles/$slug': typeof OutsolesSlugRoute
   '/admin/_layout/': typeof AdminLayoutIndexRoute
   '/admin/_layout/outsoles/new': typeof AdminLayoutOutsolesNewRoute
+  '/admin/_layout/inquiries/': typeof AdminLayoutInquiriesIndexRoute
   '/admin/_layout/outsoles/': typeof AdminLayoutOutsolesIndexRoute
   '/admin/_layout/taxonomy/': typeof AdminLayoutTaxonomyIndexRoute
   '/admin/_layout/outsoles/$id/edit': typeof AdminLayoutOutsolesIdEditRoute
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/outsoles/$slug'
     | '/admin/'
     | '/admin/outsoles/new'
+    | '/admin/inquiries/'
     | '/admin/outsoles/'
     | '/admin/taxonomy/'
     | '/admin/outsoles/$id/edit'
@@ -164,6 +175,7 @@ export interface FileRouteTypes {
     | '/outsoles/$slug'
     | '/admin'
     | '/admin/outsoles/new'
+    | '/admin/inquiries'
     | '/admin/outsoles'
     | '/admin/taxonomy'
     | '/admin/outsoles/$id/edit'
@@ -179,6 +191,7 @@ export interface FileRouteTypes {
     | '/outsoles/$slug'
     | '/admin/_layout/'
     | '/admin/_layout/outsoles/new'
+    | '/admin/_layout/inquiries/'
     | '/admin/_layout/outsoles/'
     | '/admin/_layout/taxonomy/'
     | '/admin/_layout/outsoles/$id/edit'
@@ -260,6 +273,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLayoutIndexRouteImport
       parentRoute: typeof AdminLayoutRoute
     }
+    '/admin/_layout/inquiries/': {
+      id: '/admin/_layout/inquiries/'
+      path: '/inquiries'
+      fullPath: '/admin/inquiries/'
+      preLoaderRoute: typeof AdminLayoutInquiriesIndexRouteImport
+      parentRoute: typeof AdminLayoutRoute
+    }
     '/admin/_layout/outsoles/': {
       id: '/admin/_layout/outsoles/'
       path: '/outsoles'
@@ -294,6 +314,7 @@ declare module '@tanstack/react-router' {
 interface AdminLayoutRouteChildren {
   AdminLayoutIndexRoute: typeof AdminLayoutIndexRoute
   AdminLayoutOutsolesNewRoute: typeof AdminLayoutOutsolesNewRoute
+  AdminLayoutInquiriesIndexRoute: typeof AdminLayoutInquiriesIndexRoute
   AdminLayoutOutsolesIndexRoute: typeof AdminLayoutOutsolesIndexRoute
   AdminLayoutTaxonomyIndexRoute: typeof AdminLayoutTaxonomyIndexRoute
   AdminLayoutOutsolesIdEditRoute: typeof AdminLayoutOutsolesIdEditRoute
@@ -302,6 +323,7 @@ interface AdminLayoutRouteChildren {
 const AdminLayoutRouteChildren: AdminLayoutRouteChildren = {
   AdminLayoutIndexRoute: AdminLayoutIndexRoute,
   AdminLayoutOutsolesNewRoute: AdminLayoutOutsolesNewRoute,
+  AdminLayoutInquiriesIndexRoute: AdminLayoutInquiriesIndexRoute,
   AdminLayoutOutsolesIndexRoute: AdminLayoutOutsolesIndexRoute,
   AdminLayoutTaxonomyIndexRoute: AdminLayoutTaxonomyIndexRoute,
   AdminLayoutOutsolesIdEditRoute: AdminLayoutOutsolesIdEditRoute,
