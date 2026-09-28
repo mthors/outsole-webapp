@@ -1016,3 +1016,224 @@ export const removeOutsoleImage = createServerFn({ method: "POST" })
       wasPrimary: img.is_primary,
     };
   });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PHASE 6B — NEW PRODUCT IMAGE UPLOAD
+// ─────────────────────────────────────────────────────────────────────────────
+
+const ALLOWED_IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
+const ALLOWED_IMAGE_EXTENSIONS = ["jpg", "jpeg", "png", "webp"] as const;
+const MAX_IMAGE_FILE_SIZE = 8 * 1024 * 1024; // 8MB
+
+function validateImageMagicBytes(buf: Buffer, expectedMime: string): boolean {
+  if (buf.length < 12) return false;
+  if (expectedMime === "image/jpeg") {
+    // JPEG starts with FF D8 FF
+    return buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff;
+  }
+  if (expectedMime === "image/png") {
+    // PNG: 89 50 4E 47 0D 0A 1A 0A
+    return (
+      buf[0] === 0x89 &&
+      buf[1] === 0x50 &&
+      buf[2] === 0x4e &&
+      buf[3] === 0x47 &&
+      buf[4] === 0x0d &&
+      buf[5] === 0x0a &&
+      buf[6] === 0x1a &&
+      buf[7] === 0x0a
+    );
+  }
+  if (expectedMime === "image/webp") {
+    // WebP: RIFF at 0..3 and WEBP at 8..11
+    const riff = buf.toString("ascii", 0, 4);
+    const webp = buf.toString("ascii", 8, 12);
+    return riff === "RIFF" && webp === "WEBP";
+  }
+  return false;
+}
+
+/**
+ * Server function: Uploads a new product image to Supabase Storage and inserts
+ * an outsole_images database record.
+ *
+ * Security & Integrity:
+ * - Authenticates caller and verifies staff role via assertStaffRole().
+ * - Verifies the target outsole exists in the database.
+ * - Validates file size (max 8MB), mime type, extension, and magic bytes.
+ * - Server constructs and controls the storage path: outsoles/<outsole_id>/<safe_filename>.
+ * - Default display_order: next sequential integer (max + 1, or 0 if first).
+ * - Default is_primary: false, unless product currently has no images (first image).
+ * - Failure cleanup: If storage upload succeeds but database insertion fails,
+ *   the uploaded storage object is deleted immediately to prevent orphaned files.
+ */
+export const uploadOutsoleImage = createServerFn({ method: "POST" })
+  .validator((data: unknown) =>
+    z
+      .object({
+        outsoleId: z.string().uuid("Invalid outsole ID"),
+        fileName: z.string().min(1, "File name is required"),
+        contentType: z.enum(ALLOWED_IMAGE_MIME_TYPES, {
+          errorMap: () => ({ message: "Only JPG, PNG, and WebP images are allowed" }),
+        }),
+        fileBase64: z.string().min(1, "Image data is required"),
+        altText: z
+          .string()
+          .trim()
+          .max(500, "Alt text must be 500 characters or fewer")
+          .nullable()
+          .optional()
+          .transform((v) => v || null),
+      })
+      .parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { assertStaffRole } = await import("./admin-auth.server");
+    await assertStaffRole();
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // 1. Verify target outsole exists
+    const { data: outsole, error: outsoleErr } = await supabaseAdmin
+      .from("outsoles")
+      .select("id, name")
+      .eq("id", data.outsoleId)
+      .maybeSingle();
+
+    if (outsoleErr) throw new Error(`Database error verifying product: ${outsoleErr.message}`);
+    if (!outsole) throw new Error("Target outsole does not exist");
+
+    // 2. Validate file extension
+    const extMatch = data.fileName.split(".").pop()?.toLowerCase();
+    if (!extMatch || !(ALLOWED_IMAGE_EXTENSIONS as readonly string[]).includes(extMatch)) {
+      throw new Error("Unsupported file extension. Only .jpg, .png, and .webp files are allowed.");
+    }
+    const normalizedExt = extMatch === "jpeg" ? "jpg" : extMatch;
+
+    // 3. Decode base64 to buffer and validate file size
+    let fileBuffer: Buffer;
+    try {
+      fileBuffer = Buffer.from(data.fileBase64, "base64");
+    } catch {
+      throw new Error("Invalid image data encoding.");
+    }
+
+    if (fileBuffer.length === 0) {
+      throw new Error("Uploaded file is empty.");
+    }
+
+    if (fileBuffer.length > MAX_IMAGE_FILE_SIZE) {
+      throw new Error("File size exceeds the 8MB limit. Please choose a smaller image.");
+    }
+
+    // 4. Verify binary magic bytes
+    if (!validateImageMagicBytes(fileBuffer, data.contentType)) {
+      throw new Error("File content does not match the specified image format.");
+    }
+
+    // 5. Construct safe, product-specific, unique Storage path
+    const rawBase = data.fileName
+      .replace(/\.[^/.]+$/, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9_-]/g, "-")
+      .replace(/-+/g, "-")
+      .slice(0, 40)
+      .replace(/^-|-$/g, "");
+    const safeBase = rawBase || "image";
+
+    const timestamp = Date.now();
+    const randomSuffix = crypto.randomUUID().slice(0, 8);
+    const safeFilename = `${timestamp}-${randomSuffix}-${safeBase}.${normalizedExt}`;
+    const storagePath = `outsoles/${data.outsoleId}/${safeFilename}`;
+
+    // 6. Upload to private Supabase Storage bucket 'outsole-images'
+    const { error: uploadErr } = await supabaseAdmin.storage
+      .from("outsole-images")
+      .upload(storagePath, fileBuffer, {
+        contentType: data.contentType,
+        upsert: false,
+      });
+
+    if (uploadErr) {
+      throw new Error(`Storage upload failed: ${uploadErr.message}`);
+    }
+
+    // 7. Insert outsole_images record with failure cleanup
+    try {
+      // Query existing images to compute next display_order and determine is_primary
+      const { data: existing, error: existErr } = await supabaseAdmin
+        .from("outsole_images")
+        .select("id, display_order, is_primary")
+        .eq("outsole_id", data.outsoleId)
+        .order("display_order", { ascending: true });
+
+      if (existErr) {
+        throw new Error(`Failed to query existing images: ${existErr.message}`);
+      }
+
+      const existingImages = existing ?? [];
+      const maxOrder =
+        existingImages.length > 0
+          ? Math.max(...existingImages.map((i) => i.display_order ?? 0))
+          : -1;
+      const nextDisplayOrder = maxOrder + 1;
+
+      // Handle is_primary:
+      // New images default to false and do NOT replace an existing primary.
+      // If the product currently has no images at all, the first image becomes primary.
+      const hasPrimary = existingImages.some((i) => i.is_primary);
+      const isPrimary = existingImages.length === 0 && !hasPrimary;
+
+      const { data: publicUrlData } = supabaseAdmin.storage
+        .from("outsole-images")
+        .getPublicUrl(storagePath);
+      const imageUrl = publicUrlData.publicUrl;
+
+      const { data: row, error: insertErr } = await supabaseAdmin
+        .from("outsole_images")
+        .insert({
+          outsole_id: data.outsoleId,
+          file_path: storagePath,
+          image_url: imageUrl,
+          alt_text: data.altText ?? null,
+          display_order: nextDisplayOrder,
+          is_primary: isPrimary,
+        })
+        .select()
+        .single();
+
+      if (insertErr || !row) {
+        throw new Error(`Database insert error: ${insertErr?.message ?? "Unknown insert error"}`);
+      }
+
+      // Generate signed URL for immediate preview
+      const { data: signed } = await supabaseAdmin.storage
+        .from("outsole-images")
+        .createSignedUrl(storagePath, 60 * 60 * 24);
+
+      return {
+        success: true,
+        image: {
+          id: row.id,
+          outsole_id: row.outsole_id,
+          file_path: row.file_path,
+          alt_text: row.alt_text,
+          display_order: row.display_order,
+          is_primary: row.is_primary,
+          url: signed?.signedUrl ?? null,
+        },
+      };
+    } catch (insertErr: unknown) {
+      // FAILURE CLEANUP:
+      // If Storage upload succeeded but database insertion failed, delete the newly uploaded Storage object
+      try {
+        await supabaseAdmin.storage.from("outsole-images").remove([storagePath]);
+      } catch (cleanupErr) {
+        console.error(`Orphan cleanup error for ${storagePath}:`, cleanupErr);
+      }
+      throw new Error(
+        `Failed to save image metadata: ${insertErr instanceof Error ? insertErr.message : "Unknown error"}. Cleaned up uploaded file.`,
+      );
+    }
+  });
+

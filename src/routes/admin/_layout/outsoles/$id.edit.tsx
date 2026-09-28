@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import {
   getAdminOutsole,
   getAdminTaxonomy,
@@ -9,6 +9,7 @@ import {
   reorderOutsoleImages,
   updateOutsoleImageMetadata,
   removeOutsoleImage,
+  uploadOutsoleImage,
   type UpdateOutsoleInput,
   type AdminOutsoleDetail,
   type AdminOutsoleImage,
@@ -626,6 +627,25 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
   const [editingAlt, setEditingAlt] = useState<string | null>(null); // imageId being edited
   const [altDraft, setAltDraft] = useState("");
 
+  // Phase 6B: Upload state
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [uploadAlt, setUploadAlt] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState<string | null>(null);
+
+  const ALLOWED_EXTS = ["jpg", "jpeg", "png", "webp"];
+  const ALLOWED_MIMES = ["image/jpeg", "image/png", "image/webp"];
+  const MAX_FILE_SIZE = 8 * 1024 * 1024; // 8MB
+
+  // Cleanup object URL when previewUrl changes or component unmounts
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
   function flash(successMsg: string) {
     setPanelError(null);
     setPanelSuccess(successMsg);
@@ -637,8 +657,92 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
     setPanelError(msg);
   }
 
+  function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const ext = file.name.split(".").pop()?.toLowerCase();
+    if (!ext || !ALLOWED_EXTS.includes(ext) || (file.type && !ALLOWED_MIMES.includes(file.type))) {
+      flashError("Unsupported file type. Please select a JPG, PNG, or WebP image.");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      flashError("File size exceeds the 8MB limit. Please choose a smaller image.");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    setSelectedFile(file);
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(URL.createObjectURL(file));
+    setPanelError(null);
+  }
+
+  function handleClearSelectedFile() {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    setUploadAlt("");
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  async function handleUpload() {
+    if (!selectedFile || isUploading) return;
+
+    setIsUploading(true);
+    setUploadStatus("Reading image file…");
+    setPanelError(null);
+
+    try {
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const res = reader.result as string;
+          const idx = res.indexOf(",");
+          resolve(idx !== -1 ? res.slice(idx + 1) : res);
+        };
+        reader.onerror = () => reject(new Error("Failed to read image file."));
+        reader.readAsDataURL(selectedFile);
+      });
+
+      setUploadStatus("Uploading to secure storage…");
+
+      const mime =
+        selectedFile.type && ALLOWED_MIMES.includes(selectedFile.type)
+          ? selectedFile.type
+          : selectedFile.name.endsWith(".png")
+            ? "image/png"
+            : selectedFile.name.endsWith(".webp")
+              ? "image/webp"
+              : "image/jpeg";
+
+      const res = await uploadOutsoleImage({
+        data: {
+          outsoleId,
+          fileName: selectedFile.name,
+          contentType: mime as "image/jpeg" | "image/png" | "image/webp",
+          fileBase64: base64,
+          altText: uploadAlt.trim() || null,
+        },
+      });
+
+      if (res.success) {
+        handleClearSelectedFile();
+        await onImagesChanged();
+        flash(`Image "${selectedFile.name}" uploaded successfully.`);
+      }
+    } catch (err: unknown) {
+      flashError(err instanceof Error ? err.message : "Failed to upload image. Please try again.");
+    } finally {
+      setIsUploading(false);
+      setUploadStatus(null);
+    }
+  }
+
   async function handleSetPrimary(imageId: string) {
-    if (busy) return;
+    if (busy || isUploading) return;
     setBusy(imageId);
     setPanelError(null);
     try {
@@ -653,7 +757,7 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
   }
 
   async function handleReorder(imageId: string, direction: "up" | "down") {
-    if (busy) return;
+    if (busy || isUploading) return;
     setBusy(imageId + direction);
     setPanelError(null);
     try {
@@ -672,7 +776,7 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
   }
 
   async function handleSaveAlt(imageId: string) {
-    if (busy) return;
+    if (busy || isUploading) return;
     setBusy(imageId + "alt");
     setPanelError(null);
     try {
@@ -688,7 +792,7 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
   }
 
   async function handleRemoveConfirm() {
-    if (!removeTarget || busy) return;
+    if (!removeTarget || busy || isUploading) return;
     const img = removeTarget;
     setBusy(img.id + "remove");
     setPanelError(null);
@@ -750,7 +854,7 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
             textTransform: "uppercase",
           }}
         >
-          Phase 6A
+          Phase 6B
         </div>
       </div>
 
@@ -803,6 +907,198 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
         </div>
       )}
 
+      {/* ─── Phase 6B: Upload Section ─── */}
+      <div
+        id="image-upload-section"
+        style={{
+          background: "oklch(0.16 0.003 285)",
+          border: "1px solid oklch(0.24 0.004 285)",
+          borderRadius: "2px",
+          padding: "1.25rem",
+          marginBottom: "1.5rem",
+        }}
+      >
+        <div style={{ marginBottom: "0.75rem" }}>
+          <h3
+            style={{
+              margin: 0,
+              fontSize: "0.875rem",
+              fontWeight: 600,
+              color: "oklch(0.92 0.008 85)",
+            }}
+          >
+            Upload New Image
+          </h3>
+          <p style={{ margin: "0.2rem 0 0", fontSize: "0.75rem", color: "oklch(0.55 0.008 85)" }}>
+            Supported formats: JPG, PNG, WebP (max 8MB). Uploads directly to private storage.
+          </p>
+        </div>
+
+        <input
+          ref={fileInputRef}
+          id="outsole-image-file-input"
+          type="file"
+          accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+          onChange={handleFileSelect}
+          disabled={isUploading}
+          style={{ display: "none" }}
+        />
+
+        {!selectedFile ? (
+          <div
+            onClick={() => {
+              if (!isUploading) fileInputRef.current?.click();
+            }}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (!isUploading && (e.key === "Enter" || e.key === " ")) {
+                e.preventDefault();
+                fileInputRef.current?.click();
+              }
+            }}
+            style={{
+              border: "1px dashed oklch(0.3 0.004 285)",
+              borderRadius: "2px",
+              padding: "1.5rem 1rem",
+              textAlign: "center",
+              cursor: isUploading ? "not-allowed" : "pointer",
+              background: "oklch(0.14 0.003 285)",
+              transition: "border-color 0.15s ease",
+            }}
+          >
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              style={{ color: "oklch(0.5 0.008 85)", marginBottom: "0.5rem" }}
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            <div style={{ fontSize: "0.8125rem", color: "oklch(0.85 0.008 85)", fontWeight: 500 }}>
+              Click to choose an image file from your computer
+            </div>
+            <div style={{ fontSize: "0.6875rem", color: "oklch(0.5 0.008 85)", marginTop: "0.25rem" }}>
+              JPG, PNG, or WebP up to 8MB
+            </div>
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
+                background: "oklch(0.14 0.003 285)",
+                padding: "0.75rem 1rem",
+                borderRadius: "2px",
+                border: "1px solid oklch(0.24 0.004 285)",
+              }}
+            >
+              {previewUrl && (
+                <img
+                  src={previewUrl}
+                  alt="Selected preview"
+                  style={{
+                    width: "56px",
+                    height: "56px",
+                    objectFit: "contain",
+                    background: "oklch(0.1 0.003 285)",
+                    borderRadius: "2px",
+                    border: "1px solid oklch(0.2 0.004 285)",
+                    flexShrink: 0,
+                  }}
+                />
+              )}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div
+                  style={{
+                    fontSize: "0.8125rem",
+                    fontWeight: 600,
+                    color: "oklch(0.9 0.008 85)",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {selectedFile.name}
+                </div>
+                <div style={{ fontSize: "0.6875rem", color: "oklch(0.55 0.008 85)", marginTop: "0.15rem" }}>
+                  {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB • {selectedFile.type || "image"}
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleClearSelectedFile}
+                disabled={isUploading}
+                className="admin-btn admin-btn-secondary"
+                style={{ fontSize: "0.75rem", padding: "0.35rem 0.65rem" }}
+              >
+                Change
+              </button>
+            </div>
+
+            <div className="admin-field" style={{ margin: 0 }}>
+              <label htmlFor="outsole-upload-alt-input" className="admin-field-label" style={{ fontSize: "0.75rem" }}>
+                Alt Text (optional)
+              </label>
+              <input
+                id="outsole-upload-alt-input"
+                type="text"
+                maxLength={500}
+                className="admin-field-input"
+                placeholder={`e.g. ${outsoleName} outsole bottom view`}
+                value={uploadAlt}
+                onChange={(e) => setUploadAlt(e.target.value)}
+                disabled={isUploading}
+                style={{ fontSize: "0.8125rem" }}
+              />
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "0.75rem" }}>
+              <button
+                type="button"
+                onClick={handleClearSelectedFile}
+                disabled={isUploading}
+                className="admin-btn admin-btn-secondary"
+                style={{ fontSize: "0.8125rem" }}
+              >
+                Cancel
+              </button>
+              <button
+                id="outsole-upload-image-btn"
+                type="button"
+                onClick={handleUpload}
+                disabled={isUploading}
+                className="admin-btn admin-btn-primary"
+                style={{ fontSize: "0.8125rem" }}
+              >
+                {isUploading ? (
+                  <>
+                    <span className="admin-login-spinner" style={{ width: "12px", height: "12px" }} />
+                    <span>{uploadStatus || "Uploading…"}</span>
+                  </>
+                ) : (
+                  <>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="17 8 12 3 7 8" />
+                      <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    <span>Upload Image</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Empty state */}
       {images.length === 0 && (
         <div
@@ -831,7 +1127,7 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
             No images attached
           </p>
           <p style={{ margin: "0.35rem 0 0", fontSize: "0.75rem", color: "oklch(0.45 0.008 85)" }}>
-            Image uploads will be available in Phase 6B.
+            Use the upload section above to add product images.
           </p>
         </div>
       )}
