@@ -103,7 +103,7 @@ function Home() {
           </div>
         ) : (
           <div
-            className={`mt-12 grid gap-px bg-border ${
+            className={`mt-12 grid pl-px pt-px ${
               data.featured.length === 1
                 ? "max-w-xl"
                 : data.featured.length === 2
@@ -202,7 +202,7 @@ function OutsoleCard({ o }: { o: Outsole }) {
   const img = primaryImage(o);
   const hard = hardnessLabel(o);
   return (
-    <Link to="/catalog" className="group flex flex-col bg-background">
+    <Link to="/outsoles/$slug" params={{ slug: o.slug }} className="group -ml-px -mt-px flex flex-col border border-border bg-background">
       <div className="aspect-[4/3] overflow-hidden bg-surface">
         {img?.url ? (
           <img src={img.url} alt={img.alt_text ?? o.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
