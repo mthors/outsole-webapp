@@ -202,7 +202,8 @@ function AdminOutsolesListPage() {
                     </td>
                     <td style={{ textAlign: "right", whiteSpace: "nowrap" }}>
                       <Link
-                        to={`/admin/outsoles`}
+                        to="/admin/outsoles/$id/edit"
+                        params={{ id: item.id }}
                         className="admin-btn admin-btn-secondary admin-btn-sm"
                         style={{ marginRight: "0.5rem" }}
                         title="Edit product"
