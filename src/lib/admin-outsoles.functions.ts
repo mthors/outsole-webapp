@@ -683,3 +683,336 @@ export const archiveAdminOutsole = createServerFn({ method: "POST" })
     return { success: true, id: updated.id, name: updated.name, alreadyArchived: false };
   });
 
+// ─────────────────────────────────────────────────────────────────────────────
+// PHASE 6A — EXISTING IMAGE MANAGEMENT
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Returns the full images list for an outsole (with signed URLs) — used to
+ * refresh the image panel after a mutation without reloading the full form.
+ */
+export const getAdminOutsoleImages = createServerFn({ method: "GET" })
+  .validator((data: unknown) =>
+    z.object({ outsoleId: z.string().uuid("Invalid outsole ID") }).parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { assertStaffRole } = await import("./admin-auth.server");
+    await assertStaffRole();
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const { data: rows, error } = await supabaseAdmin
+      .from("outsole_images")
+      .select("id, outsole_id, file_path, alt_text, display_order, is_primary")
+      .eq("outsole_id", data.outsoleId)
+      .order("display_order", { ascending: true });
+
+    if (error) throw new Error(`Failed to load images: ${error.message}`);
+
+    const paths = (rows ?? []).map((r) => r.file_path).filter(Boolean);
+    const urlMap = new Map<string, string>();
+    if (paths.length > 0) {
+      const { data: signed } = await supabaseAdmin.storage
+        .from("outsole-images")
+        .createSignedUrls(paths, 60 * 60 * 24);
+      for (const entry of signed ?? []) {
+        if (entry.path && entry.signedUrl) urlMap.set(entry.path, entry.signedUrl);
+      }
+    }
+
+    const images = (rows ?? []).map((r) => ({
+      id: r.id,
+      outsole_id: r.outsole_id,
+      file_path: r.file_path,
+      alt_text: r.alt_text ?? null,
+      display_order: r.display_order ?? 0,
+      is_primary: Boolean(r.is_primary),
+      url: urlMap.get(r.file_path) ?? null,
+    }));
+
+    return { images };
+  });
+
+export type AdminOutsoleImage = {
+  id: string;
+  outsole_id: string;
+  file_path: string;
+  alt_text: string | null;
+  display_order: number;
+  is_primary: boolean;
+  url: string | null;
+};
+
+/**
+ * Server function: Sets a specific image as the primary image for an outsole.
+ *
+ * Unique-constraint safety:
+ *   The `unique_primary_outsole_image` partial unique index enforces at most
+ *   one row with is_primary=true per outsole_id.
+ *
+ *   We use a two-step UPDATE sequence (clear old primary → set new primary)
+ *   via the service-role client. Because each step modifies a different row,
+ *   there is no window where TWO primaries would exist simultaneously.
+ *   If step 2 fails after step 1 succeeds, the outsole temporarily has zero
+ *   primaries (acceptable — the UI will refresh and allow re-selection).
+ *
+ *   True ACID atomicity would require an RPC/plpgsql function; this is noted
+ *   as a known limitation and is safe for the current single-writer admin use.
+ */
+export const setPrimaryOutsoleImage = createServerFn({ method: "POST" })
+  .validator((data: unknown) =>
+    z
+      .object({
+        outsoleId: z.string().uuid("Invalid outsole ID"),
+        imageId: z.string().uuid("Invalid image ID"),
+      })
+      .parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { assertStaffRole } = await import("./admin-auth.server");
+    await assertStaffRole();
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // 1. Verify image belongs to this outsole
+    const { data: img, error: lookupErr } = await supabaseAdmin
+      .from("outsole_images")
+      .select("id, outsole_id, is_primary, file_path")
+      .eq("id", data.imageId)
+      .eq("outsole_id", data.outsoleId)
+      .maybeSingle();
+
+    if (lookupErr) throw new Error("Failed to verify image ownership");
+    if (!img) throw new Error("Image not found or does not belong to this product");
+
+    // 2. Idempotent: already primary → nothing to do
+    if (img.is_primary) {
+      return { success: true, imageId: data.imageId, alreadyPrimary: true };
+    }
+
+    // 3. Step A: Clear current primary (if any) — no-op if none
+    const { error: clearErr } = await supabaseAdmin
+      .from("outsole_images")
+      .update({ is_primary: false })
+      .eq("outsole_id", data.outsoleId)
+      .eq("is_primary", true);
+
+    if (clearErr) throw new Error(`Failed to clear existing primary: ${clearErr.message}`);
+
+    // 4. Step B: Mark new primary
+    const { error: setErr } = await supabaseAdmin
+      .from("outsole_images")
+      .update({ is_primary: true })
+      .eq("id", data.imageId)
+      .eq("outsole_id", data.outsoleId);
+
+    if (setErr) throw new Error(`Failed to set new primary image: ${setErr.message}`);
+
+    return { success: true, imageId: data.imageId, alreadyPrimary: false };
+  });
+
+/**
+ * Server function: Swaps display_order between two adjacent images.
+ * Supports "move up" (lower order) and "move down" (higher order).
+ *
+ * Renumbers the complete set for the product to keep orders compact and
+ * collision-free. Does not modify file paths or image content.
+ */
+export const reorderOutsoleImages = createServerFn({ method: "POST" })
+  .validator((data: unknown) =>
+    z
+      .object({
+        outsoleId: z.string().uuid("Invalid outsole ID"),
+        imageId: z.string().uuid("Invalid image ID"),
+        direction: z.enum(["up", "down"]),
+      })
+      .parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { assertStaffRole } = await import("./admin-auth.server");
+    await assertStaffRole();
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // 1. Load all images for the outsole, sorted by current display_order
+    const { data: allImgs, error: listErr } = await supabaseAdmin
+      .from("outsole_images")
+      .select("id, outsole_id, display_order")
+      .eq("outsole_id", data.outsoleId)
+      .order("display_order", { ascending: true });
+
+    if (listErr) throw new Error(`Failed to load images: ${listErr.message}`);
+    if (!allImgs || allImgs.length === 0) throw new Error("No images found for this product");
+
+    // 2. Verify the target image belongs to this outsole
+    const targetIdx = allImgs.findIndex((i) => i.id === data.imageId);
+    if (targetIdx === -1) throw new Error("Image not found or does not belong to this product");
+
+    // 3. Compute swap index
+    const swapIdx = data.direction === "up" ? targetIdx - 1 : targetIdx + 1;
+    if (swapIdx < 0 || swapIdx >= allImgs.length) {
+      // Already at boundary — no-op
+      return { success: true, noOp: true };
+    }
+
+    // 4. Build reordered array
+    const reordered = [...allImgs];
+    // Non-null assertions are safe: swapIdx and targetIdx are bounds-checked above
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const temp = reordered[swapIdx]!;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    reordered[swapIdx] = reordered[targetIdx]!;
+    reordered[targetIdx] = temp;
+
+    // 5. Assign compact sequential orders starting from 0
+    const updates = reordered.map((img, idx) => ({ id: img.id, display_order: idx }));
+
+    // 6. Apply updates sequentially
+    for (const u of updates) {
+      const { error: upErr } = await supabaseAdmin
+        .from("outsole_images")
+        .update({ display_order: u.display_order })
+        .eq("id", u.id)
+        .eq("outsole_id", data.outsoleId);
+      if (upErr) throw new Error(`Failed to update display_order for ${u.id}: ${upErr.message}`);
+    }
+
+    return { success: true, noOp: false };
+  });
+
+/**
+ * Server function: Updates ONLY the alt_text for an existing outsole image.
+ * Does not modify file_path, image_url, display_order, or is_primary.
+ */
+export const updateOutsoleImageMetadata = createServerFn({ method: "POST" })
+  .validator((data: unknown) =>
+    z
+      .object({
+        outsoleId: z.string().uuid("Invalid outsole ID"),
+        imageId: z.string().uuid("Invalid image ID"),
+        alt_text: z
+          .string()
+          .trim()
+          .max(500, "Alt text must be 500 characters or fewer")
+          .nullable()
+          .optional()
+          .transform((v) => v ?? null),
+      })
+      .parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { assertStaffRole } = await import("./admin-auth.server");
+    await assertStaffRole();
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // 1. Verify image belongs to this outsole
+    const { data: img, error: lookupErr } = await supabaseAdmin
+      .from("outsole_images")
+      .select("id, outsole_id, alt_text")
+      .eq("id", data.imageId)
+      .eq("outsole_id", data.outsoleId)
+      .maybeSingle();
+
+    if (lookupErr) throw new Error("Failed to verify image ownership");
+    if (!img) throw new Error("Image not found or does not belong to this product");
+
+    // 2. Update ONLY alt_text
+    const { error: updErr } = await supabaseAdmin
+      .from("outsole_images")
+      .update({ alt_text: data.alt_text ?? null })
+      .eq("id", data.imageId)
+      .eq("outsole_id", data.outsoleId);
+
+    if (updErr) throw new Error(`Failed to update alt text: ${updErr.message}`);
+
+    return { success: true, imageId: data.imageId };
+  });
+
+/**
+ * Server function: Removes an existing image from an outsole.
+ *
+ * Order of operations (to minimise orphan risk):
+ *   1. Authenticate + authorise caller.
+ *   2. Validate IDs.
+ *   3. Look up image row to get the *trusted* file_path from the DB.
+ *   4. Delete Storage object.
+ *   5. Delete outsole_images metadata row.
+ *
+ * If Storage deletion fails → abort, return error, leave DB intact.
+ * If metadata deletion fails after Storage deletion → return partial failure.
+ *
+ * The caller must never supply an arbitrary file_path — it is always read
+ * from the authorised database record to prevent path injection.
+ *
+ * Primary-image edge cases:
+ *   - Removing the last image → product has zero images (allowed).
+ *   - Removing the primary image when others exist → no automatic replacement;
+ *     admin must explicitly set a new primary via setPrimaryOutsoleImage.
+ *   - Removing a non-primary image → primary remains unchanged.
+ *   - Removing an image belonging to another product → rejected (cross-product guard).
+ */
+export const removeOutsoleImage = createServerFn({ method: "POST" })
+  .validator((data: unknown) =>
+    z
+      .object({
+        outsoleId: z.string().uuid("Invalid outsole ID"),
+        imageId: z.string().uuid("Invalid image ID"),
+      })
+      .parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { assertStaffRole } = await import("./admin-auth.server");
+    await assertStaffRole();
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // 1. Verify image belongs to this outsole — read trusted file_path from DB
+    const { data: img, error: lookupErr } = await supabaseAdmin
+      .from("outsole_images")
+      .select("id, outsole_id, file_path, is_primary")
+      .eq("id", data.imageId)
+      .eq("outsole_id", data.outsoleId)
+      .maybeSingle();
+
+    if (lookupErr) throw new Error("Failed to verify image ownership");
+    if (!img) throw new Error("Image not found or does not belong to this product");
+
+    const trustedPath = img.file_path;
+
+    // 2. Delete Storage object first — if this fails we leave the DB intact
+    const { error: storageErr } = await supabaseAdmin.storage
+      .from("outsole-images")
+      .remove([trustedPath]);
+
+    if (storageErr) {
+      throw new Error(
+        `Storage deletion failed for "${trustedPath}": ${storageErr.message}. ` +
+          `The image record has NOT been removed. Please try again.`,
+      );
+    }
+
+    // 3. Delete metadata row
+    const { error: rowErr } = await supabaseAdmin
+      .from("outsole_images")
+      .delete()
+      .eq("id", data.imageId)
+      .eq("outsole_id", data.outsoleId);
+
+    if (rowErr) {
+      // Partial failure: Storage file deleted but metadata row remains.
+      // This is an orphan situation — report clearly.
+      throw new Error(
+        `PARTIAL FAILURE: Storage file "${trustedPath}" was deleted but the ` +
+          `database record could not be removed (${rowErr.message}). ` +
+          `Please contact your database administrator to remove image ID ${data.imageId} manually.`,
+      );
+    }
+
+    return {
+      success: true,
+      imageId: data.imageId,
+      removedPath: trustedPath,
+      wasPrimary: img.is_primary,
+    };
+  });
