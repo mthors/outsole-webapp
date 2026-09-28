@@ -14,7 +14,10 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as CatalogRouteImport } from './routes/catalog'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as RequestSampleRouteImport } from './routes/request-sample'
+import { Route as AdminLayoutRouteImport } from './routes/admin/_layout'
+import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as OutsolesSlugRouteImport } from './routes/outsoles.$slug'
+import { Route as AdminLayoutIndexRouteImport } from './routes/admin/_layout/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -41,10 +44,25 @@ const RequestSampleRoute = RequestSampleRouteImport.update({
   path: '/request-sample',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminLayoutRoute = AdminLayoutRouteImport.update({
+  id: '/admin/_layout',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin/login',
+  path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OutsolesSlugRoute = OutsolesSlugRouteImport.update({
   id: '/outsoles/$slug',
   path: '/outsoles/$slug',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLayoutIndexRoute = AdminLayoutIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminLayoutRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -53,7 +71,10 @@ export interface FileRoutesByFullPath {
   '/catalog': typeof CatalogRoute
   '/contact': typeof ContactRoute
   '/request-sample': typeof RequestSampleRoute
+  '/admin': typeof AdminLayoutRouteWithChildren
+  '/admin/login': typeof AdminLoginRoute
   '/outsoles/$slug': typeof OutsolesSlugRoute
+  '/admin/': typeof AdminLayoutIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -61,7 +82,9 @@ export interface FileRoutesByTo {
   '/catalog': typeof CatalogRoute
   '/contact': typeof ContactRoute
   '/request-sample': typeof RequestSampleRoute
+  '/admin/login': typeof AdminLoginRoute
   '/outsoles/$slug': typeof OutsolesSlugRoute
+  '/admin': typeof AdminLayoutIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -70,7 +93,10 @@ export interface FileRoutesById {
   '/catalog': typeof CatalogRoute
   '/contact': typeof ContactRoute
   '/request-sample': typeof RequestSampleRoute
+  '/admin/_layout': typeof AdminLayoutRouteWithChildren
+  '/admin/login': typeof AdminLoginRoute
   '/outsoles/$slug': typeof OutsolesSlugRoute
+  '/admin/_layout/': typeof AdminLayoutIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -80,7 +106,10 @@ export interface FileRouteTypes {
     | '/catalog'
     | '/contact'
     | '/request-sample'
+    | '/admin'
+    | '/admin/login'
     | '/outsoles/$slug'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -88,7 +117,9 @@ export interface FileRouteTypes {
     | '/catalog'
     | '/contact'
     | '/request-sample'
+    | '/admin/login'
     | '/outsoles/$slug'
+    | '/admin'
   id:
     | '__root__'
     | '/'
@@ -96,7 +127,10 @@ export interface FileRouteTypes {
     | '/catalog'
     | '/contact'
     | '/request-sample'
+    | '/admin/_layout'
+    | '/admin/login'
     | '/outsoles/$slug'
+    | '/admin/_layout/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -105,6 +139,8 @@ export interface RootRouteChildren {
   CatalogRoute: typeof CatalogRoute
   ContactRoute: typeof ContactRoute
   RequestSampleRoute: typeof RequestSampleRoute
+  AdminLayoutRoute: typeof AdminLayoutRouteWithChildren
+  AdminLoginRoute: typeof AdminLoginRoute
   OutsolesSlugRoute: typeof OutsolesSlugRoute
 }
 
@@ -145,6 +181,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RequestSampleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/_layout': {
+      id: '/admin/_layout'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/outsoles/$slug': {
       id: '/outsoles/$slug'
       path: '/outsoles/$slug'
@@ -152,8 +202,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OutsolesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/_layout/': {
+      id: '/admin/_layout/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminLayoutIndexRouteImport
+      parentRoute: typeof AdminLayoutRoute
+    }
   }
 }
+
+interface AdminLayoutRouteChildren {
+  AdminLayoutIndexRoute: typeof AdminLayoutIndexRoute
+}
+
+const AdminLayoutRouteChildren: AdminLayoutRouteChildren = {
+  AdminLayoutIndexRoute: AdminLayoutIndexRoute,
+}
+
+const AdminLayoutRouteWithChildren = AdminLayoutRoute._addFileChildren(
+  AdminLayoutRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -161,6 +230,8 @@ const rootRouteChildren: RootRouteChildren = {
   CatalogRoute: CatalogRoute,
   ContactRoute: ContactRoute,
   RequestSampleRoute: RequestSampleRoute,
+  AdminLayoutRoute: AdminLayoutRouteWithChildren,
+  AdminLoginRoute: AdminLoginRoute,
   OutsolesSlugRoute: OutsolesSlugRoute,
 }
 export const routeTree = rootRouteImport
