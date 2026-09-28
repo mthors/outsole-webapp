@@ -14,7 +14,31 @@ export type AdminInquiryOutsole = {
   model_number: string;
   slug: string;
   status?: string;
+  primary_image_url?: string | null;
 } | null;
+
+export type AdminInquiryDetailOutsole = {
+  id: string;
+  name: string;
+  model_number: string;
+  slug: string;
+  status?: string;
+  description?: string | null;
+  primary_image_url?: string | null;
+} | null;
+
+export type AdminInquiryDetail = {
+  id: string;
+  outsole_id: string | null;
+  client_name: string;
+  company_name: string;
+  email: string;
+  phone: string | null;
+  message: string;
+  status: InquiryStatus;
+  created_at: string;
+  outsole: AdminInquiryDetailOutsole;
+};
 
 export type AdminInquiryListItem = {
   id: string;
@@ -162,6 +186,53 @@ export const listAdminInquiries = createServerFn({ method: "GET" })
     const total = count ?? 0;
     const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
+    // Batch resolve primary image URLs for outsoles
+    const outsoleIds = Array.from(
+      new Set(
+        (rows ?? [])
+          .map((r) => r.outsole_id)
+          .filter((id): id is string => Boolean(id)),
+      ),
+    );
+
+    const imageMap = new Map<string, string>();
+    if (outsoleIds.length > 0) {
+      const { data: images } = await supabaseAdmin
+        .from("outsole_images")
+        .select("outsole_id, file_path, is_primary, display_order")
+        .in("outsole_id", outsoleIds);
+
+      const primaryPathByOutsole = new Map<string, string>();
+      const sortedImages = (images ?? []).sort(
+        (a, b) =>
+          Number(b.is_primary) - Number(a.is_primary) ||
+          (a.display_order ?? 0) - (b.display_order ?? 0),
+      );
+
+      for (const img of sortedImages) {
+        if (!primaryPathByOutsole.has(img.outsole_id)) {
+          primaryPathByOutsole.set(img.outsole_id, img.file_path);
+        }
+      }
+
+      const pathsToSign = Array.from(primaryPathByOutsole.values());
+      if (pathsToSign.length > 0) {
+        const { data: signed } = await supabaseAdmin.storage
+          .from("outsole-images")
+          .createSignedUrls(pathsToSign, 60 * 60 * 24);
+
+        const signedByPath = new Map<string, string>();
+        for (const s of signed ?? []) {
+          if (s.path && s.signedUrl) signedByPath.set(s.path, s.signedUrl);
+        }
+
+        for (const [oId, path] of primaryPathByOutsole.entries()) {
+          const url = signedByPath.get(path);
+          if (url) imageMap.set(oId, url);
+        }
+      }
+    }
+
     const inquiries: AdminInquiryListItem[] = (rows ?? []).map((r) => {
       const out = Array.isArray(r.outsoles) ? r.outsoles[0] : r.outsoles;
       return {
@@ -180,6 +251,7 @@ export const listAdminInquiries = createServerFn({ method: "GET" })
               name: out.name,
               model_number: out.model_number,
               slug: out.slug,
+              primary_image_url: imageMap.get(out.id) ?? null,
             }
           : null,
       };
@@ -203,7 +275,7 @@ export const getAdminInquiry = createServerFn({ method: "GET" })
   .validator((data: unknown) =>
     z.object({ id: z.string().uuid("Invalid inquiry ID") }).parse(data),
   )
-  .handler(async ({ data }) => {
+  .handler(async ({ data }): Promise<{ inquiry: AdminInquiryDetail }> => {
     const { assertStaffRole } = await import("./admin-auth.server");
     await assertStaffRole();
 
@@ -241,6 +313,27 @@ export const getAdminInquiry = createServerFn({ method: "GET" })
 
     const out = Array.isArray(row.outsoles) ? row.outsoles[0] : row.outsoles;
 
+    let primaryImageUrl: string | null = null;
+    if (row.outsole_id) {
+      const { data: img } = await supabaseAdmin
+        .from("outsole_images")
+        .select("file_path, is_primary, display_order")
+        .eq("outsole_id", row.outsole_id)
+        .order("is_primary", { ascending: false })
+        .order("display_order", { ascending: true })
+        .limit(1)
+        .maybeSingle();
+
+      if (img?.file_path) {
+        const { data: signed } = await supabaseAdmin.storage
+          .from("outsole-images")
+          .createSignedUrl(img.file_path, 60 * 60 * 24);
+        if (signed?.signedUrl) {
+          primaryImageUrl = signed.signedUrl;
+        }
+      }
+    }
+
     return {
       inquiry: {
         id: row.id,
@@ -260,6 +353,7 @@ export const getAdminInquiry = createServerFn({ method: "GET" })
               slug: out.slug,
               status: out.status,
               description: out.description,
+              primary_image_url: primaryImageUrl,
             }
           : null,
       },

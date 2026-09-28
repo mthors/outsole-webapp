@@ -417,6 +417,66 @@ async function runInquiriesTests() {
       "Zod inquiryStatusEnum strictly allows 'pending' | 'contacted' | 'resolved' and rejects others",
     );
 
+    // -------------------------------------------------------------
+    // GROUP 7: Milestone 9B Advanced Inquiry Detail & Product Image Integration
+    // -------------------------------------------------------------
+    console.log("\n[GROUP 7: Milestone 9B Advanced Inquiry Detail & Product Image Integration]");
+
+    // 1. Resolve outsole primary image for product inquiry
+    const { data: outsoleImages } = await adminClient
+      .from("outsole_images")
+      .select("file_path, is_primary, display_order")
+      .eq("outsole_id", inserted1.outsole_id)
+      .order("is_primary", { ascending: false })
+      .order("display_order", { ascending: true })
+      .limit(1);
+
+    check(outsoleImages && outsoleImages.length > 0, "Outsole image record resolved for requested product");
+    const primaryImgPath = outsoleImages?.[0]?.file_path;
+    let signedImgUrl = null;
+    if (primaryImgPath) {
+      const { data: signed } = await adminClient.storage
+        .from("outsole-images")
+        .createSignedUrl(primaryImgPath, 60 * 60);
+      signedImgUrl = signed?.signedUrl;
+    }
+    check(signedImgUrl != null && signedImgUrl.includes("outsole-images"), "Generated valid signed URL for requested product image");
+
+    // 2. Verify signed image URL responds with HTTP 200
+    if (signedImgUrl) {
+      const imgRes = await fetch(signedImgUrl);
+      check(imgRes.status === 200, "Signed product image URL returns HTTP 200");
+    }
+
+    // 3. Verify general inquiry has no outsole link
+    const { data: generalInquiryDetail } = await adminClient
+      .from("sample_inquiries")
+      .select("id, client_name, outsole_id")
+      .eq("id", inserted2.id)
+      .single();
+    check(generalInquiryDetail?.outsole_id === null, "General inquiry has null outsole_id");
+
+    // 4. Reversible status workflow: transition resolved -> pending (reopen inquiry)
+    const { data: reopened, error: reopenErr } = await adminClient
+      .from("sample_inquiries")
+      .update({ status: "pending" })
+      .eq("id", inserted1.id)
+      .select("id, status")
+      .single();
+    check(!reopenErr && reopened?.status === "pending", "Reversible workflow: reopened inquiry from 'resolved' back to 'pending'");
+
+    // 5. Schema validation: listInquiriesSchema rejects invalid status
+    const invalidListFilter = listInquiriesSchema.safeParse({ status: "invalid_filter" });
+    check(!invalidListFilter.success, "listInquiriesSchema rejects invalid status option");
+
+    // 6. Schema validation: listInquiriesSchema accepts valid pagination & status
+    const validListFilter = listInquiriesSchema.safeParse({ status: "pending", page: 2, pageSize: 15 });
+    check(validListFilter.success, "listInquiriesSchema accepts valid pagination & status");
+
+    // 7. Schema validation: updateInquiryStatusSchema rejects non-UUID id
+    const invalidUuidStatus = updateInquiryStatusSchema.safeParse({ id: "not-a-uuid", status: "contacted" });
+    check(!invalidUuidStatus.success, "updateInquiryStatusSchema rejects non-UUID id");
+
   } finally {
     // -------------------------------------------------------------
     // CLEANUP: Clean up all test inquiries created during test

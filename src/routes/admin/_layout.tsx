@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet, redirect, Link, useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { requireAdminRole } from "@/lib/admin.functions";
+import { Toaster } from "@/components/ui/sonner";
 
 export const Route = createFileRoute("/admin/_layout")({
   /**
@@ -32,6 +33,7 @@ function AdminLayout() {
 
   return (
     <div className="admin-shell">
+      <Toaster position="top-right" />
       <aside className="admin-sidebar">
         <div className="admin-logo">
           <span className="admin-logo-mark">OW</span>
