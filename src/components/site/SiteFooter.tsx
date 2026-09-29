@@ -5,9 +5,9 @@ export function SiteFooter() {
     <footer className="border-t border-border bg-surface">
       <div className="shell grid gap-10 py-14 md:grid-cols-4">
         <div className="md:col-span-2">
-          <p className="text-sm font-bold uppercase tracking-[0.2em]">ODE Outsole</p>
+          <p className="text-sm font-bold uppercase tracking-[0.2em]">PT ODE CIPTA SEMESTA</p>
           <p className="mt-4 max-w-sm text-sm text-muted-foreground">
-            Rubber outsole development and volume production for footwear brands. OEM and ODM programs.
+            Jl. Kidemang Singomenggolo no.20 Buduran Sidoarjo
           </p>
         </div>
         <div>
@@ -28,7 +28,7 @@ export function SiteFooter() {
       <div className="border-t border-border">
         <div className="shell flex flex-col gap-2 py-5 sm:flex-row sm:justify-between">
           <p className="label-tech">© {new Date().getFullYear()} ODE Outsole</p>
-          <p className="label-tech">Engineered in rubber</p>
+          <p className="label-tech">Created by Thor</p>
         </div>
       </div>
     </footer>
