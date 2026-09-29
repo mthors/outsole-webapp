@@ -31,6 +31,18 @@ export const getSiteContent = createServerFn({ method: "GET" }).handler(async ()
   return { content: await fetchSiteContent() };
 });
 
+export const getInteriorHero = createServerFn({ method: "GET" }).handler(async () => {
+  const { fetchSiteContent } = await import("./public-catalog.server");
+  const { parseInteriorHero, fetchInteriorHeroSignedUrl } = await import("./interior-hero");
+
+  const entries = await fetchSiteContent();
+  const heroEntry = entries.find((e) => e.content_key === "interior_hero");
+  const config = parseInteriorHero(heroEntry?.content ?? null);
+  const imageUrl = config.imagePath ? await fetchInteriorHeroSignedUrl(config.imagePath) : null;
+
+  return { config, imageUrl };
+});
+
 export const getSampleOptions = createServerFn({ method: "GET" }).handler(async () => {
   const { fetchActiveOutsoles } = await import("./public-catalog.server");
   const outsoles = await fetchActiveOutsoles();

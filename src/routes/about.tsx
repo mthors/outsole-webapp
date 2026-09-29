@@ -1,11 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowRight, CheckCircle2, Cog, Layers, Wrench } from "lucide-react";
-import { getSiteContent } from "@/lib/public-catalog.functions";
+import { getSiteContent, getInteriorHero } from "@/lib/public-catalog.functions";
+import { InteriorHero } from "@/components/site/InteriorHero";
 
 const aboutContentQuery = queryOptions({
   queryKey: ["site-content-about"],
   queryFn: () => getSiteContent(),
+  staleTime: 5 * 60 * 1000,
+  refetchOnMount: false,
+});
+
+const interiorHeroQuery = queryOptions({
+  queryKey: ["interior-hero"],
+  queryFn: () => getInteriorHero(),
   staleTime: 5 * 60 * 1000,
   refetchOnMount: false,
 });
@@ -27,7 +35,10 @@ export const Route = createFileRoute("/about")({
       },
     ],
   }),
-  loader: ({ context }) => context.queryClient.ensureQueryData(aboutContentQuery),
+  loader: ({ context }) => Promise.all([
+    context.queryClient.ensureQueryData(aboutContentQuery),
+    context.queryClient.ensureQueryData(interiorHeroQuery),
+  ]),
   component: AboutPage,
   pendingComponent: () => (
     <div className="shell py-32">
@@ -48,6 +59,7 @@ const clean = (s?: string | null) => (s ?? "").replace(/^Editable placeholder\.?
 
 function AboutPage() {
   const { data } = useSuspenseQuery(aboutContentQuery);
+  const { data: hero } = useSuspenseQuery(interiorHeroQuery);
   const contentMap = Object.fromEntries(
     data.content.map((item) => [item.content_key, item]),
   );
@@ -58,23 +70,18 @@ function AboutPage() {
 
   return (
     <>
-      {/* Hero / Factory Narrative Section */}
-      <section className="relative border-b border-border bg-background py-20 md:py-28">
-        <div className="shell">
-          <div className="max-w-4xl">
-            <span className="rule-accent" />
-            <p className="label-tech mt-6">About · Factory & Engineering Background</p>
-            <h1 className="display-xl mt-5">
-              {company?.title ?? "About the Factory"}
-            </h1>
-            <p className="mt-8 text-lg leading-relaxed text-muted-foreground md:text-xl">
-              {clean(company?.content) ||
-                "High-performance rubber outsole development, compounding, mold engineering, and volume production for technical and lifestyle footwear programs."}
-            </p>
-          </div>
+      <InteriorHero
+        config={hero.config}
+        imageUrl={hero.imageUrl}
+        eyebrow="About · Factory & Engineering Background"
+        title={company?.title ?? "About the Factory"}
+        description={clean(company?.content) || "High-performance rubber outsole development, compounding, mold engineering, and volume production for technical and lifestyle footwear programs."}
+      />
 
-          {/* Quick Technical Highlights */}
-          <div className="mt-16 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
+      {/* Quick Technical Highlights */}
+      <section className="border-b border-border bg-background">
+        <div className="shell py-12 md:py-16">
+          <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
             <div className="bg-surface p-7">
               <p className="data-mono text-xs text-primary uppercase tracking-[0.14em]">01 / Infrastructure</p>
               <h3 className="mt-4 text-base font-semibold uppercase text-foreground">In-House Tooling</h3>

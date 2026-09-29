@@ -3,9 +3,18 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
-import { getOutsole } from "@/lib/public-catalog.functions";
+import { getOutsole, getInteriorHero } from "@/lib/public-catalog.functions";
 import { submitInquiry, inquirySchema } from "@/lib/inquiries.functions";
 import type { InquiryInput } from "@/lib/inquiries.functions";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { InteriorHero } from "@/components/site/InteriorHero";
+
+const interiorHeroQuery = queryOptions({
+  queryKey: ["interior-hero"],
+  queryFn: () => getInteriorHero(),
+  staleTime: 5 * 60 * 1000,
+  refetchOnMount: false,
+});
 
 export const Route = createFileRoute("/request-sample")({
   validateSearch: (search: Record<string, unknown>): { product?: string } => {
@@ -13,13 +22,12 @@ export const Route = createFileRoute("/request-sample")({
     return typeof p === "string" && p.trim() ? { product: p.trim().slice(0, 150) } : {};
   },
   loaderDeps: ({ search }) => ({ product: search.product }),
-  loader: async ({ deps }) => {
+  loader: async ({ deps, context }) => {
+    await context.queryClient.ensureQueryData(interiorHeroQuery);
     if (!deps.product) return { selected: null };
     try {
       const res = await getOutsole({ data: { slug: deps.product } });
       const o = res.outsole;
-      // Return id so the form can pass it as outsole_id to submitInquiry.
-      // The server function validates the UUID against active outsoles anyway.
       return { selected: o ? { id: o.id, name: o.name, model: o.model_number } : null };
     } catch {
       return { selected: null };
@@ -40,6 +48,7 @@ type FormStatus = "idle" | "submitting" | "success" | "error";
 
 function RequestSamplePage() {
   const { selected } = Route.useLoaderData();
+  const { data: hero } = useSuspenseQuery(interiorHeroQuery);
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -107,18 +116,13 @@ function RequestSamplePage() {
 
   return (
     <>
-      {/* Page header */}
-      <section className="border-b border-border">
-        <div className="shell py-16 md:py-20">
-          <span className="rule-accent" />
-          <p className="label-tech mt-6">Sampling</p>
-          <h1 className="display-xl mt-5">Request a Sample</h1>
-          <p className="mt-6 max-w-2xl text-muted-foreground md:text-lg">
-            Fill in your details below. Our team will review your request and contact you to arrange
-            sampling.
-          </p>
-        </div>
-      </section>
+      <InteriorHero
+        config={hero.config}
+        imageUrl={hero.imageUrl}
+        eyebrow="Sampling"
+        title="Request a Sample"
+        description="Fill in your details below. Our team will review your request and contact you to arrange sampling."
+      />
 
       <section className="shell py-12 md:py-16">
         <div className="grid gap-12 lg:grid-cols-[1fr_18rem]">

@@ -1,11 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowRight, Clock, Mail, MapPin, MessageSquare, Phone } from "lucide-react";
-import { getSiteContent } from "@/lib/public-catalog.functions";
+import { getSiteContent, getInteriorHero } from "@/lib/public-catalog.functions";
+import { InteriorHero } from "@/components/site/InteriorHero";
 
 const contactContentQuery = queryOptions({
   queryKey: ["site-content-contact"],
   queryFn: () => getSiteContent(),
+  staleTime: 5 * 60 * 1000,
+  refetchOnMount: false,
+});
+
+const interiorHeroQuery = queryOptions({
+  queryKey: ["interior-hero"],
+  queryFn: () => getInteriorHero(),
   staleTime: 5 * 60 * 1000,
   refetchOnMount: false,
 });
@@ -27,7 +35,10 @@ export const Route = createFileRoute("/contact")({
       },
     ],
   }),
-  loader: ({ context }) => context.queryClient.ensureQueryData(contactContentQuery),
+  loader: ({ context }) => Promise.all([
+    context.queryClient.ensureQueryData(contactContentQuery),
+    context.queryClient.ensureQueryData(interiorHeroQuery),
+  ]),
   component: ContactPage,
   pendingComponent: () => (
     <div className="shell py-32">
@@ -54,6 +65,7 @@ const clean = (s?: string | null) => (s ?? "").replace(/^Editable placeholder\.?
 
 function ContactPage() {
   const { data } = useSuspenseQuery(contactContentQuery);
+  const { data: hero } = useSuspenseQuery(interiorHeroQuery);
   const contentMap = Object.fromEntries(
     data.content.map((item) => [item.content_key, item]),
   );
@@ -65,23 +77,15 @@ function ContactPage() {
 
   return (
     <>
-      {/* Header Section */}
-      <section className="relative border-b border-border bg-background py-20 md:py-28">
-        <div className="shell">
-          <div className="max-w-3xl">
-            <span className="rule-accent" />
-            <p className="label-tech mt-6">Get in Touch · Facilities & Direct Sales</p>
-            <h1 className="display-xl mt-5">
-              {contact?.title ?? "Contact ODE Outsole"}
-            </h1>
-            <p className="mt-6 text-lg leading-relaxed text-muted-foreground md:text-xl">
-              {parsed.intro ||
-                clean(contact?.content) ||
-                "Connect directly with our rubber compounding engineers, tooling mold specialists, and commercial sales team for OEM programs and sample dispatch."}
-            </p>
-          </div>
-        </div>
-      </section>
+      <InteriorHero
+        config={hero.config}
+        imageUrl={hero.imageUrl}
+        eyebrow="Get in Touch · Facilities & Direct Sales"
+        title={contact?.title ?? "Contact ODE Outsole"}
+        description={parsed.intro ||
+          clean(contact?.content) ||
+          "Connect directly with our rubber compounding engineers, tooling mold specialists, and commercial sales team for OEM programs and sample dispatch."}
+      />
 
       {/* Contact Cards Grid */}
       <section className="border-b border-border bg-surface py-20 md:py-24">

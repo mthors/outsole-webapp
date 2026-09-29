@@ -2,12 +2,20 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, Search, SlidersHorizontal, X } from "lucide-react";
-import { getCatalog } from "@/lib/public-catalog.functions";
+import { getCatalog, getInteriorHero } from "@/lib/public-catalog.functions";
 import { hardnessLabel, primaryImage, type Outsole, type TaxonomyTerm } from "@/lib/catalog-types";
+import { InteriorHero } from "@/components/site/InteriorHero";
 
 const catalogQuery = queryOptions({
   queryKey: ["catalog"],
   queryFn: () => getCatalog(),
+  staleTime: 5 * 60 * 1000,
+  refetchOnMount: false,
+});
+
+const interiorHeroQuery = queryOptions({
+  queryKey: ["interior-hero"],
+  queryFn: () => getInteriorHero(),
   staleTime: 5 * 60 * 1000,
   refetchOnMount: false,
 });
@@ -51,32 +59,30 @@ export const Route = createFileRoute("/catalog")({
       { name: "twitter:card", content: "summary" },
     ],
   }),
-  loader: ({ context }) => context.queryClient.ensureQueryData(catalogQuery),
+  loader: ({ context }) => Promise.all([
+    context.queryClient.ensureQueryData(catalogQuery),
+    context.queryClient.ensureQueryData(interiorHeroQuery),
+  ]),
   component: CatalogPage,
   pendingComponent: CatalogLoading,
   errorComponent: CatalogError,
   notFoundComponent: () => <div className="shell py-32">Not found.</div>,
 });
 
-function CatalogHeader() {
-  return (
-    <section className="border-b border-border">
-      <div className="shell py-16 md:py-20">
-        <span className="rule-accent" />
-        <p className="label-tech mt-6">Collection</p>
-        <h1 className="display-xl mt-5">Outsole Catalog</h1>
-        <p className="mt-6 max-w-2xl text-muted-foreground md:text-lg">
-          Explore our outsole portfolio by application, material, traction, and technical specification.
-        </p>
-      </div>
-    </section>
-  );
-}
+
+
 
 function CatalogLoading() {
   return (
     <>
-      <CatalogHeader />
+      <section className="interior-hero" aria-label="Outsole Catalog">
+        <div className="interior-hero__overlay" />
+        <div className="shell interior-hero__content">
+          <span className="rule-accent" />
+          <p className="label-tech interior-hero__eyebrow">Collection</p>
+          <h1 className="display-xl interior-hero__title">Outsole Catalog</h1>
+        </div>
+      </section>
       <div className="shell py-12">
         <div className="h-12 animate-pulse bg-surface" />
         <div className="mt-8 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">
@@ -95,7 +101,14 @@ function CatalogLoading() {
 function CatalogError() {
   return (
     <>
-      <CatalogHeader />
+      <section className="interior-hero" aria-label="Outsole Catalog">
+        <div className="interior-hero__overlay" />
+        <div className="shell interior-hero__content">
+          <span className="rule-accent" />
+          <p className="label-tech interior-hero__eyebrow">Collection</p>
+          <h1 className="display-xl interior-hero__title">Outsole Catalog</h1>
+        </div>
+      </section>
       <div role="alert" className="shell py-20">
         <div className="border border-border p-12 text-center">
           <p className="label-tech">Catalog unavailable</p>
@@ -110,6 +123,7 @@ function CatalogError() {
 
 function CatalogPage() {
   const { data } = useSuspenseQuery(catalogQuery);
+  const { data: hero } = useSuspenseQuery(interiorHeroQuery);
   const search = Route.useSearch();
   const navigate = useNavigate({ from: "/catalog" });
   const [q, setQ] = useState(search.q ?? "");
@@ -138,7 +152,13 @@ function CatalogPage() {
 
   return (
     <>
-      <CatalogHeader />
+      <InteriorHero
+        config={hero.config}
+        imageUrl={hero.imageUrl}
+        eyebrow="Collection"
+        title="Outsole Catalog"
+        description="Explore our outsole portfolio by application, material, traction, and technical specification."
+      />
       <section className="shell py-10 md:py-14">
         <div className="flex flex-col gap-3 sm:flex-row">
           <label className="relative flex-1">

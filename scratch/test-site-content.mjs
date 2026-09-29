@@ -45,6 +45,7 @@ const EXPECTED_CONTENT_KEYS = [
   "about_oem",
   "about_odm",
   "contact_information",
+  "interior_hero",
 ];
 
 const AUTHENTIC_OUTSOLE_SLUGS = [
@@ -103,6 +104,7 @@ const contentKeyEnum = z.enum([
   "about_oem",
   "about_odm",
   "contact_information",
+  "interior_hero",
 ]);
 
 const updateSiteContentSchema = z
@@ -241,7 +243,7 @@ async function runTests() {
     .select("content_key, title, content");
 
   check(!anonReadErr && anonRead, "Anonymous client can SELECT from site_content");
-  check(anonRead?.length === 6, "Anonymous SELECT returns all 6 site_content entries");
+  check(anonRead?.length === EXPECTED_CONTENT_KEYS.length, `Anonymous SELECT returns all ${EXPECTED_CONTENT_KEYS.length} site_content entries`);
 
   // Anonymous direct UPDATE should be rejected or affect 0 rows
   const { data: anonUpdateData, error: anonUpdateErr } = await anonClient
@@ -693,7 +695,7 @@ async function runTests() {
     .from("site_content")
     .select("id, content_key, title, content");
 
-  check(!finalContentErr && finalContentRows?.length === 6, "Final check: Exactly 6 site_content rows remain");
+  check(!finalContentErr && finalContentRows?.length === EXPECTED_CONTENT_KEYS.length, `Final check: Exactly ${EXPECTED_CONTENT_KEYS.length} site_content rows remain`);
 
   let allRestored = true;
   for (const key of EXPECTED_CONTENT_KEYS) {
