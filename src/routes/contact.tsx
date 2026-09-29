@@ -44,6 +44,12 @@ export const Route = createFileRoute("/contact")({
   notFoundComponent: () => <div className="shell py-32">Contact details not found.</div>,
 });
 
+import {
+  parseContactContent,
+  formatPhoneLink,
+  formatWhatsAppLink,
+} from "@/lib/contact-content";
+
 const clean = (s?: string | null) => (s ?? "").replace(/^Editable placeholder\.?\s*/i, "");
 
 function ContactPage() {
@@ -53,6 +59,9 @@ function ContactPage() {
   );
 
   const contact = contentMap["contact_information"];
+  const parsed = parseContactContent(contact?.content);
+  const phoneHref = formatPhoneLink(parsed.phoneWhatsapp.phone);
+  const waHref = formatWhatsAppLink(parsed.phoneWhatsapp.whatsapp);
 
   return (
     <>
@@ -66,7 +75,8 @@ function ContactPage() {
               {contact?.title ?? "Contact ODE Outsole"}
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground md:text-xl">
-              {clean(contact?.content) ||
+              {parsed.intro ||
+                clean(contact?.content) ||
                 "Connect directly with our rubber compounding engineers, tooling mold specialists, and commercial sales team for OEM programs and sample dispatch."}
             </p>
           </div>
@@ -83,17 +93,25 @@ function ContactPage() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-primary/10 text-primary">
                   <MapPin className="h-5 w-5" />
                 </div>
-                <p className="data-mono text-xs text-primary mt-6 uppercase tracking-[0.14em]">Facility</p>
-                <h3 className="mt-2 text-lg font-semibold uppercase text-foreground">Factory Plant</h3>
+                <p className="data-mono text-xs text-primary mt-6 uppercase tracking-[0.14em]">
+                  {parsed.facility.eyebrow}
+                </p>
+                <h3 className="mt-2 text-lg font-semibold uppercase text-foreground">
+                  {parsed.facility.heading}
+                </h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  ODE Outsole Manufacturing Plant<br />
-                  Plot 18, Industrial Footwear Zone<br />
-                  Rubber Compounding Complex<br />
-                  Banten 15710, Indonesia
+                  <strong className="block font-semibold text-foreground">
+                    {parsed.facility.name}
+                  </strong>
+                  {parsed.facility.address.split("\n").map((line, i) => (
+                    <span key={i} className="block">
+                      {line}
+                    </span>
+                  ))}
                 </p>
               </div>
               <p className="label-tech mt-6 border-t border-border pt-4">
-                Factory audits by appointment
+                {parsed.facility.footerNote}
               </p>
             </div>
 
@@ -103,20 +121,24 @@ function ContactPage() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-primary/10 text-primary">
                   <Mail className="h-5 w-5" />
                 </div>
-                <p className="data-mono text-xs text-primary mt-6 uppercase tracking-[0.14em]">Direct Email</p>
-                <h3 className="mt-2 text-lg font-semibold uppercase text-foreground">Technical Sales</h3>
+                <p className="data-mono text-xs text-primary mt-6 uppercase tracking-[0.14em]">
+                  {parsed.directEmail.eyebrow}
+                </p>
+                <h3 className="mt-2 text-lg font-semibold uppercase text-foreground">
+                  {parsed.directEmail.heading}
+                </h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  Send technical blueprints, 3D bottom-unit files, or inquiry specifications:
+                  {parsed.directEmail.description}
                 </p>
                 <a
-                  href="mailto:sales@odeoutsole.com"
+                  href={`mailto:${parsed.directEmail.email}`}
                   className="mt-3 inline-block font-mono text-sm font-semibold text-primary hover:underline"
                 >
-                  sales@odeoutsole.com
+                  {parsed.directEmail.email}
                 </a>
               </div>
               <p className="label-tech mt-6 border-t border-border pt-4">
-                Typical response: &lt; 24 business hours
+                {parsed.directEmail.footerNote}
               </p>
             </div>
 
@@ -126,30 +148,46 @@ function ContactPage() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-primary/10 text-primary">
                   <Phone className="h-5 w-5" />
                 </div>
-                <p className="data-mono text-xs text-primary mt-6 uppercase tracking-[0.14em]">Direct Line</p>
-                <h3 className="mt-2 text-lg font-semibold uppercase text-foreground">Phone & WhatsApp</h3>
+                <p className="data-mono text-xs text-primary mt-6 uppercase tracking-[0.14em]">
+                  {parsed.phoneWhatsapp.eyebrow}
+                </p>
+                <h3 className="mt-2 text-lg font-semibold uppercase text-foreground">
+                  {parsed.phoneWhatsapp.heading}
+                </h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  Speak directly with account engineers or instant-message our liaison:
+                  {parsed.phoneWhatsapp.description}
                 </p>
                 <div className="mt-3 space-y-1">
-                  <a
-                    href="tel:+62215550198"
-                    className="block font-mono text-sm font-semibold text-foreground hover:text-primary"
-                  >
-                    +62 21 555-0198 (Office)
-                  </a>
-                  <a
-                    href="https://wa.me/628125550199"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 font-mono text-sm font-semibold text-primary hover:underline"
-                  >
-                    <MessageSquare className="h-3.5 w-3.5" /> +62 812-555-0199 (WhatsApp)
-                  </a>
+                  {phoneHref ? (
+                    <a
+                      href={phoneHref}
+                      className="block font-mono text-sm font-semibold text-foreground hover:text-primary"
+                    >
+                      {parsed.phoneWhatsapp.phone}
+                    </a>
+                  ) : (
+                    <span className="block font-mono text-sm font-semibold text-foreground">
+                      {parsed.phoneWhatsapp.phone}
+                    </span>
+                  )}
+                  {waHref ? (
+                    <a
+                      href={waHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 font-mono text-sm font-semibold text-primary hover:underline"
+                    >
+                      <MessageSquare className="h-3.5 w-3.5" /> {parsed.phoneWhatsapp.whatsapp}
+                    </a>
+                  ) : (
+                    <span className="inline-flex items-center gap-1.5 font-mono text-sm font-semibold text-primary">
+                      <MessageSquare className="h-3.5 w-3.5" /> {parsed.phoneWhatsapp.whatsapp}
+                    </span>
+                  )}
                 </div>
               </div>
               <p className="label-tech mt-6 border-t border-border pt-4">
-                English & Indonesian supported
+                {parsed.phoneWhatsapp.footerNote}
               </p>
             </div>
 
@@ -159,25 +197,37 @@ function ContactPage() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-primary/10 text-primary">
                   <Clock className="h-5 w-5" />
                 </div>
-                <p className="data-mono text-xs text-primary mt-6 uppercase tracking-[0.14em]">Schedule</p>
-                <h3 className="mt-2 text-lg font-semibold uppercase text-foreground">Operating Hours</h3>
+                <p className="data-mono text-xs text-primary mt-6 uppercase tracking-[0.14em]">
+                  {parsed.operatingHours.eyebrow}
+                </p>
+                <h3 className="mt-2 text-lg font-semibold uppercase text-foreground">
+                  {parsed.operatingHours.heading}
+                </h3>
                 <dl className="mt-3 space-y-2 text-sm text-muted-foreground">
                   <div className="flex justify-between border-b border-border/50 pb-1.5">
                     <span>Monday – Friday:</span>
-                    <span className="font-mono text-foreground">08:00 – 17:00</span>
+                    <span className="font-mono text-foreground">
+                      {parsed.operatingHours.mondayFriday}
+                    </span>
                   </div>
                   <div className="flex justify-between border-b border-border/50 pb-1.5">
                     <span>Saturday:</span>
-                    <span className="font-mono text-foreground">08:00 – 13:00</span>
+                    <span className="font-mono text-foreground">
+                      {parsed.operatingHours.saturday}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Sunday:</span>
-                    <span className="font-mono text-muted-foreground">Closed</span>
+                    <span className="font-mono text-muted-foreground">
+                      {parsed.operatingHours.sunday}
+                    </span>
                   </div>
                 </dl>
               </div>
               <p className="label-tech mt-6 border-t border-border pt-4">
-                Timezone: Western Indonesia (UTC+7)
+                {parsed.operatingHours.timezone.toLowerCase().startsWith("timezone")
+                  ? parsed.operatingHours.timezone
+                  : `Timezone: ${parsed.operatingHours.timezone}`}
               </p>
             </div>
           </div>

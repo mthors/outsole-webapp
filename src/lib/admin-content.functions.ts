@@ -17,19 +17,46 @@ export const allowedContentKeys = [
 export const contentKeyEnum = z.enum(allowedContentKeys);
 export type ContentKey = z.infer<typeof contentKeyEnum>;
 
-export const updateSiteContentSchema = z.object({
-  content_key: contentKeyEnum,
-  title: z
-    .string()
-    .trim()
-    .min(1, "Title is required")
-    .max(255, "Title must not exceed 255 characters"),
-  content: z
-    .string()
-    .trim()
-    .min(1, "Content is required")
-    .max(5000, "Content must not exceed 5000 characters"),
-});
+import { contactContentSchema } from "./contact-content";
+
+export const updateSiteContentSchema = z
+  .object({
+    content_key: contentKeyEnum,
+    title: z
+      .string()
+      .trim()
+      .min(1, "Title is required")
+      .max(255, "Title must not exceed 255 characters"),
+    content: z
+      .string()
+      .trim()
+      .min(1, "Content is required")
+      .max(5000, "Content must not exceed 5000 characters"),
+  })
+  .superRefine((val, ctx) => {
+    if (val.content_key === "contact_information") {
+      try {
+        const parsed = JSON.parse(val.content);
+        const res = contactContentSchema.safeParse(parsed);
+        if (!res.success) {
+          for (const issue of res.error.issues) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `${issue.path.join(".")}: ${issue.message}`,
+              path: ["content", ...issue.path],
+            });
+          }
+        }
+      } catch {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            "Contact information content must be a valid JSON representation matching the contact schema",
+          path: ["content"],
+        });
+      }
+    }
+  });
 
 export type UpdateSiteContentInput = z.infer<typeof updateSiteContentSchema>;
 
