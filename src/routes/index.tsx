@@ -17,12 +17,12 @@ const featuredQuery = queryOptions({
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Outsole Works — Rubber Outsole Manufacturer, OEM & ODM" },
+      { title: "ODE Outsole — Rubber Outsole Manufacturer, OEM & ODM" },
       {
         name: "description",
         content: "Engineered rubber outsoles for footwear brands. Browse the collection, compare compounds and request samples.",
       },
-      { property: "og:title", content: "Outsole Works — Rubber Outsole Manufacturer" },
+      { property: "og:title", content: "ODE Outsole — Rubber Outsole Manufacturer" },
       {
         property: "og:description",
         content: "Engineered rubber outsoles, OEM and ODM development, and sampling for footwear brands.",

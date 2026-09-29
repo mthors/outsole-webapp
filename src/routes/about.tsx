@@ -13,13 +13,13 @@ const aboutContentQuery = queryOptions({
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About Us — Outsole Works | Rubber Outsole Engineering & Manufacturing" },
+      { title: "About Us — ODE Outsole | Rubber Outsole Engineering & Manufacturing" },
       {
         name: "description",
         content:
-          "Outsole Works specializes in high-performance rubber outsole engineering, OEM tooling transfer, and ODM development for global footwear brands.",
+          "ODE Outsole specializes in high-performance rubber outsole engineering, OEM tooling transfer, and ODM development for global footwear brands.",
       },
-      { property: "og:title", content: "About Us — Outsole Works" },
+      { property: "og:title", content: "About Us — ODE Outsole" },
       {
         property: "og:description",
         content:

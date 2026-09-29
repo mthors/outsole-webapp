@@ -18,7 +18,7 @@ export function SiteHeader() {
           <span className="grid h-8 w-8 place-items-center bg-primary font-mono text-sm font-bold text-primary-foreground">
             OS
           </span>
-          <span className="text-sm font-bold uppercase tracking-[0.2em]">Outsole Works</span>
+          <span className="text-sm font-bold uppercase tracking-[0.2em]">ODE Outsole</span>
         </Link>
         <nav className="hidden items-center gap-8 md:flex">
           {NAV.map((n) => (

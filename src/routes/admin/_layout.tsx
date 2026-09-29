@@ -36,8 +36,8 @@ function AdminLayout() {
       <Toaster position="top-right" />
       <aside className="admin-sidebar">
         <div className="admin-logo">
-          <span className="admin-logo-mark">OW</span>
-          <span className="admin-logo-text">Outsole Works</span>
+          <span className="admin-logo-mark">ODE</span>
+          <span className="admin-logo-text">ODE Outsole</span>
         </div>
         <nav className="admin-nav">
           <Link

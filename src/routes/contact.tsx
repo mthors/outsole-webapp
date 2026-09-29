@@ -13,17 +13,17 @@ const contactContentQuery = queryOptions({
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact Us — Outsole Works | Technical Sales & Facility Inquiries" },
+      { title: "Contact Us — ODE Outsole | Technical Sales & Facility Inquiries" },
       {
         name: "description",
         content:
-          "Connect with Outsole Works technical sales, mold engineering, and production teams. Request physical samples or schedule factory tooling consultations.",
+          "Connect with ODE Outsole technical sales, mold engineering, and production teams. Request physical samples or schedule factory tooling consultations.",
       },
-      { property: "og:title", content: "Contact Us — Outsole Works" },
+      { property: "og:title", content: "Contact Us — ODE Outsole" },
       {
         property: "og:description",
         content:
-          "Connect with Outsole Works technical sales, mold engineering, and factory facilities.",
+          "Connect with ODE Outsole technical sales, mold engineering, and factory facilities.",
       },
     ],
   }),
@@ -63,7 +63,7 @@ function ContactPage() {
             <span className="rule-accent" />
             <p className="label-tech mt-6">Get in Touch · Facilities & Direct Sales</p>
             <h1 className="display-xl mt-5">
-              {contact?.title ?? "Contact Outsole Works"}
+              {contact?.title ?? "Contact ODE Outsole"}
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground md:text-xl">
               {clean(contact?.content) ||
@@ -86,7 +86,7 @@ function ContactPage() {
                 <p className="data-mono text-xs text-primary mt-6 uppercase tracking-[0.14em]">Facility</p>
                 <h3 className="mt-2 text-lg font-semibold uppercase text-foreground">Factory Plant</h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  Outsole Works Manufacturing Plant<br />
+                  ODE Outsole Manufacturing Plant<br />
                   Plot 18, Industrial Footwear Zone<br />
                   Rubber Compounding Complex<br />
                   Banten 15710, Indonesia
@@ -109,10 +109,10 @@ function ContactPage() {
                   Send technical blueprints, 3D bottom-unit files, or inquiry specifications:
                 </p>
                 <a
-                  href="mailto:sales@outsoleworks.com"
+                  href="mailto:sales@odeoutsole.com"
                   className="mt-3 inline-block font-mono text-sm font-semibold text-primary hover:underline"
                 >
-                  sales@outsoleworks.com
+                  sales@odeoutsole.com
                 </a>
               </div>
               <p className="label-tech mt-6 border-t border-border pt-4">

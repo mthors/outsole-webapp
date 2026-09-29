@@ -1141,11 +1141,11 @@ export function AdminInquiriesPage() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <a
                 href={`mailto:${activeInquiry.email}?subject=${encodeURIComponent(
-                  `Re: Sample Request — ${activeInquiry.outsole ? `${activeInquiry.outsole.name} (${activeInquiry.outsole.model_number})` : "Outsole Works"}`,
+                  `Re: Sample Request — ${activeInquiry.outsole ? `${activeInquiry.outsole.name} (${activeInquiry.outsole.model_number})` : "ODE Outsole"}`,
                 )}&body=${encodeURIComponent(
-                  `Dear ${activeInquiry.client_name},\n\nThank you for reaching out to Outsole Works regarding your footwear program${
+                  `Dear ${activeInquiry.client_name},\n\nThank you for reaching out to ODE Outsole regarding your footwear program${
                     activeInquiry.outsole ? ` and the ${activeInquiry.outsole.name} (${activeInquiry.outsole.model_number})` : ""
-                  }.\n\nBest regards,\nOutsole Works Team`,
+                  }.\n\nBest regards,\nODE Outsole Team`,
                 )}`}
                 style={{
                   display: "inline-flex",

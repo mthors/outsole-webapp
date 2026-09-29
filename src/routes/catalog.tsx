@@ -43,9 +43,9 @@ export const Route = createFileRoute("/catalog")({
   }),
   head: () => ({
     meta: [
-      { title: "Outsole Catalog — Outsole Works" },
+      { title: "Outsole Catalog — ODE Outsole" },
       { name: "description", content: "Explore our outsole portfolio by application, material, traction and technical specification." },
-      { property: "og:title", content: "Outsole Catalog — Outsole Works" },
+      { property: "og:title", content: "Outsole Catalog — ODE Outsole" },
       { property: "og:description", content: "Explore our outsole portfolio by application, material, traction and technical specification." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

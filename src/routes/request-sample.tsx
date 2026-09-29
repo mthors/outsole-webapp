@@ -27,9 +27,9 @@ export const Route = createFileRoute("/request-sample")({
   },
   head: () => ({
     meta: [
-      { title: "Request a Sample — Outsole Works" },
+      { title: "Request a Sample — ODE Outsole" },
       { name: "description", content: "Request outsole samples for your footwear program." },
-      { property: "og:title", content: "Request a Sample — Outsole Works" },
+      { property: "og:title", content: "Request a Sample — ODE Outsole" },
       { property: "og:description", content: "Request outsole samples for your footwear program." },
     ],
   }),

@@ -192,7 +192,7 @@ async function runTests() {
   // Valid schema test
   const validPayload = {
     content_key: "about_company",
-    title: "Outsole Works Factory Profile",
+    title: "ODE Outsole Factory Profile",
     content: "Engineered rubber production since 2012.",
   };
   const validResult = updateSiteContentSchema.safeParse(validPayload);
@@ -253,7 +253,7 @@ async function runTests() {
 
   const testKey = "about_company";
   const originalRow = baselineMap.get(testKey);
-  const testModifiedTitle = "Outsole Works — Technical Rubber Facility [TEST]";
+  const testModifiedTitle = "ODE Outsole — Technical Rubber Facility [TEST]";
   const testModifiedContent =
     "Over 12 years of specialized compression molding and high-abrasion compound formulation in our certified facility. [TEST]";
 

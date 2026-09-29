@@ -76,7 +76,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Outsole Works" },
+      { title: "ODE Outsole" },
       { name: "description", content: "Rubber outsole manufacturer for footwear brands." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
