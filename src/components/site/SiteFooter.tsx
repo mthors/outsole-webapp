@@ -1,6 +1,9 @@
 import { Link } from "@tanstack/react-router";
+import { useI18n } from "@/lib/i18n";
 
 export function SiteFooter() {
+  const { dict } = useI18n();
+
   return (
     <footer className="border-t border-border bg-surface">
       <div className="shell grid gap-10 py-14 md:grid-cols-4">
@@ -13,15 +16,15 @@ export function SiteFooter() {
         <div>
           <p className="label-tech">Explore</p>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><Link to="/catalog" className="hover:text-primary">Catalog</Link></li>
-            <li><Link to="/about" className="hover:text-primary">About</Link></li>
-            <li><Link to="/contact" className="hover:text-primary">Contact</Link></li>
+            <li><Link to="/catalog" className="hover:text-primary">{dict.nav.catalog}</Link></li>
+            <li><Link to="/about" className="hover:text-primary">{dict.nav.about}</Link></li>
+            <li><Link to="/contact" className="hover:text-primary">{dict.nav.contact}</Link></li>
           </ul>
         </div>
         <div>
           <p className="label-tech">Sampling</p>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><Link to="/request-sample" className="hover:text-primary">Request a Sample</Link></li>
+            <li><Link to="/request-sample" className="hover:text-primary">{dict.nav.requestSample}</Link></li>
           </ul>
         </div>
       </div>

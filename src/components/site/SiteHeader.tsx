@@ -1,16 +1,20 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-
-const NAV = [
-  { to: "/", label: "Home" },
-  { to: "/catalog", label: "Catalog" },
-  { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
-] as const;
+import { useI18n } from "@/lib/i18n";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const { dict } = useI18n();
+
+  const nav = [
+    { to: "/", label: dict.nav.home },
+    { to: "/catalog", label: dict.nav.catalog },
+    { to: "/about", label: dict.nav.about },
+    { to: "/contact", label: dict.nav.contact },
+  ] as const;
+
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
       <div className="shell flex h-16 items-center justify-between gap-6">
@@ -21,7 +25,7 @@ export function SiteHeader() {
           <span className="text-sm font-bold uppercase tracking-[0.2em]">ODE Outsole</span>
         </Link>
         <nav className="hidden items-center gap-8 md:flex">
-          {NAV.map((n) => (
+          {nav.map((n) => (
             <Link
               key={n.to}
               to={n.to}
@@ -33,12 +37,13 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <LanguageSwitcher />
           <Link
             to="/request-sample"
             className="hidden bg-primary px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-primary-foreground transition-opacity hover:opacity-90 sm:inline-flex"
           >
-            Request a Sample
+            {dict.nav.requestSample}
           </Link>
           <button
             type="button"
@@ -54,7 +59,13 @@ export function SiteHeader() {
       {open && (
         <nav className="border-t border-border bg-background md:hidden">
           <div className="shell flex flex-col py-4">
-            {NAV.map((n) => (
+            <div className="flex items-center justify-between border-b border-border pb-3 mb-2">
+              <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
+                {dict.common.language}
+              </span>
+              <LanguageSwitcher />
+            </div>
+            {nav.map((n) => (
               <Link
                 key={n.to}
                 to={n.to}
@@ -71,7 +82,7 @@ export function SiteHeader() {
               onClick={() => setOpen(false)}
               className="mt-5 bg-primary py-4 text-center text-sm font-semibold uppercase tracking-[0.14em] text-primary-foreground"
             >
-              Request a Sample
+              {dict.nav.requestSample}
             </Link>
           </div>
         </nav>
@@ -79,3 +90,4 @@ export function SiteHeader() {
     </header>
   );
 }
+
