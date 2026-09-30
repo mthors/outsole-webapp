@@ -72,15 +72,15 @@ function ContactNotFound() {
 }
 
 import {
-  parseContactContent,
   formatPhoneLink,
   formatWhatsAppLink,
 } from "@/lib/contact-content";
+import { getLocalizedContact, getLocalizedContent } from "@/lib/content-locale";
 
 const clean = (s?: string | null) => (s ?? "").replace(/^Editable placeholder\.?\s*/i, "");
 
 function ContactPage() {
-  const { dict } = useI18n();
+  const { dict, locale } = useI18n();
   const { data } = useSuspenseQuery(contactContentQuery);
   const { data: hero } = useSuspenseQuery(interiorHeroQuery);
   const contentMap = Object.fromEntries(
@@ -88,7 +88,8 @@ function ContactPage() {
   );
 
   const contact = contentMap["contact_information"];
-  const parsed = parseContactContent(contact?.content);
+  const localized = getLocalizedContent(contact, locale);
+  const parsed = getLocalizedContact(contact, locale);
   const phoneHref = formatPhoneLink(parsed.phoneWhatsapp.phone);
   const waHref = formatWhatsAppLink(parsed.phoneWhatsapp.whatsapp);
 
@@ -96,11 +97,12 @@ function ContactPage() {
     <>
       <InteriorHero
         config={hero.config}
+        config_en={hero.config_en}
         imageUrl={hero.imageUrl}
         eyebrow={dict.contact.eyebrow}
-        title={contact?.title ?? dict.contact.defaultTitle}
+        title={localized.title || dict.contact.defaultTitle}
         description={parsed.intro ||
-          clean(contact?.content) ||
+          clean(localized.content) ||
           dict.contact.defaultDescription}
       />
 

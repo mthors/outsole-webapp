@@ -5,6 +5,7 @@ import heroImg from "@/assets/hero-outsole.jpg";
 import { getFeatured } from "@/lib/public-catalog.functions";
 import { hardnessLabel, primaryImage, type Outsole } from "@/lib/catalog-types";
 import { useI18n } from "@/lib/i18n";
+import { getLocalizedContent } from "@/lib/content-locale";
 
 const featuredQuery = queryOptions({
   queryKey: ["home-featured"],
@@ -63,11 +64,11 @@ function HomeNotFound() {
 const clean = (s?: string | null) => (s ?? "").replace(/^Editable placeholder\.?\s*/i, "");
 
 function Home() {
-  const { dict } = useI18n();
+  const { dict, locale } = useI18n();
   const { data } = useSuspenseQuery(featuredQuery);
   const content = Object.fromEntries(data.content.map((c) => [c.content_key, c]));
-  const hero = content["homepage_hero"];
-  const caps = content["homepage_capabilities"];
+  const heroLocalized = getLocalizedContent(content["homepage_hero"], locale);
+  const capsLocalized = getLocalizedContent(content["homepage_capabilities"], locale);
 
   return (
     <>
@@ -83,10 +84,10 @@ function Home() {
           <span className="rule-accent" />
           <p className="label-tech mt-6">{dict.home.hero.eyebrow}</p>
           <h1 className="display-xl mt-5 max-w-4xl">
-            {hero?.title ?? dict.home.hero.defaultTitle}
+            {heroLocalized.title || dict.home.hero.defaultTitle}
           </h1>
           <p className="mt-6 max-w-xl text-base text-muted-foreground md:text-lg">
-            {clean(hero?.content) || dict.home.hero.defaultContent}
+            {clean(heroLocalized.content) || dict.home.hero.defaultContent}
           </p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <Link
@@ -146,8 +147,8 @@ function Home() {
 
       {/* Capability */}
       <section className="shell py-20 md:py-28">
-        <SectionHead index="03" eyebrow={caps?.title ?? dict.home.capability.eyebrow} title={dict.home.capability.title} />
-        {caps?.content && <p className="mt-6 max-w-2xl text-muted-foreground">{clean(caps.content)}</p>}
+        <SectionHead index="03" eyebrow={capsLocalized.title || dict.home.capability.eyebrow} title={dict.home.capability.title} />
+        {capsLocalized.content && <p className="mt-6 max-w-2xl text-muted-foreground">{clean(capsLocalized.content)}</p>}
         <div className="mt-12 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
           {[
             ["OEM", dict.home.capability.items.oemDesc],

@@ -166,6 +166,7 @@ function CatalogPage() {
     <>
       <InteriorHero
         config={hero.config}
+        config_en={hero.config_en}
         imageUrl={hero.imageUrl}
         eyebrow={dict.catalog.eyebrow}
         title={dict.catalog.title}

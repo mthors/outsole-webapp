@@ -38,9 +38,11 @@ export const getInteriorHero = createServerFn({ method: "GET" }).handler(async (
   const entries = await fetchSiteContent();
   const heroEntry = entries.find((e) => e.content_key === "interior_hero");
   const config = parseInteriorHero(heroEntry?.content ?? null);
-  const imageUrl = config.imagePath ? await fetchInteriorHeroSignedUrl(config.imagePath) : null;
+  const config_en = parseInteriorHero(heroEntry?.content_en ?? null);
+  const imagePath = config.imagePath || config_en.imagePath;
+  const imageUrl = imagePath ? await fetchInteriorHeroSignedUrl(imagePath) : null;
 
-  return { config, imageUrl };
+  return { config, config_en, imageUrl };
 });
 
 export const getSampleOptions = createServerFn({ method: "GET" }).handler(async () => {

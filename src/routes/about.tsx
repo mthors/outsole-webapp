@@ -4,6 +4,7 @@ import { ArrowRight, CheckCircle2, Cog, Layers } from "lucide-react";
 import { getSiteContent, getInteriorHero } from "@/lib/public-catalog.functions";
 import { InteriorHero } from "@/components/site/InteriorHero";
 import { useI18n } from "@/lib/i18n";
+import { getLocalizedContent } from "@/lib/content-locale";
 
 const aboutContentQuery = queryOptions({
   queryKey: ["site-content-about"],
@@ -74,25 +75,26 @@ function AboutNotFound() {
 const clean = (s?: string | null) => (s ?? "").replace(/^Editable placeholder\.?\s*/i, "");
 
 function AboutPage() {
-  const { dict } = useI18n();
+  const { dict, locale } = useI18n();
   const { data } = useSuspenseQuery(aboutContentQuery);
   const { data: hero } = useSuspenseQuery(interiorHeroQuery);
   const contentMap = Object.fromEntries(
     data.content.map((item) => [item.content_key, item]),
   );
 
-  const company = contentMap["about_company"];
-  const oem = contentMap["about_oem"];
-  const odm = contentMap["about_odm"];
+  const companyLocalized = getLocalizedContent(contentMap["about_company"], locale);
+  const oemLocalized = getLocalizedContent(contentMap["about_oem"], locale);
+  const odmLocalized = getLocalizedContent(contentMap["about_odm"], locale);
 
   return (
     <>
       <InteriorHero
         config={hero.config}
+        config_en={hero.config_en}
         imageUrl={hero.imageUrl}
         eyebrow={dict.about.eyebrow}
-        title={company?.title ?? dict.about.defaultTitle}
-        description={clean(company?.content) || dict.about.defaultDescription}
+        title={companyLocalized.title || dict.about.defaultTitle}
+        description={clean(companyLocalized.content) || dict.about.defaultDescription}
       />
 
       {/* Quick Technical Highlights */}
@@ -143,10 +145,10 @@ function AboutPage() {
                 <span className="text-primary">01</span> / {dict.about.oem.eyebrow}
               </p>
               <h2 className="display-lg mt-4">
-                {oem?.title ?? "OEM Manufacturing"}
+                {oemLocalized.title || "OEM Manufacturing"}
               </h2>
               <p className="mt-6 text-base leading-relaxed text-muted-foreground md:text-lg">
-                {clean(oem?.content) ||
+                {clean(oemLocalized.content) ||
                   "Precision build-to-print production: tooling transfer, compound matching, rigorous quality control, and dependable shipping lead times."}
               </p>
             </div>
@@ -201,10 +203,10 @@ function AboutPage() {
                 <span className="text-primary">02</span> / {dict.about.odm.eyebrow}
               </p>
               <h2 className="display-lg mt-4">
-                {odm?.title ?? "ODM Development"}
+                {odmLocalized.title || "ODM Development"}
               </h2>
               <p className="mt-6 text-base leading-relaxed text-muted-foreground md:text-lg">
-                {clean(odm?.content) ||
+                {clean(odmLocalized.content) ||
                   "In-house tread design development: concept rendering, 3D bottom-unit modeling, rapid prototyping, and sampling cycles tailored to your brand identity."}
               </p>
             </div>

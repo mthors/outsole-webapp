@@ -133,6 +133,7 @@ function RequestSamplePage() {
     <>
       <InteriorHero
         config={hero.config}
+        config_en={hero.config_en}
         imageUrl={hero.imageUrl}
         eyebrow={dict.sample.eyebrow}
         title={dict.sample.title}

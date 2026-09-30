@@ -14,6 +14,8 @@ import type { InteriorHeroContent } from "@/lib/interior-hero";
 interface InteriorHeroProps {
   /** Parsed CMS configuration from interior_hero site_content entry */
   config: InteriorHeroContent;
+  /** Optional English CMS configuration */
+  config_en?: InteriorHeroContent | null;
   /** Pre-generated signed URL for the image, or null for dark fallback */
   imageUrl: string | null;
   /** Per-page override: small uppercase label above the headline */
@@ -26,10 +28,11 @@ interface InteriorHeroProps {
 
 import { useI18n } from "@/lib/i18n";
 
-export function InteriorHero({ config, imageUrl, eyebrow, title, description }: InteriorHeroProps) {
+export function InteriorHero({ config, config_en, imageUrl, eyebrow, title, description }: InteriorHeroProps) {
   const { isIndonesian } = useI18n();
-  const altText = config.altText || (isIndonesian ? "Fasilitas manufaktur ODE Outsole" : "ODE Outsole manufacturing facility");
-  const desc = description ?? config.description ?? "";
+  const activeConfig = !isIndonesian && config_en ? config_en : config;
+  const altText = activeConfig.altText || (isIndonesian ? "Fasilitas manufaktur ODE Outsole" : "ODE Outsole manufacturing facility");
+  const desc = description ?? activeConfig.description ?? "";
 
   return (
     <section

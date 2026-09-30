@@ -34,21 +34,36 @@ export const updateSiteContentSchema = z
       .trim()
       .min(1, "Content is required")
       .max(5000, "Content must not exceed 5000 characters"),
+    title_en: z
+      .string()
+      .trim()
+      .max(255, "English title must not exceed 255 characters")
+      .nullable()
+      .optional(),
+    content_en: z
+      .string()
+      .trim()
+      .max(5000, "English content must not exceed 5000 characters")
+      .nullable()
+      .optional(),
   })
   .superRefine((val, ctx) => {
     function validateJsonKey(
+      raw: string | null | undefined,
+      fieldName: "content" | "content_en",
       schema: { safeParse: (v: unknown) => { success: boolean; error?: { issues: { path: (string | number)[]; message: string }[] } } },
       errorMsg: string,
     ) {
+      if (!raw || !raw.trim()) return;
       try {
-        const parsed = JSON.parse(val.content);
+        const parsed = JSON.parse(raw);
         const res = schema.safeParse(parsed);
         if (!res.success) {
           for (const issue of res.error!.issues) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
               message: `${issue.path.join(".")}: ${issue.message}`,
-              path: ["content", ...issue.path],
+              path: [fieldName, ...issue.path],
             });
           }
         }
@@ -56,22 +71,42 @@ export const updateSiteContentSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: errorMsg,
-          path: ["content"],
+          path: [fieldName],
         });
       }
     }
 
     if (val.content_key === "contact_information") {
       validateJsonKey(
+        val.content,
+        "content",
         contactContentSchema,
         "Contact information content must be a valid JSON representation matching the contact schema",
       );
+      if (val.content_en) {
+        validateJsonKey(
+          val.content_en,
+          "content_en",
+          contactContentSchema,
+          "English contact information content must be a valid JSON representation matching the contact schema",
+        );
+      }
     }
     if (val.content_key === "interior_hero") {
       validateJsonKey(
+        val.content,
+        "content",
         interiorHeroSchema,
         "Interior hero content must be a valid JSON representation matching the interior hero schema",
       );
+      if (val.content_en) {
+        validateJsonKey(
+          val.content_en,
+          "content_en",
+          interiorHeroSchema,
+          "English interior hero content must be a valid JSON representation matching the interior hero schema",
+        );
+      }
     }
   });
 
@@ -82,6 +117,8 @@ export type AdminSiteContentEntry = {
   content_key: ContentKey;
   title: string | null;
   content: string | null;
+  title_en: string | null;
+  content_en: string | null;
   updated_at: string;
 };
 
@@ -104,13 +141,25 @@ export const listAdminSiteContent = createServerFn({ method: "GET" }).handler(
 
     const { data, error } = await supabaseAdmin
       .from("site_content")
-      .select("id, content_key, title, content, updated_at");
+      .select("id, content_key, title, content, title_en, content_en, updated_at");
 
+    let rows: AdminSiteContentEntry[];
     if (error) {
-      throw new Error(`Failed to load site content: ${error.message}`);
+      // Fallback if title_en/content_en don't exist yet in remote database
+      const { data: legacyData, error: legacyErr } = await supabaseAdmin
+        .from("site_content")
+        .select("id, content_key, title, content, updated_at");
+      if (legacyErr) {
+        throw new Error(`Failed to load site content: ${legacyErr.message}`);
+      }
+      rows = (legacyData ?? []).map((r) => ({
+        ...r,
+        title_en: null,
+        content_en: null,
+      })) as AdminSiteContentEntry[];
+    } else {
+      rows = (data ?? []) as AdminSiteContentEntry[];
     }
-
-    const rows = (data ?? []) as AdminSiteContentEntry[];
 
     // Sort rows deterministically by allowedContentKeys index
     const sorted = [...rows].sort((a, b) => {
@@ -137,25 +186,63 @@ export const updateAdminSiteContentEntry = createServerFn({ method: "POST" })
       "@/integrations/supabase/client.server"
     );
 
-    const { data: updated, error } = await supabaseAdmin
-      .from("site_content")
-      .update({
-        title: data.title,
-        content: data.content,
-      })
-      .eq("content_key", data.content_key)
-      .select("id, content_key, title, content, updated_at")
-      .single();
+    const updatePayload: {
+      title: string;
+      content: string;
+      title_en?: string | null;
+      content_en?: string | null;
+    } = {
+      title: data.title,
+      content: data.content,
+    };
+    if (data.title_en !== undefined) {
+      updatePayload.title_en = data.title_en;
+    }
+    if (data.content_en !== undefined) {
+      updatePayload.content_en = data.content_en;
+    }
 
-    if (error || !updated) {
-      throw new Error(
-        `Failed to update site content for "${data.content_key}": ${error?.message ?? "Entry not found"}`,
-      );
+    let updated: AdminSiteContentEntry | null = null;
+    const { data: updatedData, error } = await supabaseAdmin
+      .from("site_content")
+      .update(updatePayload)
+      .eq("content_key", data.content_key)
+      .select("id, content_key, title, content, title_en, content_en, updated_at")
+      .maybeSingle();
+
+    if (error) {
+      // Fallback if title_en or content_en don't exist yet
+      const { data: legacyUpdated, error: legacyErr } = await supabaseAdmin
+        .from("site_content")
+        .update({
+          title: data.title,
+          content: data.content,
+        })
+        .eq("content_key", data.content_key)
+        .select("id, content_key, title, content, updated_at")
+        .maybeSingle();
+
+      if (legacyErr || !legacyUpdated) {
+        throw new Error(
+          `Failed to update site content for "${data.content_key}": ${legacyErr?.message ?? error.message}`,
+        );
+      }
+      updated = {
+        ...legacyUpdated,
+        title_en: data.title_en ?? null,
+        content_en: data.content_en ?? null,
+      } as AdminSiteContentEntry;
+    } else {
+      updated = updatedData as AdminSiteContentEntry;
+    }
+
+    if (!updated) {
+      throw new Error(`Failed to update site content for "${data.content_key}": Entry not found`);
     }
 
     return {
       success: true,
-      item: updated as AdminSiteContentEntry,
+      item: updated,
     };
   });
 
@@ -197,21 +284,23 @@ export const getInteriorHeroAdminPreview = createServerFn({ method: "GET" }).han
 
   const { data: row } = await supabaseAdmin
     .from("site_content")
-    .select("content")
+    .select("content, content_en")
     .eq("content_key", "interior_hero")
     .maybeSingle();
 
   const config = parseInteriorHero(row?.content ?? null);
+  const config_en = parseInteriorHero(row?.content_en ?? null);
   let imageUrl: string | null = null;
 
-  if (config.imagePath) {
+  const imagePath = config.imagePath || config_en.imagePath;
+  if (imagePath) {
     const { data: signed } = await supabaseAdmin.storage
       .from(INTERIOR_HERO_BUCKET)
-      .createSignedUrl(config.imagePath, 60 * 60); // 1-hour URL for admin
+      .createSignedUrl(imagePath, 60 * 60); // 1-hour URL for admin
     imageUrl = signed?.signedUrl ?? null;
   }
 
-  return { config, imageUrl };
+  return { config, config_en, imageUrl };
 });
 
 /**
@@ -234,10 +323,14 @@ export const uploadInteriorHeroImage = createServerFn({ method: "POST" })
           errorMap: () => ({ message: "Only JPG, PNG, and WebP images are allowed" }),
         }),
         fileBase64: z.string().min(1, "Image data is required"),
-        altText: z.string().trim().max(300, "Alt text must be 300 characters or fewer").default("ODE Outsole manufacturing facility"),
+        altText: z.string().trim().max(300, "Alt text must be 300 characters or fewer").default("Fasilitas manufaktur ODE Outsole"),
         eyebrow: z.string().trim().max(100).default(""),
         title: z.string().trim().max(200).default(""),
         description: z.string().trim().max(500).default(""),
+        altText_en: z.string().trim().max(300).default("ODE Outsole manufacturing facility").optional(),
+        eyebrow_en: z.string().trim().max(100).default("").optional(),
+        title_en: z.string().trim().max(200).default("").optional(),
+        description_en: z.string().trim().max(500).default("").optional(),
       })
       .parse(data),
   )
@@ -275,11 +368,12 @@ export const uploadInteriorHeroImage = createServerFn({ method: "POST" })
     // 4. Read current hero config to capture previous imagePath (for cleanup)
     const { data: existingRow } = await supabaseAdmin
       .from("site_content")
-      .select("content")
+      .select("content, content_en")
       .eq("content_key", "interior_hero")
       .maybeSingle();
     const prevConfig = parseInteriorHero(existingRow?.content ?? null);
-    const prevPath = prevConfig.imagePath || null;
+    const prevConfigEn = parseInteriorHero(existingRow?.content_en ?? null);
+    const prevPath = prevConfig.imagePath || prevConfigEn.imagePath || null;
 
     // 5. Construct server-controlled storage path
     const rawBase = data.fileName
@@ -309,7 +403,7 @@ export const uploadInteriorHeroImage = createServerFn({ method: "POST" })
     }
 
     // 7. Update CMS — on failure, clean up newly uploaded file to prevent orphans
-    const newContent = JSON.stringify({
+    const newContentId = JSON.stringify({
       imagePath: storagePath,
       altText: data.altText,
       eyebrow: data.eyebrow,
@@ -317,10 +411,30 @@ export const uploadInteriorHeroImage = createServerFn({ method: "POST" })
       description: data.description,
     });
 
-    const { error: cmsErr } = await supabaseAdmin
+    const newContentEn = JSON.stringify({
+      imagePath: storagePath,
+      altText: data.altText_en ?? prevConfigEn.altText ?? "ODE Outsole manufacturing facility",
+      eyebrow: data.eyebrow_en ?? prevConfigEn.eyebrow ?? "",
+      title: data.title_en ?? prevConfigEn.title ?? "",
+      description: data.description_en ?? prevConfigEn.description ?? "",
+    });
+
+    let { error: cmsErr } = await supabaseAdmin
       .from("site_content")
-      .update({ content: newContent })
+      .update({
+        content: newContentId,
+        content_en: newContentEn,
+      })
       .eq("content_key", "interior_hero");
+
+    if (cmsErr) {
+      // Fallback if content_en column doesn't exist yet
+      const fb = await supabaseAdmin
+        .from("site_content")
+        .update({ content: newContentId })
+        .eq("content_key", "interior_hero");
+      cmsErr = fb.error;
+    }
 
     if (cmsErr) {
       // CMS update failed — remove newly uploaded file to prevent orphan
@@ -358,6 +472,13 @@ export const uploadInteriorHeroImage = createServerFn({ method: "POST" })
         title: data.title,
         description: data.description,
       },
+      config_en: {
+        imagePath: storagePath,
+        altText: data.altText_en ?? prevConfigEn.altText ?? "ODE Outsole manufacturing facility",
+        eyebrow: data.eyebrow_en ?? prevConfigEn.eyebrow ?? "",
+        title: data.title_en ?? prevConfigEn.title ?? "",
+        description: data.description_en ?? prevConfigEn.description ?? "",
+      },
     };
   });
 
@@ -369,10 +490,14 @@ export const updateInteriorHeroMetadata = createServerFn({ method: "POST" })
   .validator((data: unknown) =>
     z
       .object({
-        altText: z.string().trim().max(300).default("ODE Outsole manufacturing facility"),
+        altText: z.string().trim().max(300).default("Fasilitas manufaktur ODE Outsole"),
         eyebrow: z.string().trim().max(100).default(""),
         title: z.string().trim().max(200).default(""),
         description: z.string().trim().max(500).default(""),
+        altText_en: z.string().trim().max(300).default("ODE Outsole manufacturing facility").optional(),
+        eyebrow_en: z.string().trim().max(100).default("").optional(),
+        title_en: z.string().trim().max(200).default("").optional(),
+        description_en: z.string().trim().max(500).default("").optional(),
       })
       .parse(data),
   )
@@ -386,23 +511,46 @@ export const updateInteriorHeroMetadata = createServerFn({ method: "POST" })
     // Read current config to preserve imagePath
     const { data: row } = await supabaseAdmin
       .from("site_content")
-      .select("content")
+      .select("content, content_en")
       .eq("content_key", "interior_hero")
       .maybeSingle();
 
-    const current = parseInteriorHero(row?.content ?? null);
-    const merged = JSON.stringify({
-      imagePath: current.imagePath,
+    const currentId = parseInteriorHero(row?.content ?? null);
+    const currentEn = parseInteriorHero(row?.content_en ?? null);
+    const sharedImagePath = currentId.imagePath || currentEn.imagePath || "";
+
+    const mergedId = JSON.stringify({
+      imagePath: sharedImagePath,
       altText: data.altText,
       eyebrow: data.eyebrow,
       title: data.title,
       description: data.description,
     });
 
-    const { error } = await supabaseAdmin
+    const mergedEn = JSON.stringify({
+      imagePath: sharedImagePath,
+      altText: data.altText_en ?? currentEn.altText ?? "ODE Outsole manufacturing facility",
+      eyebrow: data.eyebrow_en ?? currentEn.eyebrow ?? "",
+      title: data.title_en ?? currentEn.title ?? "",
+      description: data.description_en ?? currentEn.description ?? "",
+    });
+
+    let { error } = await supabaseAdmin
       .from("site_content")
-      .update({ content: merged })
+      .update({
+        content: mergedId,
+        content_en: mergedEn,
+      })
       .eq("content_key", "interior_hero");
+
+    if (error) {
+      // Fallback if content_en column doesn't exist yet
+      const fb = await supabaseAdmin
+        .from("site_content")
+        .update({ content: mergedId })
+        .eq("content_key", "interior_hero");
+      error = fb.error;
+    }
 
     if (error) throw new Error(`Failed to update interior hero metadata: ${error.message}`);
 

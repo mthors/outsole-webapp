@@ -154,36 +154,70 @@ export const DEFAULT_CONTACT_CONTENT: ContactContent = {
     "Connect directly with our rubber compounding engineers, tooling mold specialists, and commercial sales team for OEM programs and sample dispatch.",
   facility: {
     eyebrow: "Facility",
-    heading: "Factory Plant",
-    name: "ODE Outsole Manufacturing Plant",
+    heading: "PT ODE CIPTA SEMESTA",
+    name: "PT ODE CIPTA SEMESTA",
     address:
-      "Plot 18, Industrial Footwear Zone\nRubber Compounding Complex\nBanten 15710, Indonesia",
+      "Jl. Kidemang Singomenggolo No.KM 20 \nSidomulyo Buduran \nSidoarjo Jawa Timur \n61252",
     footerNote: "Factory audits by appointment",
   },
   directEmail: {
     eyebrow: "Direct Email",
-    heading: "Technical Sales",
-    description:
-      "Send technical blueprints, 3D bottom-unit files, or inquiry specifications:",
-    email: "sales@odeoutsole.com",
+    heading: "Outsole Sales",
+    description: "Contact Us by e-mail.",
+    email: "sales@ode.co.id",
     footerNote: "Typical response: < 24 business hours",
   },
   phoneWhatsapp: {
     eyebrow: "Direct Line",
     heading: "Phone & WhatsApp",
-    description:
-      "Speak directly with account engineers or instant-message our liaison:",
-    phone: "+62 21 555-0198 (Office)",
-    whatsapp: "+62 812-555-0199 (WhatsApp)",
+    description: "Speak directly with our sales team.",
+    phone: "(031) 8929186",
+    whatsapp: "+62 123-456-789 (WhatsApp)",
     footerNote: "English & Indonesian supported",
   },
   operatingHours: {
     eyebrow: "Schedule",
     heading: "Operating Hours",
-    mondayFriday: "08:00 – 17:00",
-    saturday: "08:00 – 13:00",
+    mondayFriday: "08:00 – 16:00",
+    saturday: "08:00 – 14:00",
     sunday: "Closed",
     timezone: "Western Indonesia (UTC+7)",
+  },
+};
+
+export const DEFAULT_CONTACT_CONTENT_ID: ContactContent = {
+  intro:
+    "Hubungi langsung tim insinyur compounding rubber, spesialis tooling mold, dan tim sales komersial kami untuk program OEM dan pengiriman sampel.",
+  facility: {
+    eyebrow: "Fasilitas",
+    heading: "PT ODE CIPTA SEMESTA",
+    name: "PT ODE CIPTA SEMESTA",
+    address:
+      "Jl. Kidemang Singomenggolo No.KM 20 \nSidomulyo Buduran \nSidoarjo Jawa Timur \n61252",
+    footerNote: "Kunjungan audit pabrik berdasarkan perjanjian",
+  },
+  directEmail: {
+    eyebrow: "Email Langsung",
+    heading: "Penjualan Outsole",
+    description: "Hubungi kami melalui email untuk spesifikasi teknis dan penawaran.",
+    email: "sales@ode.co.id",
+    footerNote: "Respons biasanya dalam < 24 jam kerja",
+  },
+  phoneWhatsapp: {
+    eyebrow: "Saluran Langsung",
+    heading: "Telepon & WhatsApp",
+    description: "Bicara langsung dengan tim penjualan kami.",
+    phone: "(031) 8929186",
+    whatsapp: "+62 123-456-789 (WhatsApp)",
+    footerNote: "Melayani Bahasa Indonesia & English",
+  },
+  operatingHours: {
+    eyebrow: "Jadwal Operasional",
+    heading: "Jam Operasional",
+    mondayFriday: "08:00 – 16:00",
+    saturday: "08:00 – 14:00",
+    sunday: "Tutup",
+    timezone: "Waktu Indonesia Barat (WIB / UTC+7)",
   },
 };
 

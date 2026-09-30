@@ -13,6 +13,8 @@ import {
 import {
   parseContactContent,
   contactContentSchema,
+  DEFAULT_CONTACT_CONTENT,
+  DEFAULT_CONTACT_CONTENT_ID,
   type ContactContent,
 } from "@/lib/contact-content";
 import { parseInteriorHero, type InteriorHeroConfig } from "@/lib/interior-hero";
@@ -295,11 +297,17 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
 
   const [title, setTitle] = useState(entry.title ?? "");
   const [content, setContent] = useState(entry.content ?? "");
+  const [titleEn, setTitleEn] = useState(entry.title_en ?? "");
+  const [contentEn, setContentEn] = useState(entry.content_en ?? "");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  const isDirty = (entry.title ?? "") !== title || (entry.content ?? "") !== content;
+  const isDirty =
+    (entry.title ?? "") !== title ||
+    (entry.content ?? "") !== content ||
+    (entry.title_en ?? "") !== titleEn ||
+    (entry.content_en ?? "") !== contentEn;
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
@@ -308,21 +316,31 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
 
     const trimmedTitle = title.trim();
     const trimmedContent = content.trim();
+    const trimmedTitleEn = titleEn.trim();
+    const trimmedContentEn = contentEn.trim();
 
     if (!trimmedTitle) {
-      setErrorMsg("Title cannot be empty.");
+      setErrorMsg("Indonesian title cannot be empty.");
       return;
     }
     if (trimmedTitle.length > 255) {
-      setErrorMsg("Title must not exceed 255 characters.");
+      setErrorMsg("Indonesian title must not exceed 255 characters.");
       return;
     }
     if (!trimmedContent) {
-      setErrorMsg("Content cannot be empty.");
+      setErrorMsg("Indonesian content cannot be empty.");
       return;
     }
     if (trimmedContent.length > 5000) {
-      setErrorMsg("Content must not exceed 5000 characters.");
+      setErrorMsg("Indonesian content must not exceed 5000 characters.");
+      return;
+    }
+    if (trimmedTitleEn.length > 255) {
+      setErrorMsg("English title must not exceed 255 characters.");
+      return;
+    }
+    if (trimmedContentEn.length > 5000) {
+      setErrorMsg("English content must not exceed 5000 characters.");
       return;
     }
 
@@ -333,9 +351,11 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
           content_key: entry.content_key,
           title: trimmedTitle,
           content: trimmedContent,
+          title_en: trimmedTitleEn.length > 0 ? trimmedTitleEn : null,
+          content_en: trimmedContentEn.length > 0 ? trimmedContentEn : null,
         },
       });
-      setSuccessMsg("Changes saved successfully!");
+      setSuccessMsg("Bilingual changes saved successfully!");
       toast.success(`Updated "${meta.friendlyTitle}"`);
       await onSaved();
       setTimeout(() => setSuccessMsg(null), 4000);
@@ -351,6 +371,8 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
   function handleReset() {
     setTitle(entry.title ?? "");
     setContent(entry.content ?? "");
+    setTitleEn(entry.title_en ?? "");
+    setContentEn(entry.content_en ?? "");
     setErrorMsg(null);
     setSuccessMsg(null);
   }
@@ -500,75 +522,209 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
           </div>
         )}
 
-        {/* Title Field */}
-        <div className="admin-field" style={{ marginBottom: "1rem" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-            <label
-              htmlFor={`title-${entry.content_key}`}
-              className="admin-field-label"
-              style={{ fontWeight: 600 }}
-            >
-              Headline / Title
-            </label>
+        {/* Section 1: Indonesian Content */}
+        <div
+          style={{
+            marginBottom: "1.25rem",
+            padding: "1rem 1.25rem",
+            background: "oklch(0.145 0.003 285)",
+            border: "1px solid oklch(0.24 0.004 285)",
+            borderRadius: "2px",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1rem" }}>
             <span
               style={{
                 fontFamily: "var(--font-mono, monospace)",
                 fontSize: "0.6875rem",
-                color: title.length > 240 ? "oklch(0.78 0.155 71)" : "oklch(0.5 0.008 85)",
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                padding: "0.2rem 0.5rem",
+                borderRadius: "2px",
+                background: "oklch(0.78 0.155 71 / 0.15)",
+                color: "oklch(0.85 0.13 75)",
+                border: "1px solid oklch(0.78 0.155 71 / 0.3)",
               }}
             >
-              {title.length} / 255
+              Bahasa Indonesia (Default)
             </span>
           </div>
-          <input
-            id={`title-${entry.content_key}`}
-            type="text"
-            className="admin-field-input"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            disabled={isSubmitting}
-            placeholder={meta.titleHint}
-            maxLength={255}
-          />
-          <span style={{ fontSize: "0.6875rem", color: "oklch(0.55 0.008 85)" }}>
-            {meta.titleHint}
-          </span>
+
+          {/* Title Field (ID) */}
+          <div className="admin-field" style={{ marginBottom: "1rem" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+              <label
+                htmlFor={`title-${entry.content_key}`}
+                className="admin-field-label"
+                style={{ fontWeight: 600 }}
+              >
+                Headline / Title (ID)
+              </label>
+              <span
+                style={{
+                  fontFamily: "var(--font-mono, monospace)",
+                  fontSize: "0.6875rem",
+                  color: title.length > 240 ? "oklch(0.78 0.155 71)" : "oklch(0.5 0.008 85)",
+                }}
+              >
+                {title.length} / 255
+              </span>
+            </div>
+            <input
+              id={`title-${entry.content_key}`}
+              type="text"
+              className="admin-field-input"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              disabled={isSubmitting}
+              placeholder={meta.titleHint}
+              maxLength={255}
+            />
+            <span style={{ fontSize: "0.6875rem", color: "oklch(0.55 0.008 85)" }}>
+              {meta.titleHint}
+            </span>
+          </div>
+
+          {/* Content Field (ID) */}
+          <div className="admin-field">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+              <label
+                htmlFor={`content-${entry.content_key}`}
+                className="admin-field-label"
+                style={{ fontWeight: 600 }}
+              >
+                Narrative Copy / Content (ID)
+              </label>
+              <span
+                style={{
+                  fontFamily: "var(--font-mono, monospace)",
+                  fontSize: "0.6875rem",
+                  color: content.length > 4800 ? "oklch(0.78 0.155 71)" : "oklch(0.5 0.008 85)",
+                }}
+              >
+                {content.length} / 5000
+              </span>
+            </div>
+            <textarea
+              id={`content-${entry.content_key}`}
+              className="admin-field-input"
+              rows={meta.defaultRows}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              disabled={isSubmitting}
+              placeholder={meta.contentHint}
+              maxLength={5000}
+              style={{ resize: "vertical", lineHeight: 1.5 }}
+            />
+            <span style={{ fontSize: "0.6875rem", color: "oklch(0.55 0.008 85)" }}>
+              {meta.contentHint}
+            </span>
+          </div>
         </div>
 
-        {/* Content Field */}
-        <div className="admin-field" style={{ marginBottom: "1.25rem" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-            <label
-              htmlFor={`content-${entry.content_key}`}
-              className="admin-field-label"
-              style={{ fontWeight: 600 }}
-            >
-              Narrative Copy / Content
-            </label>
+        {/* Section 2: English Content */}
+        <div
+          style={{
+            marginBottom: "1.25rem",
+            padding: "1rem 1.25rem",
+            background: "oklch(0.145 0.003 285)",
+            border: "1px solid oklch(0.24 0.004 285)",
+            borderRadius: "2px",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1rem" }}>
             <span
               style={{
                 fontFamily: "var(--font-mono, monospace)",
                 fontSize: "0.6875rem",
-                color: content.length > 4800 ? "oklch(0.78 0.155 71)" : "oklch(0.5 0.008 85)",
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                padding: "0.2rem 0.5rem",
+                borderRadius: "2px",
+                background: "oklch(0.65 0.18 250 / 0.15)",
+                color: "oklch(0.8 0.12 250)",
+                border: "1px solid oklch(0.65 0.18 250 / 0.3)",
               }}
             >
-              {content.length} / 5000
+              English (EN)
+            </span>
+            <span style={{ fontSize: "0.6875rem", color: "oklch(0.55 0.008 85)" }}>
+              (Optional — falls back to Indonesian if omitted)
             </span>
           </div>
-          <textarea
-            id={`content-${entry.content_key}`}
-            className="admin-field-input"
-            rows={meta.defaultRows}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            disabled={isSubmitting}
-            placeholder={meta.contentHint}
-            maxLength={5000}
-            style={{ resize: "vertical", lineHeight: 1.5 }}
-          />
-          <span style={{ fontSize: "0.6875rem", color: "oklch(0.55 0.008 85)" }}>
-            {meta.contentHint}
-          </span>
+
+          {/* Title Field (EN) */}
+          <div className="admin-field" style={{ marginBottom: "1rem" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+              <label
+                htmlFor={`title-en-${entry.content_key}`}
+                className="admin-field-label"
+                style={{ fontWeight: 600 }}
+              >
+                Headline / Title (EN)
+              </label>
+              <span
+                style={{
+                  fontFamily: "var(--font-mono, monospace)",
+                  fontSize: "0.6875rem",
+                  color: titleEn.length > 240 ? "oklch(0.78 0.155 71)" : "oklch(0.5 0.008 85)",
+                }}
+              >
+                {titleEn.length} / 255
+              </span>
+            </div>
+            <input
+              id={`title-en-${entry.content_key}`}
+              type="text"
+              className="admin-field-input"
+              value={titleEn}
+              onChange={(e) => setTitleEn(e.target.value)}
+              disabled={isSubmitting}
+              placeholder="English headline (displayed when visitor selects English)"
+              maxLength={255}
+            />
+            <span style={{ fontSize: "0.6875rem", color: "oklch(0.55 0.008 85)" }}>
+              English headline displayed on public site when English locale is selected.
+            </span>
+          </div>
+
+          {/* Content Field (EN) */}
+          <div className="admin-field">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+              <label
+                htmlFor={`content-en-${entry.content_key}`}
+                className="admin-field-label"
+                style={{ fontWeight: 600 }}
+              >
+                Narrative Copy / Content (EN)
+              </label>
+              <span
+                style={{
+                  fontFamily: "var(--font-mono, monospace)",
+                  fontSize: "0.6875rem",
+                  color: contentEn.length > 4800 ? "oklch(0.78 0.155 71)" : "oklch(0.5 0.008 85)",
+                }}
+              >
+                {contentEn.length} / 5000
+              </span>
+            </div>
+            <textarea
+              id={`content-en-${entry.content_key}`}
+              className="admin-field-input"
+              rows={meta.defaultRows}
+              value={contentEn}
+              onChange={(e) => setContentEn(e.target.value)}
+              disabled={isSubmitting}
+              placeholder="English narrative copy (displayed when visitor selects English)"
+              maxLength={5000}
+              style={{ resize: "vertical", lineHeight: 1.5 }}
+            />
+            <span style={{ fontSize: "0.6875rem", color: "oklch(0.55 0.008 85)" }}>
+              English narrative body copy.
+            </span>
+          </div>
         </div>
 
         {/* Actions Toolbar */}
@@ -633,59 +789,101 @@ interface ContactContentCardProps {
 function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
   const meta = METADATA_MAP.contact_information;
 
-  const initialParsed = useMemo(() => parseContactContent(entry.content), [entry.content]);
-  const initialTitle = entry.title ?? "Contact ODE Outsole";
+  function parseContact(raw: string | null | undefined, isId: boolean): ContactContent {
+    if (!raw || !raw.trim()) {
+      return isId ? DEFAULT_CONTACT_CONTENT_ID : DEFAULT_CONTACT_CONTENT;
+    }
+    try {
+      const parsed = JSON.parse(raw);
+      const result = contactContentSchema.safeParse(parsed);
+      if (result.success) return result.data;
+    } catch {}
+    return isId ? DEFAULT_CONTACT_CONTENT_ID : DEFAULT_CONTACT_CONTENT;
+  }
+
+  const initialParsed = useMemo(() => parseContact(entry.content, true), [entry.content]);
+  const initialTitle = entry.title ?? "Kontak ODE Outsole";
+
+  const initialParsedEn = useMemo(() => parseContact(entry.content_en, false), [entry.content_en]);
+  const initialTitleEn = entry.title_en ?? "Contact ODE Outsole";
 
   const [title, setTitle] = useState(initialTitle);
   const [data, setData] = useState<ContactContent>(initialParsed);
+
+  const [titleEn, setTitleEn] = useState(initialTitleEn);
+  const [dataEn, setDataEn] = useState<ContactContent>(initialParsedEn);
+
+  const [contactTab, setContactTab] = useState<"all" | "id" | "en">("all");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   const isTitleDirty = title !== initialTitle;
+  const isTitleEnDirty = titleEn !== initialTitleEn;
   const isContentDirty = useMemo(() => {
     return JSON.stringify(data) !== JSON.stringify(initialParsed);
   }, [data, initialParsed]);
+  const isContentEnDirty = useMemo(() => {
+    return JSON.stringify(dataEn) !== JSON.stringify(initialParsedEn);
+  }, [dataEn, initialParsedEn]);
 
-  const isDirty = isTitleDirty || isContentDirty;
+  const isDirty = isTitleDirty || isTitleEnDirty || isContentDirty || isContentEnDirty;
 
+  // Indonesian field updaters
   function updateFacilityField(field: keyof ContactContent["facility"], value: string) {
     setData((prev) => ({
       ...prev,
-      facility: {
-        ...prev.facility,
-        [field]: value,
-      },
+      facility: { ...prev.facility, [field]: value },
     }));
   }
 
   function updateDirectEmailField(field: keyof ContactContent["directEmail"], value: string) {
     setData((prev) => ({
       ...prev,
-      directEmail: {
-        ...prev.directEmail,
-        [field]: value,
-      },
+      directEmail: { ...prev.directEmail, [field]: value },
     }));
   }
 
   function updatePhoneWhatsappField(field: keyof ContactContent["phoneWhatsapp"], value: string) {
     setData((prev) => ({
       ...prev,
-      phoneWhatsapp: {
-        ...prev.phoneWhatsapp,
-        [field]: value,
-      },
+      phoneWhatsapp: { ...prev.phoneWhatsapp, [field]: value },
     }));
   }
 
   function updateOperatingHoursField(field: keyof ContactContent["operatingHours"], value: string) {
     setData((prev) => ({
       ...prev,
-      operatingHours: {
-        ...prev.operatingHours,
-        [field]: value,
-      },
+      operatingHours: { ...prev.operatingHours, [field]: value },
+    }));
+  }
+
+  // English field updaters
+  function updateFacilityEnField(field: keyof ContactContent["facility"], value: string) {
+    setDataEn((prev) => ({
+      ...prev,
+      facility: { ...prev.facility, [field]: value },
+    }));
+  }
+
+  function updateDirectEmailEnField(field: keyof ContactContent["directEmail"], value: string) {
+    setDataEn((prev) => ({
+      ...prev,
+      directEmail: { ...prev.directEmail, [field]: value },
+    }));
+  }
+
+  function updatePhoneWhatsappEnField(field: keyof ContactContent["phoneWhatsapp"], value: string) {
+    setDataEn((prev) => ({
+      ...prev,
+      phoneWhatsapp: { ...prev.phoneWhatsapp, [field]: value },
+    }));
+  }
+
+  function updateOperatingHoursEnField(field: keyof ContactContent["operatingHours"], value: string) {
+    setDataEn((prev) => ({
+      ...prev,
+      operatingHours: { ...prev.operatingHours, [field]: value },
     }));
   }
 
@@ -696,11 +894,17 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
 
     const trimmedTitle = title.trim();
     if (!trimmedTitle) {
-      setErrorMsg("Headline / Title cannot be empty.");
+      setErrorMsg("Bahasa Indonesia Headline / Title cannot be empty.");
       return;
     }
     if (trimmedTitle.length > 255) {
-      setErrorMsg("Headline / Title must not exceed 255 characters.");
+      setErrorMsg("Bahasa Indonesia Headline / Title must not exceed 255 characters.");
+      return;
+    }
+
+    const trimmedTitleEn = titleEn.trim();
+    if (trimmedTitleEn && trimmedTitleEn.length > 255) {
+      setErrorMsg("English Headline / Title must not exceed 255 characters.");
       return;
     }
 
@@ -709,8 +913,20 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
       const firstIssue = validationResult.error.issues[0];
       const fieldPath = firstIssue ? firstIssue.path.join(" -> ") : "";
       const msg = firstIssue
-        ? `${fieldPath ? `[${fieldPath}] ` : ""}${firstIssue.message}`
-        : "Validation failed for contact information.";
+        ? `[Bahasa Indonesia ${fieldPath ? `${fieldPath}` : ""}] ${firstIssue.message}`
+        : "Validation failed for Indonesian contact information.";
+      setErrorMsg(msg);
+      toast.error(msg);
+      return;
+    }
+
+    const validationResultEn = contactContentSchema.safeParse(dataEn);
+    if (!validationResultEn.success) {
+      const firstIssue = validationResultEn.error.issues[0];
+      const fieldPath = firstIssue ? firstIssue.path.join(" -> ") : "";
+      const msg = firstIssue
+        ? `[English ${fieldPath ? `${fieldPath}` : ""}] ${firstIssue.message}`
+        : "Validation failed for English contact information.";
       setErrorMsg(msg);
       toast.error(msg);
       return;
@@ -719,15 +935,18 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
     setIsSubmitting(true);
     try {
       const serialized = JSON.stringify(validationResult.data, null, 2);
+      const serializedEn = JSON.stringify(validationResultEn.data, null, 2);
       await updateAdminSiteContentEntry({
         data: {
           content_key: "contact_information",
           title: trimmedTitle,
           content: serialized,
+          title_en: trimmedTitleEn || undefined,
+          content_en: serializedEn,
         },
       });
-      setSuccessMsg("Contact coordinates and cards updated successfully!");
-      toast.success("Updated Contact Coordinates & 4 Cards");
+      setSuccessMsg("Contact coordinates and cards updated successfully for both languages!");
+      toast.success("Updated Contact Coordinates & Cards (Bilingual)");
       await onSaved();
       setTimeout(() => setSuccessMsg(null), 4000);
     } catch (err: unknown) {
@@ -742,6 +961,8 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
   function handleReset() {
     setTitle(initialTitle);
     setData(initialParsed);
+    setTitleEn(initialTitleEn);
+    setDataEn(initialParsedEn);
     setErrorMsg(null);
     setSuccessMsg(null);
   }
@@ -766,6 +987,22 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
     alignItems: "center",
     gap: "0.5rem",
   };
+
+  const subHeaderEnStyle: React.CSSProperties = {
+    fontFamily: "var(--font-mono, monospace)",
+    fontSize: "0.75rem",
+    fontWeight: 700,
+    letterSpacing: "0.08em",
+    color: "oklch(0.8 0.12 250)",
+    textTransform: "uppercase",
+    marginBottom: "1rem",
+    display: "flex",
+    alignItems: "center",
+    gap: "0.5rem",
+  };
+
+  const showId = contactTab === "all" || contactTab === "id";
+  const showEn = contactTab === "all" || contactTab === "en";
 
   return (
     <div
@@ -829,7 +1066,7 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
               letterSpacing: "0.02em",
             }}
           >
-            Contact Page (/contact) · Facility Details & 4 Cards
+            Contact Page (/contact) · Bilingual Facility &amp; 4 Cards
           </span>
         </div>
 
@@ -858,6 +1095,49 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
             Updated: {formatDate(entry.updated_at)}
           </span>
         </div>
+      </div>
+
+      {/* Language View Switcher */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "0.5rem",
+          padding: "0.75rem 1.25rem",
+          background: "oklch(0.14 0.002 285)",
+          borderBottom: "1px solid oklch(0.22 0.004 285)",
+        }}
+      >
+        <span style={{ fontSize: "0.75rem", color: "oklch(0.6 0.008 85)", fontWeight: 500 }}>
+          View Fields:
+        </span>
+        <button
+          type="button"
+          id="contact-lang-tab-all"
+          onClick={() => setContactTab("all")}
+          className={`admin-btn ${contactTab === "all" ? "admin-btn-primary" : "admin-btn-secondary"} admin-btn-sm`}
+          style={{ fontSize: "0.6875rem", padding: "0.25rem 0.6rem" }}
+        >
+          Show Both
+        </button>
+        <button
+          type="button"
+          id="contact-lang-tab-id"
+          onClick={() => setContactTab("id")}
+          className={`admin-btn ${contactTab === "id" ? "admin-btn-primary" : "admin-btn-secondary"} admin-btn-sm`}
+          style={{ fontSize: "0.6875rem", padding: "0.25rem 0.6rem" }}
+        >
+          Bahasa Indonesia (ID){(isTitleDirty || isContentDirty) && " ●"}
+        </button>
+        <button
+          type="button"
+          id="contact-lang-tab-en"
+          onClick={() => setContactTab("en")}
+          className={`admin-btn ${contactTab === "en" ? "admin-btn-primary" : "admin-btn-secondary"} admin-btn-sm`}
+          style={{ fontSize: "0.6875rem", padding: "0.25rem 0.6rem" }}
+        >
+          English (EN){(isTitleEnDirty || isContentEnDirty) && " ●"}
+        </button>
       </div>
 
       {/* Card Form */}
@@ -912,450 +1192,966 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
           </div>
         )}
 
-        {/* 1. Page Header Block */}
-        <div style={subPanelStyle}>
-          <div style={subHeaderStyle}>
-            <span>Contact Page Header</span>
+        {/* ============================================================== */}
+        {/* SECTION 1: BAHASA INDONESIA (ID)                               */}
+        {/* ============================================================== */}
+        {showId && (
+          <div
+            style={{
+              marginBottom: showEn ? "2rem" : "1.25rem",
+              padding: "1.25rem",
+              background: "oklch(0.15 0.003 285)",
+              border: "1px solid oklch(0.78 0.155 71 / 0.4)",
+              borderRadius: "2px",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1.25rem" }}>
+              <span
+                style={{
+                  fontFamily: "var(--font-mono, monospace)",
+                  fontSize: "0.6875rem",
+                  fontWeight: 700,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  padding: "0.2rem 0.5rem",
+                  borderRadius: "2px",
+                  background: "oklch(0.78 0.155 71 / 0.15)",
+                  color: "oklch(0.85 0.13 75)",
+                  border: "1px solid oklch(0.78 0.155 71 / 0.3)",
+                }}
+              >
+                Bahasa Indonesia (ID) — Default Public
+              </span>
+            </div>
+
+            {/* 1. Page Header Block (ID) */}
+            <div style={subPanelStyle}>
+              <div style={subHeaderStyle}>
+                <span>Header Halaman Kontak</span>
+              </div>
+              <div style={{ display: "grid", gap: "1rem" }}>
+                <div className="admin-field">
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                    <label htmlFor="title-contact_information" className="admin-field-label" style={{ fontWeight: 600 }}>
+                      Judul / Headline Halaman
+                    </label>
+                    <span style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.6875rem", color: "oklch(0.5 0.008 85)" }}>
+                      {title.length} / 255
+                    </span>
+                  </div>
+                  <input
+                    id="title-contact_information"
+                    type="text"
+                    className="admin-field-input"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    disabled={isSubmitting}
+                    placeholder="Kontak ODE Outsole"
+                    maxLength={255}
+                  />
+                </div>
+
+                <div className="admin-field">
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                    <label htmlFor="contact-intro" className="admin-field-label" style={{ fontWeight: 600 }}>
+                      Deskripsi Pengantar / Intro
+                    </label>
+                    <span style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.6875rem", color: "oklch(0.5 0.008 85)" }}>
+                      {data.intro.length} / 1000
+                    </span>
+                  </div>
+                  <textarea
+                    id="contact-intro"
+                    className="admin-field-input"
+                    rows={2}
+                    value={data.intro}
+                    onChange={(e) => setData((prev) => ({ ...prev, intro: e.target.value }))}
+                    disabled={isSubmitting}
+                    placeholder="Hubungi langsung tim insinyur compounding rubber..."
+                    maxLength={1000}
+                    style={{ resize: "vertical", lineHeight: 1.5 }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 2. Facility Card (ID) */}
+            <div style={subPanelStyle}>
+              <div style={subHeaderStyle}>
+                <span>1. Kartu Fasilitas Pabrik</span>
+              </div>
+              <div style={{ display: "grid", gap: "1rem" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
+                  <div className="admin-field">
+                    <label htmlFor="contact-facility-eyebrow" className="admin-field-label">
+                      Label Seksi / Eyebrow
+                    </label>
+                    <input
+                      id="contact-facility-eyebrow"
+                      type="text"
+                      className="admin-field-input"
+                      value={data.facility.eyebrow}
+                      onChange={(e) => updateFacilityField("eyebrow", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="Fasilitas"
+                      maxLength={100}
+                    />
+                  </div>
+                  <div className="admin-field">
+                    <label htmlFor="contact-facility-heading" className="admin-field-label">
+                      Judul Kartu
+                    </label>
+                    <input
+                      id="contact-facility-heading"
+                      type="text"
+                      className="admin-field-input"
+                      value={data.facility.heading}
+                      onChange={(e) => updateFacilityField("heading", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="PT ODE CIPTA SEMESTA"
+                      maxLength={100}
+                    />
+                  </div>
+                </div>
+
+                <div className="admin-field">
+                  <label htmlFor="contact-facility-name" className="admin-field-label">
+                    Nama Entitas / Perusahaan
+                  </label>
+                  <input
+                    id="contact-facility-name"
+                    type="text"
+                    className="admin-field-input"
+                    value={data.facility.name}
+                    onChange={(e) => updateFacilityField("name", e.target.value)}
+                    disabled={isSubmitting}
+                    placeholder="PT ODE CIPTA SEMESTA"
+                    maxLength={200}
+                  />
+                </div>
+
+                <div className="admin-field">
+                  <label htmlFor="contact-facility-address" className="admin-field-label">
+                    Alamat Lengkap Fasilitas
+                  </label>
+                  <textarea
+                    id="contact-facility-address"
+                    className="admin-field-input"
+                    rows={3}
+                    value={data.facility.address}
+                    onChange={(e) => updateFacilityField("address", e.target.value)}
+                    disabled={isSubmitting}
+                    placeholder="Jl. Kidemang Singomenggolo..."
+                    maxLength={500}
+                    style={{ resize: "vertical", lineHeight: 1.5 }}
+                  />
+                </div>
+
+                <div className="admin-field">
+                  <label htmlFor="contact-facility-footernote" className="admin-field-label">
+                    Catatan Kaki
+                  </label>
+                  <input
+                    id="contact-facility-footernote"
+                    type="text"
+                    className="admin-field-input"
+                    value={data.facility.footerNote}
+                    onChange={(e) => updateFacilityField("footerNote", e.target.value)}
+                    disabled={isSubmitting}
+                    placeholder="Kunjungan audit pabrik berdasarkan perjanjian"
+                    maxLength={200}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Direct Email Card (ID) */}
+            <div style={subPanelStyle}>
+              <div style={subHeaderStyle}>
+                <span>2. Kartu Email Langsung</span>
+              </div>
+              <div style={{ display: "grid", gap: "1rem" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
+                  <div className="admin-field">
+                    <label htmlFor="contact-email-eyebrow" className="admin-field-label">
+                      Label Seksi / Eyebrow
+                    </label>
+                    <input
+                      id="contact-email-eyebrow"
+                      type="text"
+                      className="admin-field-input"
+                      value={data.directEmail.eyebrow}
+                      onChange={(e) => updateDirectEmailField("eyebrow", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="Email Langsung"
+                      maxLength={100}
+                    />
+                  </div>
+                  <div className="admin-field">
+                    <label htmlFor="contact-email-heading" className="admin-field-label">
+                      Judul Kartu
+                    </label>
+                    <input
+                      id="contact-email-heading"
+                      type="text"
+                      className="admin-field-input"
+                      value={data.directEmail.heading}
+                      onChange={(e) => updateDirectEmailField("heading", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="Penjualan Outsole"
+                      maxLength={100}
+                    />
+                  </div>
+                </div>
+
+                <div className="admin-field">
+                  <label htmlFor="contact-email-description" className="admin-field-label">
+                    Deskripsi
+                  </label>
+                  <textarea
+                    id="contact-email-description"
+                    className="admin-field-input"
+                    rows={2}
+                    value={data.directEmail.description}
+                    onChange={(e) => updateDirectEmailField("description", e.target.value)}
+                    disabled={isSubmitting}
+                    placeholder="Hubungi kami melalui email..."
+                    maxLength={500}
+                    style={{ resize: "vertical", lineHeight: 1.5 }}
+                  />
+                </div>
+
+                <div className="admin-field">
+                  <label htmlFor="contact-email-address" className="admin-field-label">
+                    Alamat Email Langsung
+                  </label>
+                  <input
+                    id="contact-email-address"
+                    type="email"
+                    className="admin-field-input"
+                    value={data.directEmail.email}
+                    onChange={(e) => updateDirectEmailField("email", e.target.value)}
+                    disabled={isSubmitting}
+                    placeholder="sales@ode.co.id"
+                    maxLength={255}
+                  />
+                </div>
+
+                <div className="admin-field">
+                  <label htmlFor="contact-email-footernote" className="admin-field-label">
+                    Catatan Kaki
+                  </label>
+                  <input
+                    id="contact-email-footernote"
+                    type="text"
+                    className="admin-field-input"
+                    value={data.directEmail.footerNote}
+                    onChange={(e) => updateDirectEmailField("footerNote", e.target.value)}
+                    disabled={isSubmitting}
+                    placeholder="Respons biasanya dalam < 24 jam kerja"
+                    maxLength={200}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 4. Phone & WhatsApp Card (ID) */}
+            <div style={subPanelStyle}>
+              <div style={subHeaderStyle}>
+                <span>3. Kartu Telepon &amp; WhatsApp</span>
+              </div>
+              <div style={{ display: "grid", gap: "1rem" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
+                  <div className="admin-field">
+                    <label htmlFor="contact-phone-eyebrow" className="admin-field-label">
+                      Label Seksi / Eyebrow
+                    </label>
+                    <input
+                      id="contact-phone-eyebrow"
+                      type="text"
+                      className="admin-field-input"
+                      value={data.phoneWhatsapp.eyebrow}
+                      onChange={(e) => updatePhoneWhatsappField("eyebrow", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="Saluran Langsung"
+                      maxLength={100}
+                    />
+                  </div>
+                  <div className="admin-field">
+                    <label htmlFor="contact-phone-heading" className="admin-field-label">
+                      Judul Kartu
+                    </label>
+                    <input
+                      id="contact-phone-heading"
+                      type="text"
+                      className="admin-field-input"
+                      value={data.phoneWhatsapp.heading}
+                      onChange={(e) => updatePhoneWhatsappField("heading", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="Telepon & WhatsApp"
+                      maxLength={100}
+                    />
+                  </div>
+                </div>
+
+                <div className="admin-field">
+                  <label htmlFor="contact-phone-description" className="admin-field-label">
+                    Deskripsi
+                  </label>
+                  <textarea
+                    id="contact-phone-description"
+                    className="admin-field-input"
+                    rows={2}
+                    value={data.phoneWhatsapp.description}
+                    onChange={(e) => updatePhoneWhatsappField("description", e.target.value)}
+                    disabled={isSubmitting}
+                    placeholder="Bicara langsung dengan tim penjualan kami..."
+                    maxLength={500}
+                    style={{ resize: "vertical", lineHeight: 1.5 }}
+                  />
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
+                  <div className="admin-field">
+                    <label htmlFor="contact-phone-number" className="admin-field-label">
+                      Nomor Telepon Kantor
+                    </label>
+                    <input
+                      id="contact-phone-number"
+                      type="text"
+                      className="admin-field-input"
+                      value={data.phoneWhatsapp.phone}
+                      onChange={(e) => updatePhoneWhatsappField("phone", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="(031) 8929186"
+                      maxLength={100}
+                    />
+                  </div>
+                  <div className="admin-field">
+                    <label htmlFor="contact-phone-whatsapp" className="admin-field-label">
+                      Nomor WhatsApp
+                    </label>
+                    <input
+                      id="contact-phone-whatsapp"
+                      type="text"
+                      className="admin-field-input"
+                      value={data.phoneWhatsapp.whatsapp}
+                      onChange={(e) => updatePhoneWhatsappField("whatsapp", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="+62 123-456-789 (WhatsApp)"
+                      maxLength={100}
+                    />
+                  </div>
+                </div>
+
+                <div className="admin-field">
+                  <label htmlFor="contact-phone-footernote" className="admin-field-label">
+                    Catatan Kaki
+                  </label>
+                  <input
+                    id="contact-phone-footernote"
+                    type="text"
+                    className="admin-field-input"
+                    value={data.phoneWhatsapp.footerNote}
+                    onChange={(e) => updatePhoneWhatsappField("footerNote", e.target.value)}
+                    disabled={isSubmitting}
+                    placeholder="Melayani Bahasa Indonesia & English"
+                    maxLength={200}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 5. Schedule / Operating Hours Card (ID) */}
+            <div style={subPanelStyle}>
+              <div style={subHeaderStyle}>
+                <span>4. Kartu Jadwal &amp; Jam Operasional</span>
+              </div>
+              <div style={{ display: "grid", gap: "1rem" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
+                  <div className="admin-field">
+                    <label htmlFor="contact-hours-eyebrow" className="admin-field-label">
+                      Label Seksi / Eyebrow
+                    </label>
+                    <input
+                      id="contact-hours-eyebrow"
+                      type="text"
+                      className="admin-field-input"
+                      value={data.operatingHours.eyebrow}
+                      onChange={(e) => updateOperatingHoursField("eyebrow", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="Jadwal Operasional"
+                      maxLength={100}
+                    />
+                  </div>
+                  <div className="admin-field">
+                    <label htmlFor="contact-hours-heading" className="admin-field-label">
+                      Judul Kartu
+                    </label>
+                    <input
+                      id="contact-hours-heading"
+                      type="text"
+                      className="admin-field-input"
+                      value={data.operatingHours.heading}
+                      onChange={(e) => updateOperatingHoursField("heading", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="Jam Operasional"
+                      maxLength={100}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
+                  <div className="admin-field">
+                    <label htmlFor="contact-hours-mondayfriday" className="admin-field-label">
+                      Jam Kerja Senin – Jumat
+                    </label>
+                    <input
+                      id="contact-hours-mondayfriday"
+                      type="text"
+                      className="admin-field-input"
+                      value={data.operatingHours.mondayFriday}
+                      onChange={(e) => updateOperatingHoursField("mondayFriday", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="08:00 – 16:00"
+                      maxLength={100}
+                    />
+                  </div>
+                  <div className="admin-field">
+                    <label htmlFor="contact-hours-saturday" className="admin-field-label">
+                      Jam Kerja Sabtu
+                    </label>
+                    <input
+                      id="contact-hours-saturday"
+                      type="text"
+                      className="admin-field-input"
+                      value={data.operatingHours.saturday}
+                      onChange={(e) => updateOperatingHoursField("saturday", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="08:00 – 14:00"
+                      maxLength={100}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
+                  <div className="admin-field">
+                    <label htmlFor="contact-hours-sunday" className="admin-field-label">
+                      Minggu &amp; Libur Nasional
+                    </label>
+                    <input
+                      id="contact-hours-sunday"
+                      type="text"
+                      className="admin-field-input"
+                      value={data.operatingHours.sunday}
+                      onChange={(e) => updateOperatingHoursField("sunday", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="Tutup"
+                      maxLength={100}
+                    />
+                  </div>
+                  <div className="admin-field">
+                    <label htmlFor="contact-hours-timezone" className="admin-field-label">
+                      Zona Waktu
+                    </label>
+                    <input
+                      id="contact-hours-timezone"
+                      type="text"
+                      className="admin-field-input"
+                      value={data.operatingHours.timezone}
+                      onChange={(e) => updateOperatingHoursField("timezone", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="Waktu Indonesia Barat (WIB / UTC+7)"
+                      maxLength={100}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div style={{ display: "grid", gap: "1rem" }}>
-            <div className="admin-field">
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                <label htmlFor="title-contact_information" className="admin-field-label" style={{ fontWeight: 600 }}>
-                  Page Headline / Title
-                </label>
-                <span style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.6875rem", color: "oklch(0.5 0.008 85)" }}>
-                  {title.length} / 255
-                </span>
-              </div>
-              <input
-                id="title-contact_information"
-                type="text"
-                className="admin-field-input"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                disabled={isSubmitting}
-                placeholder="Contact ODE Outsole"
-                maxLength={255}
-              />
+        )}
+
+        {/* ============================================================== */}
+        {/* SECTION 2: ENGLISH (EN)                                        */}
+        {/* ============================================================== */}
+        {showEn && (
+          <div
+            style={{
+              marginBottom: "1.25rem",
+              padding: "1.25rem",
+              background: "oklch(0.145 0.003 285)",
+              border: "1px solid oklch(0.65 0.18 250 / 0.4)",
+              borderRadius: "2px",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1.25rem" }}>
+              <span
+                style={{
+                  fontFamily: "var(--font-mono, monospace)",
+                  fontSize: "0.6875rem",
+                  fontWeight: 700,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  padding: "0.2rem 0.5rem",
+                  borderRadius: "2px",
+                  background: "oklch(0.65 0.18 250 / 0.15)",
+                  color: "oklch(0.8 0.12 250)",
+                  border: "1px solid oklch(0.65 0.18 250 / 0.3)",
+                }}
+              >
+                English (EN) — Bilingual Public
+              </span>
+              <span style={{ fontSize: "0.6875rem", color: "oklch(0.55 0.008 85)" }}>
+                (Shown when visitor selects English)
+              </span>
             </div>
 
-            <div className="admin-field">
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                <label htmlFor="contact-intro" className="admin-field-label" style={{ fontWeight: 600 }}>
-                  Intro Narrative / Tagline
-                </label>
-                <span style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.6875rem", color: "oklch(0.5 0.008 85)" }}>
-                  {data.intro.length} / 1000
-                </span>
+            {/* 1. Page Header Block (EN) */}
+            <div style={subPanelStyle}>
+              <div style={subHeaderEnStyle}>
+                <span>Contact Page Header (EN)</span>
               </div>
-              <textarea
-                id="contact-intro"
-                className="admin-field-input"
-                rows={2}
-                value={data.intro}
-                onChange={(e) => setData((prev) => ({ ...prev, intro: e.target.value }))}
-                disabled={isSubmitting}
-                placeholder="Connect directly with our rubber compounding engineers, tooling mold specialists, and commercial sales team for OEM programs and sample dispatch."
-                maxLength={1000}
-                style={{ resize: "vertical", lineHeight: 1.5 }}
-              />
+              <div style={{ display: "grid", gap: "1rem" }}>
+                <div className="admin-field">
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                    <label htmlFor="title-en-contact_information" className="admin-field-label" style={{ fontWeight: 600 }}>
+                      Headline / Title (EN)
+                    </label>
+                    <span style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.6875rem", color: "oklch(0.5 0.008 85)" }}>
+                      {titleEn.length} / 255
+                    </span>
+                  </div>
+                  <input
+                    id="title-en-contact_information"
+                    type="text"
+                    className="admin-field-input"
+                    value={titleEn}
+                    onChange={(e) => setTitleEn(e.target.value)}
+                    disabled={isSubmitting}
+                    placeholder="Contact ODE Outsole"
+                    maxLength={255}
+                  />
+                </div>
+
+                <div className="admin-field">
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                    <label htmlFor="contact-intro-en" className="admin-field-label" style={{ fontWeight: 600 }}>
+                      Intro Narrative / Tagline (EN)
+                    </label>
+                    <span style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.6875rem", color: "oklch(0.5 0.008 85)" }}>
+                      {dataEn.intro.length} / 1000
+                    </span>
+                  </div>
+                  <textarea
+                    id="contact-intro-en"
+                    className="admin-field-input"
+                    rows={2}
+                    value={dataEn.intro}
+                    onChange={(e) => setDataEn((prev) => ({ ...prev, intro: e.target.value }))}
+                    disabled={isSubmitting}
+                    placeholder="Connect directly with our rubber compounding engineers, tooling mold specialists, and commercial sales team..."
+                    maxLength={1000}
+                    style={{ resize: "vertical", lineHeight: 1.5 }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 2. Facility Card (EN) */}
+            <div style={subPanelStyle}>
+              <div style={subHeaderEnStyle}>
+                <span>1. Facility Card (EN)</span>
+              </div>
+              <div style={{ display: "grid", gap: "1rem" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
+                  <div className="admin-field">
+                    <label htmlFor="contact-facility-eyebrow-en" className="admin-field-label">
+                      Section Label / Eyebrow (EN)
+                    </label>
+                    <input
+                      id="contact-facility-eyebrow-en"
+                      type="text"
+                      className="admin-field-input"
+                      value={dataEn.facility.eyebrow}
+                      onChange={(e) => updateFacilityEnField("eyebrow", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="Facility"
+                      maxLength={100}
+                    />
+                  </div>
+                  <div className="admin-field">
+                    <label htmlFor="contact-facility-heading-en" className="admin-field-label">
+                      Card Heading (EN)
+                    </label>
+                    <input
+                      id="contact-facility-heading-en"
+                      type="text"
+                      className="admin-field-input"
+                      value={dataEn.facility.heading}
+                      onChange={(e) => updateFacilityEnField("heading", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="PT ODE CIPTA SEMESTA"
+                      maxLength={100}
+                    />
+                  </div>
+                </div>
+
+                <div className="admin-field">
+                  <label htmlFor="contact-facility-name-en" className="admin-field-label">
+                    Facility / Company Name
+                  </label>
+                  <input
+                    id="contact-facility-name-en"
+                    type="text"
+                    className="admin-field-input"
+                    value={dataEn.facility.name}
+                    onChange={(e) => updateFacilityEnField("name", e.target.value)}
+                    disabled={isSubmitting}
+                    placeholder="PT ODE CIPTA SEMESTA"
+                    maxLength={200}
+                  />
+                </div>
+
+                <div className="admin-field">
+                  <label htmlFor="contact-facility-address-en" className="admin-field-label">
+                    Facility Address (Line breaks preserved)
+                  </label>
+                  <textarea
+                    id="contact-facility-address-en"
+                    className="admin-field-input"
+                    rows={3}
+                    value={dataEn.facility.address}
+                    onChange={(e) => updateFacilityEnField("address", e.target.value)}
+                    disabled={isSubmitting}
+                    placeholder="Jl. Kidemang Singomenggolo..."
+                    maxLength={500}
+                    style={{ resize: "vertical", lineHeight: 1.5 }}
+                  />
+                </div>
+
+                <div className="admin-field">
+                  <label htmlFor="contact-facility-footernote-en" className="admin-field-label">
+                    Footer Note (EN)
+                  </label>
+                  <input
+                    id="contact-facility-footernote-en"
+                    type="text"
+                    className="admin-field-input"
+                    value={dataEn.facility.footerNote}
+                    onChange={(e) => updateFacilityEnField("footerNote", e.target.value)}
+                    disabled={isSubmitting}
+                    placeholder="Factory audits by appointment"
+                    maxLength={200}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Direct Email Card (EN) */}
+            <div style={subPanelStyle}>
+              <div style={subHeaderEnStyle}>
+                <span>2. Direct Email Card (EN)</span>
+              </div>
+              <div style={{ display: "grid", gap: "1rem" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
+                  <div className="admin-field">
+                    <label htmlFor="contact-email-eyebrow-en" className="admin-field-label">
+                      Section Label / Eyebrow (EN)
+                    </label>
+                    <input
+                      id="contact-email-eyebrow-en"
+                      type="text"
+                      className="admin-field-input"
+                      value={dataEn.directEmail.eyebrow}
+                      onChange={(e) => updateDirectEmailEnField("eyebrow", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="Direct Email"
+                      maxLength={100}
+                    />
+                  </div>
+                  <div className="admin-field">
+                    <label htmlFor="contact-email-heading-en" className="admin-field-label">
+                      Card Heading (EN)
+                    </label>
+                    <input
+                      id="contact-email-heading-en"
+                      type="text"
+                      className="admin-field-input"
+                      value={dataEn.directEmail.heading}
+                      onChange={(e) => updateDirectEmailEnField("heading", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="Outsole Sales"
+                      maxLength={100}
+                    />
+                  </div>
+                </div>
+
+                <div className="admin-field">
+                  <label htmlFor="contact-email-description-en" className="admin-field-label">
+                    Description (EN)
+                  </label>
+                  <textarea
+                    id="contact-email-description-en"
+                    className="admin-field-input"
+                    rows={2}
+                    value={dataEn.directEmail.description}
+                    onChange={(e) => updateDirectEmailEnField("description", e.target.value)}
+                    disabled={isSubmitting}
+                    placeholder="Contact Us by e-mail."
+                    maxLength={500}
+                    style={{ resize: "vertical", lineHeight: 1.5 }}
+                  />
+                </div>
+
+                <div className="admin-field">
+                  <label htmlFor="contact-email-address-en" className="admin-field-label">
+                    Direct Email Address
+                  </label>
+                  <input
+                    id="contact-email-address-en"
+                    type="email"
+                    className="admin-field-input"
+                    value={dataEn.directEmail.email}
+                    onChange={(e) => updateDirectEmailEnField("email", e.target.value)}
+                    disabled={isSubmitting}
+                    placeholder="sales@ode.co.id"
+                    maxLength={255}
+                  />
+                </div>
+
+                <div className="admin-field">
+                  <label htmlFor="contact-email-footernote-en" className="admin-field-label">
+                    Footer Note (EN)
+                  </label>
+                  <input
+                    id="contact-email-footernote-en"
+                    type="text"
+                    className="admin-field-input"
+                    value={dataEn.directEmail.footerNote}
+                    onChange={(e) => updateDirectEmailEnField("footerNote", e.target.value)}
+                    disabled={isSubmitting}
+                    placeholder="Typical response: < 24 business hours"
+                    maxLength={200}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 4. Phone & WhatsApp Card (EN) */}
+            <div style={subPanelStyle}>
+              <div style={subHeaderEnStyle}>
+                <span>3. Phone &amp; WhatsApp Card (EN)</span>
+              </div>
+              <div style={{ display: "grid", gap: "1rem" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
+                  <div className="admin-field">
+                    <label htmlFor="contact-phone-eyebrow-en" className="admin-field-label">
+                      Section Label / Eyebrow (EN)
+                    </label>
+                    <input
+                      id="contact-phone-eyebrow-en"
+                      type="text"
+                      className="admin-field-input"
+                      value={dataEn.phoneWhatsapp.eyebrow}
+                      onChange={(e) => updatePhoneWhatsappEnField("eyebrow", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="Direct Line"
+                      maxLength={100}
+                    />
+                  </div>
+                  <div className="admin-field">
+                    <label htmlFor="contact-phone-heading-en" className="admin-field-label">
+                      Card Heading (EN)
+                    </label>
+                    <input
+                      id="contact-phone-heading-en"
+                      type="text"
+                      className="admin-field-input"
+                      value={dataEn.phoneWhatsapp.heading}
+                      onChange={(e) => updatePhoneWhatsappEnField("heading", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="Phone & WhatsApp"
+                      maxLength={100}
+                    />
+                  </div>
+                </div>
+
+                <div className="admin-field">
+                  <label htmlFor="contact-phone-description-en" className="admin-field-label">
+                    Description (EN)
+                  </label>
+                  <textarea
+                    id="contact-phone-description-en"
+                    className="admin-field-input"
+                    rows={2}
+                    value={dataEn.phoneWhatsapp.description}
+                    onChange={(e) => updatePhoneWhatsappEnField("description", e.target.value)}
+                    disabled={isSubmitting}
+                    placeholder="Speak directly with our sales team."
+                    maxLength={500}
+                    style={{ resize: "vertical", lineHeight: 1.5 }}
+                  />
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
+                  <div className="admin-field">
+                    <label htmlFor="contact-phone-number-en" className="admin-field-label">
+                      Office Phone Number
+                    </label>
+                    <input
+                      id="contact-phone-number-en"
+                      type="text"
+                      className="admin-field-input"
+                      value={dataEn.phoneWhatsapp.phone}
+                      onChange={(e) => updatePhoneWhatsappEnField("phone", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="(031) 8929186"
+                      maxLength={100}
+                    />
+                  </div>
+                  <div className="admin-field">
+                    <label htmlFor="contact-phone-whatsapp-en" className="admin-field-label">
+                      WhatsApp Number
+                    </label>
+                    <input
+                      id="contact-phone-whatsapp-en"
+                      type="text"
+                      className="admin-field-input"
+                      value={dataEn.phoneWhatsapp.whatsapp}
+                      onChange={(e) => updatePhoneWhatsappEnField("whatsapp", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="+62 123-456-789 (WhatsApp)"
+                      maxLength={100}
+                    />
+                  </div>
+                </div>
+
+                <div className="admin-field">
+                  <label htmlFor="contact-phone-footernote-en" className="admin-field-label">
+                    Footer Note (EN)
+                  </label>
+                  <input
+                    id="contact-phone-footernote-en"
+                    type="text"
+                    className="admin-field-input"
+                    value={dataEn.phoneWhatsapp.footerNote}
+                    onChange={(e) => updatePhoneWhatsappEnField("footerNote", e.target.value)}
+                    disabled={isSubmitting}
+                    placeholder="English & Indonesian supported"
+                    maxLength={200}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 5. Schedule / Operating Hours Card (EN) */}
+            <div style={subPanelStyle}>
+              <div style={subHeaderEnStyle}>
+                <span>4. Schedule / Operating Hours Card (EN)</span>
+              </div>
+              <div style={{ display: "grid", gap: "1rem" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
+                  <div className="admin-field">
+                    <label htmlFor="contact-hours-eyebrow-en" className="admin-field-label">
+                      Section Label / Eyebrow (EN)
+                    </label>
+                    <input
+                      id="contact-hours-eyebrow-en"
+                      type="text"
+                      className="admin-field-input"
+                      value={dataEn.operatingHours.eyebrow}
+                      onChange={(e) => updateOperatingHoursEnField("eyebrow", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="Schedule"
+                      maxLength={100}
+                    />
+                  </div>
+                  <div className="admin-field">
+                    <label htmlFor="contact-hours-heading-en" className="admin-field-label">
+                      Card Heading (EN)
+                    </label>
+                    <input
+                      id="contact-hours-heading-en"
+                      type="text"
+                      className="admin-field-input"
+                      value={dataEn.operatingHours.heading}
+                      onChange={(e) => updateOperatingHoursEnField("heading", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="Operating Hours"
+                      maxLength={100}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
+                  <div className="admin-field">
+                    <label htmlFor="contact-hours-mondayfriday-en" className="admin-field-label">
+                      Monday – Friday Hours
+                    </label>
+                    <input
+                      id="contact-hours-mondayfriday-en"
+                      type="text"
+                      className="admin-field-input"
+                      value={dataEn.operatingHours.mondayFriday}
+                      onChange={(e) => updateOperatingHoursEnField("mondayFriday", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="08:00 – 16:00"
+                      maxLength={100}
+                    />
+                  </div>
+                  <div className="admin-field">
+                    <label htmlFor="contact-hours-saturday-en" className="admin-field-label">
+                      Saturday Hours
+                    </label>
+                    <input
+                      id="contact-hours-saturday-en"
+                      type="text"
+                      className="admin-field-input"
+                      value={dataEn.operatingHours.saturday}
+                      onChange={(e) => updateOperatingHoursEnField("saturday", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="08:00 – 14:00"
+                      maxLength={100}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
+                  <div className="admin-field">
+                    <label htmlFor="contact-hours-sunday-en" className="admin-field-label">
+                      Sunday Hours
+                    </label>
+                    <input
+                      id="contact-hours-sunday-en"
+                      type="text"
+                      className="admin-field-input"
+                      value={dataEn.operatingHours.sunday}
+                      onChange={(e) => updateOperatingHoursEnField("sunday", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="Closed"
+                      maxLength={100}
+                    />
+                  </div>
+                  <div className="admin-field">
+                    <label htmlFor="contact-hours-timezone-en" className="admin-field-label">
+                      Timezone
+                    </label>
+                    <input
+                      id="contact-hours-timezone-en"
+                      type="text"
+                      className="admin-field-input"
+                      value={dataEn.operatingHours.timezone}
+                      onChange={(e) => updateOperatingHoursEnField("timezone", e.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="Western Indonesia (UTC+7)"
+                      maxLength={100}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* 2. Facility Card */}
-        <div style={subPanelStyle}>
-          <div style={subHeaderStyle}>
-            <span>1. Facility Card</span>
-          </div>
-          <div style={{ display: "grid", gap: "1rem" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
-              <div className="admin-field">
-                <label htmlFor="contact-facility-eyebrow" className="admin-field-label">
-                  Section Label / Eyebrow
-                </label>
-                <input
-                  id="contact-facility-eyebrow"
-                  type="text"
-                  className="admin-field-input"
-                  value={data.facility.eyebrow}
-                  onChange={(e) => updateFacilityField("eyebrow", e.target.value)}
-                  disabled={isSubmitting}
-                  placeholder="Facility"
-                  maxLength={100}
-                />
-              </div>
-              <div className="admin-field">
-                <label htmlFor="contact-facility-heading" className="admin-field-label">
-                  Card Heading
-                </label>
-                <input
-                  id="contact-facility-heading"
-                  type="text"
-                  className="admin-field-input"
-                  value={data.facility.heading}
-                  onChange={(e) => updateFacilityField("heading", e.target.value)}
-                  disabled={isSubmitting}
-                  placeholder="Factory Plant"
-                  maxLength={100}
-                />
-              </div>
-            </div>
-
-            <div className="admin-field">
-              <label htmlFor="contact-facility-name" className="admin-field-label">
-                Facility / Company Name
-              </label>
-              <input
-                id="contact-facility-name"
-                type="text"
-                className="admin-field-input"
-                value={data.facility.name}
-                onChange={(e) => updateFacilityField("name", e.target.value)}
-                disabled={isSubmitting}
-                placeholder="ODE Outsole Manufacturing Plant"
-                maxLength={200}
-              />
-            </div>
-
-            <div className="admin-field">
-              <label htmlFor="contact-facility-address" className="admin-field-label">
-                Facility Address (Line breaks preserved)
-              </label>
-              <textarea
-                id="contact-facility-address"
-                className="admin-field-input"
-                rows={3}
-                value={data.facility.address}
-                onChange={(e) => updateFacilityField("address", e.target.value)}
-                disabled={isSubmitting}
-                placeholder="Plot 18, Industrial Footwear Zone&#10;Rubber Compounding Complex&#10;Banten 15710, Indonesia"
-                maxLength={500}
-                style={{ resize: "vertical", lineHeight: 1.5 }}
-              />
-            </div>
-
-            <div className="admin-field">
-              <label htmlFor="contact-facility-footernote" className="admin-field-label">
-                Footer Note
-              </label>
-              <input
-                id="contact-facility-footernote"
-                type="text"
-                className="admin-field-input"
-                value={data.facility.footerNote}
-                onChange={(e) => updateFacilityField("footerNote", e.target.value)}
-                disabled={isSubmitting}
-                placeholder="Factory audits by appointment"
-                maxLength={200}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* 3. Direct Email Card */}
-        <div style={subPanelStyle}>
-          <div style={subHeaderStyle}>
-            <span>2. Direct Email Card</span>
-          </div>
-          <div style={{ display: "grid", gap: "1rem" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
-              <div className="admin-field">
-                <label htmlFor="contact-email-eyebrow" className="admin-field-label">
-                  Section Label / Eyebrow
-                </label>
-                <input
-                  id="contact-email-eyebrow"
-                  type="text"
-                  className="admin-field-input"
-                  value={data.directEmail.eyebrow}
-                  onChange={(e) => updateDirectEmailField("eyebrow", e.target.value)}
-                  disabled={isSubmitting}
-                  placeholder="Direct Email"
-                  maxLength={100}
-                />
-              </div>
-              <div className="admin-field">
-                <label htmlFor="contact-email-heading" className="admin-field-label">
-                  Card Heading
-                </label>
-                <input
-                  id="contact-email-heading"
-                  type="text"
-                  className="admin-field-input"
-                  value={data.directEmail.heading}
-                  onChange={(e) => updateDirectEmailField("heading", e.target.value)}
-                  disabled={isSubmitting}
-                  placeholder="Technical Sales"
-                  maxLength={100}
-                />
-              </div>
-            </div>
-
-            <div className="admin-field">
-              <label htmlFor="contact-email-description" className="admin-field-label">
-                Description
-              </label>
-              <textarea
-                id="contact-email-description"
-                className="admin-field-input"
-                rows={2}
-                value={data.directEmail.description}
-                onChange={(e) => updateDirectEmailField("description", e.target.value)}
-                disabled={isSubmitting}
-                placeholder="Send technical blueprints, 3D bottom-unit files, or inquiry specifications:"
-                maxLength={500}
-                style={{ resize: "vertical", lineHeight: 1.5 }}
-              />
-            </div>
-
-            <div className="admin-field">
-              <label htmlFor="contact-email-address" className="admin-field-label">
-                Direct Email Address
-              </label>
-              <input
-                id="contact-email-address"
-                type="email"
-                className="admin-field-input"
-                value={data.directEmail.email}
-                onChange={(e) => updateDirectEmailField("email", e.target.value)}
-                disabled={isSubmitting}
-                placeholder="sales@odeoutsole.com"
-                maxLength={255}
-              />
-            </div>
-
-            <div className="admin-field">
-              <label htmlFor="contact-email-footernote" className="admin-field-label">
-                Footer Note
-              </label>
-              <input
-                id="contact-email-footernote"
-                type="text"
-                className="admin-field-input"
-                value={data.directEmail.footerNote}
-                onChange={(e) => updateDirectEmailField("footerNote", e.target.value)}
-                disabled={isSubmitting}
-                placeholder="Typical response: < 24 business hours"
-                maxLength={200}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* 4. Phone & WhatsApp Card */}
-        <div style={subPanelStyle}>
-          <div style={subHeaderStyle}>
-            <span>3. Phone & WhatsApp Card</span>
-          </div>
-          <div style={{ display: "grid", gap: "1rem" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
-              <div className="admin-field">
-                <label htmlFor="contact-phone-eyebrow" className="admin-field-label">
-                  Section Label / Eyebrow
-                </label>
-                <input
-                  id="contact-phone-eyebrow"
-                  type="text"
-                  className="admin-field-input"
-                  value={data.phoneWhatsapp.eyebrow}
-                  onChange={(e) => updatePhoneWhatsappField("eyebrow", e.target.value)}
-                  disabled={isSubmitting}
-                  placeholder="Direct Line"
-                  maxLength={100}
-                />
-              </div>
-              <div className="admin-field">
-                <label htmlFor="contact-phone-heading" className="admin-field-label">
-                  Card Heading
-                </label>
-                <input
-                  id="contact-phone-heading"
-                  type="text"
-                  className="admin-field-input"
-                  value={data.phoneWhatsapp.heading}
-                  onChange={(e) => updatePhoneWhatsappField("heading", e.target.value)}
-                  disabled={isSubmitting}
-                  placeholder="Phone & WhatsApp"
-                  maxLength={100}
-                />
-              </div>
-            </div>
-
-            <div className="admin-field">
-              <label htmlFor="contact-phone-description" className="admin-field-label">
-                Description
-              </label>
-              <textarea
-                id="contact-phone-description"
-                className="admin-field-input"
-                rows={2}
-                value={data.phoneWhatsapp.description}
-                onChange={(e) => updatePhoneWhatsappField("description", e.target.value)}
-                disabled={isSubmitting}
-                placeholder="Speak directly with account engineers or instant-message our liaison:"
-                maxLength={500}
-                style={{ resize: "vertical", lineHeight: 1.5 }}
-              />
-            </div>
-
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
-              <div className="admin-field">
-                <label htmlFor="contact-phone-number" className="admin-field-label">
-                  Office Phone Number
-                </label>
-                <input
-                  id="contact-phone-number"
-                  type="text"
-                  className="admin-field-input"
-                  value={data.phoneWhatsapp.phone}
-                  onChange={(e) => updatePhoneWhatsappField("phone", e.target.value)}
-                  disabled={isSubmitting}
-                  placeholder="+62 21 555-0198 (Office)"
-                  maxLength={100}
-                />
-              </div>
-              <div className="admin-field">
-                <label htmlFor="contact-phone-whatsapp" className="admin-field-label">
-                  WhatsApp Number
-                </label>
-                <input
-                  id="contact-phone-whatsapp"
-                  type="text"
-                  className="admin-field-input"
-                  value={data.phoneWhatsapp.whatsapp}
-                  onChange={(e) => updatePhoneWhatsappField("whatsapp", e.target.value)}
-                  disabled={isSubmitting}
-                  placeholder="+62 812-555-0199 (WhatsApp)"
-                  maxLength={100}
-                />
-              </div>
-            </div>
-
-            <div className="admin-field">
-              <label htmlFor="contact-phone-footernote" className="admin-field-label">
-                Footer Note
-              </label>
-              <input
-                id="contact-phone-footernote"
-                type="text"
-                className="admin-field-input"
-                value={data.phoneWhatsapp.footerNote}
-                onChange={(e) => updatePhoneWhatsappField("footerNote", e.target.value)}
-                disabled={isSubmitting}
-                placeholder="English & Indonesian supported"
-                maxLength={200}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* 5. Schedule / Operating Hours Card */}
-        <div style={subPanelStyle}>
-          <div style={subHeaderStyle}>
-            <span>4. Schedule / Operating Hours Card</span>
-          </div>
-          <div style={{ display: "grid", gap: "1rem" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
-              <div className="admin-field">
-                <label htmlFor="contact-hours-eyebrow" className="admin-field-label">
-                  Section Label / Eyebrow
-                </label>
-                <input
-                  id="contact-hours-eyebrow"
-                  type="text"
-                  className="admin-field-input"
-                  value={data.operatingHours.eyebrow}
-                  onChange={(e) => updateOperatingHoursField("eyebrow", e.target.value)}
-                  disabled={isSubmitting}
-                  placeholder="Schedule"
-                  maxLength={100}
-                />
-              </div>
-              <div className="admin-field">
-                <label htmlFor="contact-hours-heading" className="admin-field-label">
-                  Card Heading
-                </label>
-                <input
-                  id="contact-hours-heading"
-                  type="text"
-                  className="admin-field-input"
-                  value={data.operatingHours.heading}
-                  onChange={(e) => updateOperatingHoursField("heading", e.target.value)}
-                  disabled={isSubmitting}
-                  placeholder="Operating Hours"
-                  maxLength={100}
-                />
-              </div>
-            </div>
-
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
-              <div className="admin-field">
-                <label htmlFor="contact-hours-mondayfriday" className="admin-field-label">
-                  Monday – Friday Hours
-                </label>
-                <input
-                  id="contact-hours-mondayfriday"
-                  type="text"
-                  className="admin-field-input"
-                  value={data.operatingHours.mondayFriday}
-                  onChange={(e) => updateOperatingHoursField("mondayFriday", e.target.value)}
-                  disabled={isSubmitting}
-                  placeholder="08:00 – 17:00"
-                  maxLength={100}
-                />
-              </div>
-              <div className="admin-field">
-                <label htmlFor="contact-hours-saturday" className="admin-field-label">
-                  Saturday Hours
-                </label>
-                <input
-                  id="contact-hours-saturday"
-                  type="text"
-                  className="admin-field-input"
-                  value={data.operatingHours.saturday}
-                  onChange={(e) => updateOperatingHoursField("saturday", e.target.value)}
-                  disabled={isSubmitting}
-                  placeholder="08:00 – 13:00"
-                  maxLength={100}
-                />
-              </div>
-            </div>
-
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
-              <div className="admin-field">
-                <label htmlFor="contact-hours-sunday" className="admin-field-label">
-                  Sunday Hours
-                </label>
-                <input
-                  id="contact-hours-sunday"
-                  type="text"
-                  className="admin-field-input"
-                  value={data.operatingHours.sunday}
-                  onChange={(e) => updateOperatingHoursField("sunday", e.target.value)}
-                  disabled={isSubmitting}
-                  placeholder="Closed"
-                  maxLength={100}
-                />
-              </div>
-              <div className="admin-field">
-                <label htmlFor="contact-hours-timezone" className="admin-field-label">
-                  Timezone
-                </label>
-                <input
-                  id="contact-hours-timezone"
-                  type="text"
-                  className="admin-field-input"
-                  value={data.operatingHours.timezone}
-                  onChange={(e) => updateOperatingHoursField("timezone", e.target.value)}
-                  disabled={isSubmitting}
-                  placeholder="Western Indonesia (UTC+7)"
-                  maxLength={100}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+        )}
 
         {/* Actions Toolbar */}
         <div
@@ -1428,16 +2224,23 @@ const HERO_MAX_FILE_SIZE = 8 * 1024 * 1024; // 8 MB
 function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProps) {
   const meta = METADATA_MAP.interior_hero;
   const initialConfig = useMemo(() => parseInteriorHero(entry.content), [entry.content]);
+  const initialConfigEn = useMemo(() => parseInteriorHero(entry.content_en), [entry.content_en]);
 
   // Server-signed URL for current hero image preview
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
   const [isLoadingPreview, setIsLoadingPreview] = useState(false);
 
-  // Metadata form state
+  // Metadata form state (Indonesian)
   const [altText, setAltText] = useState(initialConfig.altText);
   const [eyebrow, setEyebrow] = useState(initialConfig.eyebrow);
   const [title, setTitle] = useState(initialConfig.title);
   const [description, setDescription] = useState(initialConfig.description);
+
+  // Metadata form state (English)
+  const [altTextEn, setAltTextEn] = useState(initialConfigEn.altText || "");
+  const [eyebrowEn, setEyebrowEn] = useState(initialConfigEn.eyebrow || "");
+  const [titleEn, setTitleEn] = useState(initialConfigEn.title || "");
+  const [descriptionEn, setDescriptionEn] = useState(initialConfigEn.description || "");
 
   // Sync metadata when entry changes if not dirty
   useEffect(() => {
@@ -1445,7 +2248,12 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
     setEyebrow(initialConfig.eyebrow);
     setTitle(initialConfig.title);
     setDescription(initialConfig.description);
-  }, [initialConfig]);
+
+    setAltTextEn(initialConfigEn.altText || "");
+    setEyebrowEn(initialConfigEn.eyebrow || "");
+    setTitleEn(initialConfigEn.title || "");
+    setDescriptionEn(initialConfigEn.description || "");
+  }, [initialConfig, initialConfigEn]);
 
   // Load preview signed URL
   useEffect(() => {
@@ -1488,7 +2296,11 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
     altText !== initialConfig.altText ||
     eyebrow !== initialConfig.eyebrow ||
     title !== initialConfig.title ||
-    description !== initialConfig.description;
+    description !== initialConfig.description ||
+    altTextEn !== (initialConfigEn.altText || "") ||
+    eyebrowEn !== (initialConfigEn.eyebrow || "") ||
+    titleEn !== (initialConfigEn.title || "") ||
+    descriptionEn !== (initialConfigEn.description || "");
 
   function handleClearFile() {
     if (previewUrl) {
@@ -1570,10 +2382,14 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
           fileName: selectedFile.name,
           contentType: mime,
           fileBase64: base64,
-          altText: altText.trim() || "ODE Outsole manufacturing facility",
+          altText: altText.trim() || "Fasilitas manufaktur ODE Outsole",
           eyebrow: eyebrow.trim(),
           title: title.trim(),
           description: description.trim(),
+          altText_en: altTextEn.trim() || undefined,
+          eyebrow_en: eyebrowEn.trim() || undefined,
+          title_en: titleEn.trim() || undefined,
+          description_en: descriptionEn.trim() || undefined,
         },
       });
 
@@ -1605,14 +2421,18 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
     try {
       await updateInteriorHeroMetadata({
         data: {
-          altText: altText.trim() || "ODE Outsole manufacturing facility",
+          altText: altText.trim() || "Fasilitas manufaktur ODE Outsole",
           eyebrow: eyebrow.trim(),
           title: title.trim(),
           description: description.trim(),
+          altText_en: altTextEn.trim() || undefined,
+          eyebrow_en: eyebrowEn.trim() || undefined,
+          title_en: titleEn.trim() || undefined,
+          description_en: descriptionEn.trim() || undefined,
         },
       });
 
-      setSuccessMsg("Interior hero metadata updated successfully.");
+      setSuccessMsg("Interior hero metadata updated successfully for both languages.");
       toast.success("Interior hero metadata saved");
       await onSaved();
     } catch (err: unknown) {
@@ -1629,6 +2449,10 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
     setEyebrow(initialConfig.eyebrow);
     setTitle(initialConfig.title);
     setDescription(initialConfig.description);
+    setAltTextEn(initialConfigEn.altText || "");
+    setEyebrowEn(initialConfigEn.eyebrow || "");
+    setTitleEn(initialConfigEn.title || "");
+    setDescriptionEn(initialConfigEn.description || "");
     setErrorMsg(null);
   }
 
@@ -2319,92 +3143,230 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
             </p>
           </div>
 
-          {/* Alt Text */}
-          <div className="admin-field">
-            <label htmlFor="interior-hero-alt" className="admin-field-label">
-              Image Alt Text (Accessibility)
-            </label>
-            <input
-              id="interior-hero-alt"
-              type="text"
-              className="admin-field-input"
-              value={altText}
-              onChange={(e) => setAltText(e.target.value)}
-              disabled={isSavingMeta || isUploading}
-              placeholder="e.g. ODE Outsole manufacturing facility"
-              maxLength={300}
-            />
-            <span className="admin-field-hint">
-              Used as the HTML alt attribute for the background hero image across all interior pages.
-            </span>
-          </div>
-
+          {/* Bahasa Indonesia Metadata */}
           <div
             style={{
+              padding: "1rem 1.25rem",
+              background: "oklch(0.15 0.003 285)",
+              border: "1px solid oklch(0.78 0.155 71 / 0.4)",
+              borderRadius: "2px",
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
               gap: "1rem",
             }}
           >
-            {/* Eyebrow */}
-            <div className="admin-field">
-              <label htmlFor="interior-hero-eyebrow" className="admin-field-label">
-                Default Eyebrow (Optional)
-              </label>
-              <input
-                id="interior-hero-eyebrow"
-                type="text"
-                className="admin-field-input"
-                value={eyebrow}
-                onChange={(e) => setEyebrow(e.target.value)}
-                disabled={isSavingMeta || isUploading}
-                placeholder="e.g. ODE Outsole"
-                maxLength={100}
-              />
-              <span className="admin-field-hint">
-                Fallback eyebrow label if not overridden by the specific route.
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <span
+                style={{
+                  fontFamily: "var(--font-mono, monospace)",
+                  fontSize: "0.6875rem",
+                  fontWeight: 700,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  padding: "0.2rem 0.5rem",
+                  borderRadius: "2px",
+                  background: "oklch(0.78 0.155 71 / 0.15)",
+                  color: "oklch(0.85 0.13 75)",
+                  border: "1px solid oklch(0.78 0.155 71 / 0.3)",
+                }}
+              >
+                Bahasa Indonesia (ID) — Default
               </span>
             </div>
 
-            {/* Title */}
+            {/* Alt Text (ID) */}
             <div className="admin-field">
-              <label htmlFor="interior-hero-title" className="admin-field-label">
-                Default Title (Optional)
+              <label htmlFor="interior-hero-alt" className="admin-field-label">
+                Image Alt Text (ID)
               </label>
               <input
-                id="interior-hero-title"
+                id="interior-hero-alt"
                 type="text"
                 className="admin-field-input"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                value={altText}
+                onChange={(e) => setAltText(e.target.value)}
                 disabled={isSavingMeta || isUploading}
-                placeholder="e.g. Engineered Performance"
-                maxLength={200}
+                placeholder="Fasilitas manufaktur ODE Outsole"
+                maxLength={300}
               />
               <span className="admin-field-hint">
-                Fallback title. Each public route (/catalog, /about, etc.) supplies its own title.
+                Atribut HTML alt untuk gambar hero interior di seluruh halaman.
+              </span>
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                gap: "1rem",
+              }}
+            >
+              {/* Eyebrow (ID) */}
+              <div className="admin-field">
+                <label htmlFor="interior-hero-eyebrow" className="admin-field-label">
+                  Eyebrow Default (ID)
+                </label>
+                <input
+                  id="interior-hero-eyebrow"
+                  type="text"
+                  className="admin-field-input"
+                  value={eyebrow}
+                  onChange={(e) => setEyebrow(e.target.value)}
+                  disabled={isSavingMeta || isUploading}
+                  placeholder="ODE Outsole"
+                  maxLength={100}
+                />
+              </div>
+
+              {/* Title (ID) */}
+              <div className="admin-field">
+                <label htmlFor="interior-hero-title" className="admin-field-label">
+                  Judul Default (ID)
+                </label>
+                <input
+                  id="interior-hero-title"
+                  type="text"
+                  className="admin-field-input"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  disabled={isSavingMeta || isUploading}
+                  placeholder="Presisi Manufaktur"
+                  maxLength={200}
+                />
+              </div>
+            </div>
+
+            {/* Description (ID) */}
+            <div className="admin-field">
+              <label htmlFor="interior-hero-desc" className="admin-field-label">
+                Deskripsi Default (ID)
+              </label>
+              <textarea
+                id="interior-hero-desc"
+                className="admin-field-input"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                disabled={isSavingMeta || isUploading}
+                rows={2}
+                placeholder="Deskripsi default jika tidak ditimpa oleh rute spesifik."
+                maxLength={500}
+              />
+              <span className="admin-field-hint">
+                Maksimal 500 karakter.
               </span>
             </div>
           </div>
 
-          {/* Description */}
-          <div className="admin-field">
-            <label htmlFor="interior-hero-desc" className="admin-field-label">
-              Default Description (Optional)
-            </label>
-            <textarea
-              id="interior-hero-desc"
-              className="admin-field-input"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              disabled={isSavingMeta || isUploading}
-              rows={2}
-              placeholder="Fallback narrative description if not overridden by page route."
-              maxLength={500}
-            />
-            <span className="admin-field-hint">
-              Max 500 characters.
-            </span>
+          {/* English Metadata */}
+          <div
+            style={{
+              padding: "1rem 1.25rem",
+              background: "oklch(0.145 0.003 285)",
+              border: "1px solid oklch(0.65 0.18 250 / 0.4)",
+              borderRadius: "2px",
+              display: "grid",
+              gap: "1rem",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <span
+                style={{
+                  fontFamily: "var(--font-mono, monospace)",
+                  fontSize: "0.6875rem",
+                  fontWeight: 700,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  padding: "0.2rem 0.5rem",
+                  borderRadius: "2px",
+                  background: "oklch(0.65 0.18 250 / 0.15)",
+                  color: "oklch(0.8 0.12 250)",
+                  border: "1px solid oklch(0.65 0.18 250 / 0.3)",
+                }}
+              >
+                English (EN) — Bilingual Public
+              </span>
+            </div>
+
+            {/* Alt Text (EN) */}
+            <div className="admin-field">
+              <label htmlFor="interior-hero-alt-en" className="admin-field-label">
+                Image Alt Text (EN)
+              </label>
+              <input
+                id="interior-hero-alt-en"
+                type="text"
+                className="admin-field-input"
+                value={altTextEn}
+                onChange={(e) => setAltTextEn(e.target.value)}
+                disabled={isSavingMeta || isUploading}
+                placeholder="ODE Outsole manufacturing facility"
+                maxLength={300}
+              />
+              <span className="admin-field-hint">
+                HTML alt attribute for interior hero image across all interior pages when viewed in English.
+              </span>
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                gap: "1rem",
+              }}
+            >
+              {/* Eyebrow (EN) */}
+              <div className="admin-field">
+                <label htmlFor="interior-hero-eyebrow-en" className="admin-field-label">
+                  Default Eyebrow (EN)
+                </label>
+                <input
+                  id="interior-hero-eyebrow-en"
+                  type="text"
+                  className="admin-field-input"
+                  value={eyebrowEn}
+                  onChange={(e) => setEyebrowEn(e.target.value)}
+                  disabled={isSavingMeta || isUploading}
+                  placeholder="ODE Outsole"
+                  maxLength={100}
+                />
+              </div>
+
+              {/* Title (EN) */}
+              <div className="admin-field">
+                <label htmlFor="interior-hero-title-en" className="admin-field-label">
+                  Default Title (EN)
+                </label>
+                <input
+                  id="interior-hero-title-en"
+                  type="text"
+                  className="admin-field-input"
+                  value={titleEn}
+                  onChange={(e) => setTitleEn(e.target.value)}
+                  disabled={isSavingMeta || isUploading}
+                  placeholder="Engineered Performance"
+                  maxLength={200}
+                />
+              </div>
+            </div>
+
+            {/* Description (EN) */}
+            <div className="admin-field">
+              <label htmlFor="interior-hero-desc-en" className="admin-field-label">
+                Default Description (EN)
+              </label>
+              <textarea
+                id="interior-hero-desc-en"
+                className="admin-field-input"
+                value={descriptionEn}
+                onChange={(e) => setDescriptionEn(e.target.value)}
+                disabled={isSavingMeta || isUploading}
+                rows={2}
+                placeholder="Fallback narrative description if not overridden by page route."
+                maxLength={500}
+              />
+              <span className="admin-field-hint">
+                Max 500 characters.
+              </span>
+            </div>
           </div>
 
           {/* Metadata Actions */}

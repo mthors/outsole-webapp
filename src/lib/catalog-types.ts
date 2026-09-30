@@ -48,6 +48,8 @@ export type SiteContentEntry = {
   content_key: string;
   title: string | null;
   content: string | null;
+  title_en?: string | null;
+  content_en?: string | null;
 };
 
 export function hardnessLabel(o: Pick<Outsole, "shore_min" | "shore_max" | "shore_scale">): string | null {

@@ -125,7 +125,15 @@ export async function fetchTaxonomy(): Promise<Taxonomy> {
 
 export async function fetchSiteContent(): Promise<SiteContentEntry[]> {
   const client = publicClient();
-  const { data } = await publicClient().from("site_content").select("content_key, title, content");
-  void client;
-  return data ?? [];
+  const { data, error } = await client
+    .from("site_content")
+    .select("content_key, title, content, title_en, content_en");
+  if (!error && data) {
+    return data as SiteContentEntry[];
+  }
+  // Graceful fallback to legacy select if columns don't exist yet
+  const { data: legacyData } = await client
+    .from("site_content")
+    .select("content_key, title, content");
+  return (legacyData ?? []) as SiteContentEntry[];
 }

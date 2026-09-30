@@ -288,23 +288,29 @@ export type Database = {
       site_content: {
         Row: {
           content: string | null
+          content_en: string | null
           content_key: string
           id: string
           title: string | null
+          title_en: string | null
           updated_at: string
         }
         Insert: {
           content?: string | null
+          content_en?: string | null
           content_key: string
           id?: string
           title?: string | null
+          title_en?: string | null
           updated_at?: string
         }
         Update: {
           content?: string | null
+          content_en?: string | null
           content_key?: string
           id?: string
           title?: string | null
+          title_en?: string | null
           updated_at?: string
         }
         Relationships: []
