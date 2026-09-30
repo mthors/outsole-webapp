@@ -14,7 +14,7 @@ export function SiteFooter() {
           </p>
         </div>
         <div>
-          <p className="label-tech">Explore</p>
+          <p className="label-tech">{dict.footer.explore}</p>
           <ul className="mt-4 space-y-2 text-sm">
             <li><Link to="/catalog" className="hover:text-primary">{dict.nav.catalog}</Link></li>
             <li><Link to="/about" className="hover:text-primary">{dict.nav.about}</Link></li>
@@ -22,7 +22,7 @@ export function SiteFooter() {
           </ul>
         </div>
         <div>
-          <p className="label-tech">Sampling</p>
+          <p className="label-tech">{dict.footer.sampling}</p>
           <ul className="mt-4 space-y-2 text-sm">
             <li><Link to="/request-sample" className="hover:text-primary">{dict.nav.requestSample}</Link></li>
           </ul>
@@ -31,7 +31,7 @@ export function SiteFooter() {
       <div className="border-t border-border">
         <div className="shell flex flex-col gap-2 py-5 sm:flex-row sm:justify-between">
           <p className="label-tech">© {new Date().getFullYear()} ODE Outsole</p>
-          <p className="label-tech">Created by Thor</p>
+          <p className="label-tech">{dict.footer.credits}</p>
         </div>
       </div>
     </footer>

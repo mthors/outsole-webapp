@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
+import { useI18n } from "@/lib/i18n";
 
 export function ComingSoon({ eyebrow, title, body }: { eyebrow: string; title: string; body: string }) {
+  const { dict } = useI18n();
   return (
     <section className="shell py-24 md:py-32">
       <span className="rule-accent" />
@@ -11,7 +13,7 @@ export function ComingSoon({ eyebrow, title, body }: { eyebrow: string; title: s
         to="/"
         className="mt-10 inline-flex border border-border px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] hover:border-primary hover:text-primary"
       >
-        Back to home
+        {dict.common.goHome}
       </Link>
     </section>
   );

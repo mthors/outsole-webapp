@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { ArrowRight, CheckCircle2, Cog, Layers, Wrench } from "lucide-react";
+import { ArrowRight, CheckCircle2, Cog, Layers } from "lucide-react";
 import { getSiteContent, getInteriorHero } from "@/lib/public-catalog.functions";
 import { InteriorHero } from "@/components/site/InteriorHero";
+import { useI18n } from "@/lib/i18n";
 
 const aboutContentQuery = queryOptions({
   queryKey: ["site-content-about"],
@@ -40,24 +41,40 @@ export const Route = createFileRoute("/about")({
     context.queryClient.ensureQueryData(interiorHeroQuery),
   ]),
   component: AboutPage,
-  pendingComponent: () => (
+  pendingComponent: AboutPending,
+  errorComponent: AboutError,
+  notFoundComponent: AboutNotFound,
+});
+
+function AboutPending() {
+  const { dict } = useI18n();
+  return (
     <div className="shell py-32">
-      <p className="label-tech">Loading factory overview…</p>
+      <p className="label-tech">{dict.about.loading}</p>
     </div>
-  ),
-  errorComponent: ({ error }) => (
+  );
+}
+
+function AboutError({ error }: { error: Error }) {
+  const { dict } = useI18n();
+  return (
     <div role="alert" className="shell py-32">
-      <p className="label-tech">Error</p>
-      <h1 className="display-lg mt-4">Failed to load factory information</h1>
+      <p className="label-tech">{dict.common.error}</p>
+      <h1 className="display-lg mt-4">{dict.about.errorTitle}</h1>
       <p className="mt-4 text-muted-foreground">{error.message}</p>
     </div>
-  ),
-  notFoundComponent: () => <div className="shell py-32">Information not found.</div>,
-});
+  );
+}
+
+function AboutNotFound() {
+  const { dict } = useI18n();
+  return <div className="shell py-32">{dict.about.notFound}</div>;
+}
 
 const clean = (s?: string | null) => (s ?? "").replace(/^Editable placeholder\.?\s*/i, "");
 
 function AboutPage() {
+  const { dict } = useI18n();
   const { data } = useSuspenseQuery(aboutContentQuery);
   const { data: hero } = useSuspenseQuery(interiorHeroQuery);
   const contentMap = Object.fromEntries(
@@ -73,9 +90,9 @@ function AboutPage() {
       <InteriorHero
         config={hero.config}
         imageUrl={hero.imageUrl}
-        eyebrow="About · Factory & Engineering Background"
-        title={company?.title ?? "About the Factory"}
-        description={clean(company?.content) || "High-performance rubber outsole development, compounding, mold engineering, and volume production for technical and lifestyle footwear programs."}
+        eyebrow={dict.about.eyebrow}
+        title={company?.title ?? dict.about.defaultTitle}
+        description={clean(company?.content) || dict.about.defaultDescription}
       />
 
       {/* Quick Technical Highlights */}
@@ -83,34 +100,34 @@ function AboutPage() {
         <div className="shell py-12 md:py-16">
           <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
             <div className="bg-surface p-7">
-              <p className="data-mono text-xs text-primary uppercase tracking-[0.14em]">01 / Infrastructure</p>
-              <h3 className="mt-4 text-base font-semibold uppercase text-foreground">In-House Tooling</h3>
+              <p className="data-mono text-xs text-primary uppercase tracking-[0.14em]">{dict.about.highlights.tag1}</p>
+              <h3 className="mt-4 text-base font-semibold uppercase text-foreground">{dict.about.highlights.title1}</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Dedicated CNC mold making, pattern laser engraving, and tooling repair facilities on site.
+                {dict.about.highlights.desc1}
               </p>
             </div>
 
             <div className="bg-surface p-7">
-              <p className="data-mono text-xs text-primary uppercase tracking-[0.14em]">02 / Chemistry</p>
-              <h3 className="mt-4 text-base font-semibold uppercase text-foreground">Compound Formulation</h3>
+              <p className="data-mono text-xs text-primary uppercase tracking-[0.14em]">{dict.about.highlights.tag2}</p>
+              <h3 className="mt-4 text-base font-semibold uppercase text-foreground">{dict.about.highlights.title2}</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Natural rubber, synthetic polymers, recycled crumb, and lightweight EVA blends tuned for specific rebound and abrasion.
+                {dict.about.highlights.desc2}
               </p>
             </div>
 
             <div className="bg-surface p-7">
-              <p className="data-mono text-xs text-primary uppercase tracking-[0.14em]">03 / Verification</p>
-              <h3 className="mt-4 text-base font-semibold uppercase text-foreground">Technical Testing</h3>
+              <p className="data-mono text-xs text-primary uppercase tracking-[0.14em]">{dict.about.highlights.tag3}</p>
+              <h3 className="mt-4 text-base font-semibold uppercase text-foreground">{dict.about.highlights.title3}</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                DIN 53516 abrasion, Shore A durometer hardness, and SATRA TM144 slip resistance quality assurance.
+                {dict.about.highlights.desc3}
               </p>
             </div>
 
             <div className="bg-surface p-7">
-              <p className="data-mono text-xs text-primary uppercase tracking-[0.14em]">04 / Production</p>
-              <h3 className="mt-4 text-base font-semibold uppercase text-foreground">Volume Scalability</h3>
+              <p className="data-mono text-xs text-primary uppercase tracking-[0.14em]">{dict.about.highlights.tag4}</p>
+              <h3 className="mt-4 text-base font-semibold uppercase text-foreground">{dict.about.highlights.title4}</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Reliable multi-cavity press lines delivering consistent physical properties from pilot run to mass production.
+                {dict.about.highlights.desc4}
               </p>
             </div>
           </div>
@@ -123,7 +140,7 @@ function AboutPage() {
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div className="max-w-3xl">
               <p className="label-tech">
-                <span className="text-primary">01</span> / Build to Specification
+                <span className="text-primary">01</span> / {dict.about.oem.eyebrow}
               </p>
               <h2 className="display-lg mt-4">
                 {oem?.title ?? "OEM Manufacturing"}
@@ -137,7 +154,7 @@ function AboutPage() {
               to="/request-sample"
               className="inline-flex items-center gap-2 border border-foreground/30 px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] hover:border-primary hover:text-primary"
             >
-              Request OEM Trial <ArrowRight className="h-4 w-4" />
+              {dict.about.oem.requestTrial} <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
 
@@ -146,9 +163,9 @@ function AboutPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-primary/10 text-primary">
                 <Cog className="h-5 w-5" />
               </div>
-              <h3 className="mt-5 text-lg font-semibold uppercase text-foreground">Tooling Transfer</h3>
+              <h3 className="mt-5 text-lg font-semibold uppercase text-foreground">{dict.about.oem.feature1Title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                Seamless onboarding of existing client tooling. We inspect mold geometry, optimize venting, and calibrate shrinkage allowances to ensure exact fit with your midsole blueprints.
+                {dict.about.oem.feature1Desc}
               </p>
             </div>
 
@@ -156,9 +173,9 @@ function AboutPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-primary/10 text-primary">
                 <Layers className="h-5 w-5" />
               </div>
-              <h3 className="mt-5 text-lg font-semibold uppercase text-foreground">Compound Matching</h3>
+              <h3 className="mt-5 text-lg font-semibold uppercase text-foreground">{dict.about.oem.feature2Title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                Exact physical property matching for durometer (Shore A), rebound resilience, and color formulations. Every batch is rheologically verified before vulcanization.
+                {dict.about.oem.feature2Desc}
               </p>
             </div>
 
@@ -166,9 +183,9 @@ function AboutPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-primary/10 text-primary">
                 <CheckCircle2 className="h-5 w-5" />
               </div>
-              <h3 className="mt-5 text-lg font-semibold uppercase text-foreground">Quality Assurance</h3>
+              <h3 className="mt-5 text-lg font-semibold uppercase text-foreground">{dict.about.oem.feature3Title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                Continuous in-line inspection of lug definition, edge trimming, thickness tolerance, and bond-surface preparation, minimizing footwear assembly defect rates.
+                {dict.about.oem.feature3Desc}
               </p>
             </div>
           </div>
@@ -181,7 +198,7 @@ function AboutPage() {
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div className="max-w-3xl">
               <p className="label-tech">
-                <span className="text-primary">02</span> / Design & Prototyping
+                <span className="text-primary">02</span> / {dict.about.odm.eyebrow}
               </p>
               <h2 className="display-lg mt-4">
                 {odm?.title ?? "ODM Development"}
@@ -195,7 +212,7 @@ function AboutPage() {
               to="/catalog"
               className="inline-flex items-center gap-2 border border-foreground/30 px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] hover:border-primary hover:text-primary"
             >
-              Browse Open Tooling <ArrowRight className="h-4 w-4" />
+              {dict.about.odm.browseTooling} <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
 
@@ -203,23 +220,23 @@ function AboutPage() {
             {[
               {
                 step: "01",
-                title: "Concept & Lug Engineering",
-                desc: "Surface contact modeling, flex notch placements, and traction lug angles tuned for targeted terrain and sport dynamics.",
+                title: dict.about.odm.step1Title,
+                desc: dict.about.odm.step1Desc,
               },
               {
                 step: "02",
-                title: "3D CAD & Last Fitting",
-                desc: "Full bottom-unit digital integration to ensure precise perimeter bonding and clean transition to midsoles.",
+                title: dict.about.odm.step2Title,
+                desc: dict.about.odm.step2Desc,
               },
               {
                 step: "03",
-                title: "Pilot Sampling Molds",
-                desc: "Rapid aluminum prototype molds engineered within days to validate physical wear, compound behavior, and aesthetics.",
+                title: dict.about.odm.step3Title,
+                desc: dict.about.odm.step3Desc,
               },
               {
                 step: "04",
-                title: "Production Tooling",
-                desc: "Multi-size grading and hardened steel or forged aluminum production molds built for high-volume press cycles.",
+                title: dict.about.odm.step4Title,
+                desc: dict.about.odm.step4Desc,
               },
             ].map((item) => (
               <div key={item.step} className="bg-surface p-8">
@@ -237,13 +254,13 @@ function AboutPage() {
         <div className="shell flex flex-col gap-10 py-20 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.18em] opacity-75">
-              Footwear Partnership
+              {dict.about.cta.eyebrow}
             </p>
             <h2 className="display-lg mt-4 max-w-2xl">
-              Put our outsole engineering under your brand's next collection.
+              {dict.about.cta.title}
             </h2>
             <p className="mt-4 max-w-xl text-sm leading-relaxed opacity-90 md:text-base">
-              Whether you need open-mold tooling from our active catalog or custom compound formulation for technical requirements, our team is ready to assist.
+              {dict.about.cta.desc}
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
@@ -251,19 +268,19 @@ function AboutPage() {
               to="/catalog"
               className="border border-primary-foreground/40 px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.14em] hover:bg-primary-foreground/10"
             >
-              Browse Catalog
+              {dict.about.cta.browseBtn}
             </Link>
             <Link
               to="/request-sample"
               className="bg-primary-foreground px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.14em] text-primary hover:opacity-90"
             >
-              Request a Sample
+              {dict.about.cta.sampleBtn}
             </Link>
             <Link
               to="/contact"
               className="border border-primary-foreground/40 px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.14em] hover:bg-primary-foreground/10"
             >
-              Contact Facility
+              {dict.about.cta.contactBtn}
             </Link>
           </div>
         </div>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ArrowLeft, ArrowRight, ImageOff } from "lucide-react";
 import { getOutsole } from "@/lib/public-catalog.functions";
 import { hardnessLabel, type Outsole, type TaxonomyTerm } from "@/lib/catalog-types";
+import { useI18n } from "@/lib/i18n";
 
 const outsoleQuery = (slug: string) =>
   queryOptions({
@@ -46,9 +47,10 @@ export const Route = createFileRoute("/outsoles/$slug")({
 });
 
 function Crumb({ name }: { name?: string }) {
+  const { dict } = useI18n();
   return (
-    <nav aria-label="Breadcrumb" className="label-tech text-muted-foreground">
-      <Link to="/catalog" className="hover:text-primary">Catalog</Link>
+    <nav aria-label={dict.product.breadcrumbCatalog} className="label-tech text-muted-foreground">
+      <Link to="/catalog" className="hover:text-primary">{dict.product.breadcrumbCatalog}</Link>
       {name && (
         <>
           <span className="mx-2 opacity-50">/</span>
@@ -76,6 +78,7 @@ function Tags({ label, terms }: { label: string; terms: TaxonomyTerm[] }) {
 }
 
 function Gallery({ outsole }: { outsole: Outsole }) {
+  const { dict } = useI18n();
   const images = [...outsole.images].sort((a, b) => a.display_order - b.display_order);
   const initial = images.find((i) => i.is_primary) ?? images[0];
   const [activeId, setActiveId] = useState(initial?.id);
@@ -85,7 +88,7 @@ function Gallery({ outsole }: { outsole: Outsole }) {
     return (
       <div className="flex aspect-[4/3] w-full flex-col items-center justify-center gap-3 border border-border bg-card text-muted-foreground">
         <ImageOff className="h-8 w-8" />
-        <p className="label-tech">No images available</p>
+        <p className="label-tech">{dict.product.noImages}</p>
       </div>
     );
   }
@@ -107,7 +110,7 @@ function Gallery({ outsole }: { outsole: Outsole }) {
                 <button
                   type="button"
                   onClick={() => setActiveId(img.id)}
-                  aria-label={`Show image: ${img.alt_text ?? outsole.name}`}
+                  aria-label={`${dict.product.showImageAria}: ${img.alt_text ?? outsole.name}`}
                   aria-pressed={img.id === active.id}
                   className={`block w-20 overflow-hidden border-2 md:w-24 ${
                     img.id === active.id ? "border-primary" : "border-border hover:border-muted-foreground"
@@ -125,16 +128,17 @@ function Gallery({ outsole }: { outsole: Outsole }) {
 }
 
 function OutsoleDetail() {
+  const { dict } = useI18n();
   const { slug } = Route.useParams();
   const { data } = useSuspenseQuery(outsoleQuery(slug));
   const o = data.outsole;
   if (!o) return <DetailNotFound />;
 
   const specs = [
-    { label: "Shore hardness", value: hardnessLabel(o) },
-    { label: "DIN abrasion", value: o.din_abrasion_mm3 != null ? `${o.din_abrasion_mm3} mm³` : null },
-    { label: "Weight", value: o.weight_grams != null ? `${o.weight_grams} g` : null },
-    { label: "Sampling", value: o.is_sampling_available ? "Sampling Available" : "Sampling Currently Unavailable" },
+    { label: dict.product.shoreHardness, value: hardnessLabel(o) },
+    { label: dict.product.dinAbrasion, value: o.din_abrasion_mm3 != null ? `${o.din_abrasion_mm3} mm³` : null },
+    { label: dict.product.weight, value: o.weight_grams != null ? `${o.weight_grams} g` : null },
+    { label: dict.product.sampling, value: o.is_sampling_available ? dict.product.samplingAvailable : dict.product.samplingUnavailable },
   ].filter((s): s is { label: string; value: string } => Boolean(s.value));
 
   return (
@@ -149,13 +153,13 @@ function OutsoleDetail() {
           {o.description && <p className="mt-6 text-muted-foreground md:text-lg">{o.description}</p>}
 
           <div className="mt-8 space-y-5">
-            <Tags label="Category" terms={o.categories} />
-            <Tags label="Material" terms={o.materials} />
-            <Tags label="Traction" terms={o.tractionTypes} />
+            <Tags label={dict.product.category} terms={o.categories} />
+            <Tags label={dict.product.material} terms={o.materials} />
+            <Tags label={dict.product.traction} terms={o.tractionTypes} />
           </div>
 
           <section className="mt-10">
-            <p className="label-tech">Technical specifications</p>
+            <p className="label-tech">{dict.product.specifications}</p>
             <dl className="mt-4 border-t border-border">
               {specs.map((s) => (
                 <div key={s.label} className="flex justify-between gap-4 border-b border-border py-3 text-sm">
@@ -172,13 +176,13 @@ function OutsoleDetail() {
               search={{ product: o.slug }}
               className="inline-flex items-center justify-center gap-2 bg-primary px-6 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-primary-foreground hover:opacity-90"
             >
-              Request a Sample <ArrowRight className="h-4 w-4" />
+              {dict.product.requestSampleCta} <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               to="/catalog"
               className="inline-flex items-center justify-center gap-2 border border-border px-6 py-3 text-xs font-semibold uppercase tracking-[0.14em] hover:border-primary hover:text-primary"
             >
-              <ArrowLeft className="h-4 w-4" /> Back to Catalog
+              <ArrowLeft className="h-4 w-4" /> {dict.product.backToCatalog}
             </Link>
           </div>
         </div>
@@ -205,6 +209,7 @@ function DetailLoading() {
 }
 
 function StateMessage({ title, body }: { title: string; body: string }) {
+  const { dict } = useI18n();
   return (
     <section className="shell py-24 md:py-32">
       <span className="rule-accent" />
@@ -214,26 +219,28 @@ function StateMessage({ title, body }: { title: string; body: string }) {
         to="/catalog"
         className="mt-10 inline-flex items-center gap-2 border border-border px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] hover:border-primary hover:text-primary"
       >
-        <ArrowLeft className="h-4 w-4" /> Back to Catalog
+        <ArrowLeft className="h-4 w-4" /> {dict.product.backToCatalog}
       </Link>
     </section>
   );
 }
 
 function DetailNotFound() {
+  const { dict } = useI18n();
   return (
     <StateMessage
-      title="Outsole not found"
-      body="The outsole you requested could not be found. It may have been renamed or is no longer available."
+      title={dict.product.notFoundTitle}
+      body={dict.product.notFoundBody}
     />
   );
 }
 
 function DetailError() {
+  const { dict } = useI18n();
   return (
     <StateMessage
-      title="Something went wrong"
-      body="We couldn't load this outsole right now. Please try again shortly or browse the catalog."
+      title={dict.product.errorTitle}
+      body={dict.product.errorBody}
     />
   );
 }

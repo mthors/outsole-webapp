@@ -3,6 +3,7 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowRight, Clock, Mail, MapPin, MessageSquare, Phone } from "lucide-react";
 import { getSiteContent, getInteriorHero } from "@/lib/public-catalog.functions";
 import { InteriorHero } from "@/components/site/InteriorHero";
+import { useI18n } from "@/lib/i18n";
 
 const contactContentQuery = queryOptions({
   queryKey: ["site-content-contact"],
@@ -40,20 +41,35 @@ export const Route = createFileRoute("/contact")({
     context.queryClient.ensureQueryData(interiorHeroQuery),
   ]),
   component: ContactPage,
-  pendingComponent: () => (
+  pendingComponent: ContactPending,
+  errorComponent: ContactError,
+  notFoundComponent: ContactNotFound,
+});
+
+function ContactPending() {
+  const { dict } = useI18n();
+  return (
     <div className="shell py-32">
-      <p className="label-tech">Loading contact information…</p>
+      <p className="label-tech">{dict.contact.loading}</p>
     </div>
-  ),
-  errorComponent: ({ error }) => (
+  );
+}
+
+function ContactError({ error }: { error: Error }) {
+  const { dict } = useI18n();
+  return (
     <div role="alert" className="shell py-32">
-      <p className="label-tech">Error</p>
-      <h1 className="display-lg mt-4">Failed to load contact information</h1>
+      <p className="label-tech">{dict.common.error}</p>
+      <h1 className="display-lg mt-4">{dict.contact.errorTitle}</h1>
       <p className="mt-4 text-muted-foreground">{error.message}</p>
     </div>
-  ),
-  notFoundComponent: () => <div className="shell py-32">Contact details not found.</div>,
-});
+  );
+}
+
+function ContactNotFound() {
+  const { dict } = useI18n();
+  return <div className="shell py-32">{dict.contact.notFound}</div>;
+}
 
 import {
   parseContactContent,
@@ -64,6 +80,7 @@ import {
 const clean = (s?: string | null) => (s ?? "").replace(/^Editable placeholder\.?\s*/i, "");
 
 function ContactPage() {
+  const { dict } = useI18n();
   const { data } = useSuspenseQuery(contactContentQuery);
   const { data: hero } = useSuspenseQuery(interiorHeroQuery);
   const contentMap = Object.fromEntries(
@@ -80,11 +97,11 @@ function ContactPage() {
       <InteriorHero
         config={hero.config}
         imageUrl={hero.imageUrl}
-        eyebrow="Get in Touch · Facilities & Direct Sales"
-        title={contact?.title ?? "Contact ODE Outsole"}
+        eyebrow={dict.contact.eyebrow}
+        title={contact?.title ?? dict.contact.defaultTitle}
         description={parsed.intro ||
           clean(contact?.content) ||
-          "Connect directly with our rubber compounding engineers, tooling mold specialists, and commercial sales team for OEM programs and sample dispatch."}
+          dict.contact.defaultDescription}
       />
 
       {/* Contact Cards Grid */}
@@ -209,19 +226,19 @@ function ContactPage() {
                 </h3>
                 <dl className="mt-3 space-y-2 text-sm text-muted-foreground">
                   <div className="flex justify-between border-b border-border/50 pb-1.5">
-                    <span>Monday – Friday:</span>
+                    <span>{dict.contact.cardHours.monFri}</span>
                     <span className="font-mono text-foreground">
                       {parsed.operatingHours.mondayFriday}
                     </span>
                   </div>
                   <div className="flex justify-between border-b border-border/50 pb-1.5">
-                    <span>Saturday:</span>
+                    <span>{dict.contact.cardHours.sat}</span>
                     <span className="font-mono text-foreground">
                       {parsed.operatingHours.saturday}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Sunday:</span>
+                    <span>{dict.contact.cardHours.sun}</span>
                     <span className="font-mono text-muted-foreground">
                       {parsed.operatingHours.sunday}
                     </span>
@@ -229,9 +246,9 @@ function ContactPage() {
                 </dl>
               </div>
               <p className="label-tech mt-6 border-t border-border pt-4">
-                {parsed.operatingHours.timezone.toLowerCase().startsWith("timezone")
+                {parsed.operatingHours.timezone.toLowerCase().startsWith("timezone") || parsed.operatingHours.timezone.toLowerCase().startsWith("zona waktu")
                   ? parsed.operatingHours.timezone
-                  : `Timezone: ${parsed.operatingHours.timezone}`}
+                  : `${dict.contact.cardHours.timezonePrefix} ${parsed.operatingHours.timezone}`}
               </p>
             </div>
           </div>
@@ -244,12 +261,12 @@ function ContactPage() {
           <div className="relative overflow-hidden border border-border bg-surface p-10 md:p-14 lg:flex lg:items-center lg:justify-between">
             <div className="max-w-2xl">
               <span className="rule-accent" />
-              <p className="label-tech mt-5">Fast-Track Sample Dispatch</p>
+              <p className="label-tech mt-5">{dict.contact.ctaCard.eyebrow}</p>
               <h2 className="display-lg mt-3">
-                Need physical outsole samples for fit & lab evaluation?
+                {dict.contact.ctaCard.title}
               </h2>
               <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-                We provide production-grade sample pairs from our active catalog for friction testing, flexural fatigue analysis, and bonding tests on your brand lasts.
+                {dict.contact.ctaCard.description}
               </p>
             </div>
 
@@ -258,13 +275,13 @@ function ContactPage() {
                 to="/request-sample"
                 className="inline-flex items-center justify-center gap-2 bg-primary px-7 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-primary-foreground hover:opacity-90"
               >
-                Request a Sample <ArrowRight className="h-4 w-4" />
+                {dict.contact.ctaCard.requestBtn} <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 to="/catalog"
                 className="inline-flex items-center justify-center border border-foreground/30 px-7 py-4 text-xs font-semibold uppercase tracking-[0.14em] hover:border-primary hover:text-primary"
               >
-                Browse Catalog
+                {dict.contact.ctaCard.catalogBtn}
               </Link>
             </div>
           </div>

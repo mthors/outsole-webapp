@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import heroImg from "@/assets/hero-outsole.jpg";
 import { getFeatured } from "@/lib/public-catalog.functions";
 import { hardnessLabel, primaryImage, type Outsole } from "@/lib/catalog-types";
+import { useI18n } from "@/lib/i18n";
 
 const featuredQuery = queryOptions({
   queryKey: ["home-featured"],
@@ -31,22 +32,38 @@ export const Route = createFileRoute("/")({
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(featuredQuery),
   component: Home,
-  pendingComponent: () => (
-    <div className="shell py-32"><p className="label-tech">Loading collection…</p></div>
-  ),
-  errorComponent: ({ error }) => (
+  pendingComponent: HomePending,
+  errorComponent: HomeError,
+  notFoundComponent: HomeNotFound,
+});
+
+function HomePending() {
+  const { dict } = useI18n();
+  return (
+    <div className="shell py-32"><p className="label-tech">{dict.common.loading}</p></div>
+  );
+}
+
+function HomeError({ error }: { error: Error }) {
+  const { dict } = useI18n();
+  return (
     <div role="alert" className="shell py-32">
-      <p className="label-tech">Error</p>
-      <h1 className="display-lg mt-4">Collection unavailable</h1>
+      <p className="label-tech">{dict.common.error}</p>
+      <h1 className="display-lg mt-4">{dict.catalog.unavailableTitle}</h1>
       <p className="mt-4 text-muted-foreground">{error.message}</p>
     </div>
-  ),
-  notFoundComponent: () => <div className="shell py-32">Not found.</div>,
-});
+  );
+}
+
+function HomeNotFound() {
+  const { dict } = useI18n();
+  return <div className="shell py-32">{dict.common.notFound}</div>;
+}
 
 const clean = (s?: string | null) => (s ?? "").replace(/^Editable placeholder\.?\s*/i, "");
 
 function Home() {
+  const { dict } = useI18n();
   const { data } = useSuspenseQuery(featuredQuery);
   const content = Object.fromEntries(data.content.map((c) => [c.content_key, c]));
   const hero = content["homepage_hero"];
@@ -58,32 +75,31 @@ function Home() {
       <section className="relative overflow-hidden border-b border-border">
         <img
           src={heroImg}
-          alt="Close-up of a rubber outsole tread"
+          alt={dict.home.hero.imageAlt}
           className="absolute inset-0 h-full w-full object-cover object-center opacity-45"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/20" />
         <div className="shell relative flex min-h-[78vh] flex-col justify-end py-16 md:py-24">
           <span className="rule-accent" />
-          <p className="label-tech mt-6">Outsole engineering · Volume production</p>
+          <p className="label-tech mt-6">{dict.home.hero.eyebrow}</p>
           <h1 className="display-xl mt-5 max-w-4xl">
-            {hero?.title ?? "Engineered Grip. Designed for Performance."}
+            {hero?.title ?? dict.home.hero.defaultTitle}
           </h1>
           <p className="mt-6 max-w-xl text-base text-muted-foreground md:text-lg">
-            {clean(hero?.content) ||
-              "Outsole tooling, compound development and volume production for footwear brands."}
+            {clean(hero?.content) || dict.home.hero.defaultContent}
           </p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <Link
               to="/catalog"
               className="inline-flex items-center justify-center gap-2 bg-primary px-6 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-primary-foreground hover:opacity-90"
             >
-              Explore Collection <ArrowRight className="h-4 w-4" />
+              {dict.home.hero.exploreCta} <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               to="/request-sample"
               className="inline-flex items-center justify-center border border-foreground/40 px-6 py-4 text-xs font-semibold uppercase tracking-[0.14em] hover:border-primary hover:text-primary"
             >
-              Request a Sample
+              {dict.home.hero.sampleCta}
             </Link>
           </div>
         </div>
@@ -91,15 +107,15 @@ function Home() {
 
       {/* Featured */}
       <section className="shell py-20 md:py-28">
-        <SectionHead index="01" eyebrow="Featured collection" title="Selected outsoles">
+        <SectionHead index="01" eyebrow={dict.home.featured.eyebrow} title={dict.home.featured.title}>
           <Link to="/catalog" className="label-tech inline-flex items-center gap-2 hover:text-primary">
-            View full catalog <ArrowRight className="h-3.5 w-3.5" />
+            {dict.home.featured.viewAll} <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </SectionHead>
         {data.featured.length === 0 ? (
           <div className="mt-12 border border-dashed border-border p-12 text-center">
-            <p className="label-tech">No featured outsoles yet</p>
-            <p className="mt-3 text-sm text-muted-foreground">Featured models will appear here once published.</p>
+            <p className="label-tech">{dict.home.featured.emptyTitle}</p>
+            <p className="mt-3 text-sm text-muted-foreground">{dict.home.featured.emptyDesc}</p>
           </div>
         ) : (
           <div
@@ -119,25 +135,25 @@ function Home() {
       {/* Materials & technology */}
       <section className="border-y border-border bg-surface">
         <div className="shell py-20 md:py-28">
-          <SectionHead index="02" eyebrow="Materials & technology" title="Compounds and traction systems" />
+          <SectionHead index="02" eyebrow={dict.home.tech.eyebrow} title={dict.home.tech.title} />
           <div className="mt-12 grid gap-10 lg:grid-cols-3">
-            <TermList label="Compounds" terms={data.taxonomy.materials} />
-            <TermList label="Traction patterns" terms={data.taxonomy.tractionTypes} />
-            <TermList label="Applications" terms={data.taxonomy.categories} />
+            <TermList label={dict.home.tech.compounds} terms={data.taxonomy.materials} emptyLabel={dict.home.tech.empty} />
+            <TermList label={dict.home.tech.traction} terms={data.taxonomy.tractionTypes} emptyLabel={dict.home.tech.empty} />
+            <TermList label={dict.home.tech.applications} terms={data.taxonomy.categories} emptyLabel={dict.home.tech.empty} />
           </div>
         </div>
       </section>
 
       {/* Capability */}
       <section className="shell py-20 md:py-28">
-        <SectionHead index="03" eyebrow={caps?.title ?? "Capability"} title="From concept to production" />
+        <SectionHead index="03" eyebrow={caps?.title ?? dict.home.capability.eyebrow} title={dict.home.capability.title} />
         {caps?.content && <p className="mt-6 max-w-2xl text-muted-foreground">{clean(caps.content)}</p>}
         <div className="mt-12 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
           {[
-            ["OEM", "Build-to-print production from your specifications, tooling and compound targets."],
-            ["ODM", "In-house tread design, last fitting and mold development for your line."],
-            ["Manufacturing", "Mold making, compound mixing, pressing and finishing under one quality system."],
-            ["Development & sampling", "Rapid prototypes and sample runs to validate fit, grip and wear."],
+            ["OEM", dict.home.capability.items.oemDesc],
+            ["ODM", dict.home.capability.items.odmDesc],
+            [dict.home.capability.items.mfgTitle, dict.home.capability.items.mfgDesc],
+            [dict.home.capability.items.devTitle, dict.home.capability.items.devDesc],
           ].map(([t, d], i) => (
             <div key={t} className="bg-background p-7">
               <p className="data-mono text-sm text-primary">0{i + 1}</p>
@@ -152,13 +168,13 @@ function Home() {
       <section className="border-t border-border bg-primary text-primary-foreground">
         <div className="shell flex flex-col gap-10 py-20 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="font-mono text-xs uppercase tracking-[0.18em] opacity-70">Start a program</p>
-            <h2 className="display-lg mt-4 max-w-2xl">Put our outsoles under your next collection.</h2>
+            <p className="font-mono text-xs uppercase tracking-[0.18em] opacity-70">{dict.home.cta.eyebrow}</p>
+            <h2 className="display-lg mt-4 max-w-2xl">{dict.home.cta.title}</h2>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Link to="/catalog" className="border border-primary-foreground/40 px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.14em] hover:bg-primary-foreground/10">Browse catalog</Link>
-            <Link to="/request-sample" className="bg-primary-foreground px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.14em] text-primary hover:opacity-90">Request a sample</Link>
-            <Link to="/contact" className="border border-primary-foreground/40 px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.14em] hover:bg-primary-foreground/10">Contact us</Link>
+            <Link to="/catalog" className="border border-primary-foreground/40 px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.14em] hover:bg-primary-foreground/10">{dict.home.cta.catalogBtn}</Link>
+            <Link to="/request-sample" className="bg-primary-foreground px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.14em] text-primary hover:opacity-90">{dict.home.cta.sampleBtn}</Link>
+            <Link to="/contact" className="border border-primary-foreground/40 px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.14em] hover:bg-primary-foreground/10">{dict.home.cta.contactBtn}</Link>
           </div>
         </div>
       </section>
@@ -178,12 +194,12 @@ function SectionHead({ index, eyebrow, title, children }: { index: string; eyebr
   );
 }
 
-function TermList({ label, terms }: { label: string; terms: { id: string; name: string; description?: string | null }[] }) {
+function TermList({ label, terms, emptyLabel }: { label: string; terms: { id: string; name: string; description?: string | null }[]; emptyLabel?: string }) {
   return (
     <div>
       <p className="label-tech border-b border-border pb-3">{label}</p>
       {terms.length === 0 ? (
-        <p className="mt-4 text-sm text-muted-foreground">None listed yet.</p>
+        <p className="mt-4 text-sm text-muted-foreground">{emptyLabel ?? "None listed yet."}</p>
       ) : (
         <ul>
           {terms.map((t) => (
@@ -199,6 +215,7 @@ function TermList({ label, terms }: { label: string; terms: { id: string; name: 
 }
 
 function OutsoleCard({ o }: { o: Outsole }) {
+  const { dict } = useI18n();
   const img = primaryImage(o);
   const hard = hardnessLabel(o);
   return (
@@ -207,19 +224,19 @@ function OutsoleCard({ o }: { o: Outsole }) {
         {img?.url ? (
           <img src={img.url} alt={img.alt_text ?? o.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
         ) : (
-          <div className="grid h-full place-items-center label-tech">No image</div>
+          <div className="grid h-full place-items-center label-tech">{dict.common.noImage}</div>
         )}
       </div>
       <div className="flex flex-1 flex-col p-6">
         <p className="data-mono text-xs text-primary">{o.model_number}</p>
         <h3 className="mt-2 text-xl uppercase">{o.name}</h3>
         <dl className="mt-5 grid grid-cols-2 gap-y-2 text-sm">
-          {hard && (<><dt className="label-tech">Hardness</dt><dd className="data-mono">{hard}</dd></>)}
-          {o.din_abrasion_mm3 != null && (<><dt className="label-tech">DIN abrasion</dt><dd className="data-mono">{o.din_abrasion_mm3} mm³</dd></>)}
-          {o.materials[0] && (<><dt className="label-tech">Compound</dt><dd>{o.materials[0].name}</dd></>)}
+          {hard && (<><dt className="label-tech">{dict.catalog.cardHardness}</dt><dd className="data-mono">{hard}</dd></>)}
+          {o.din_abrasion_mm3 != null && (<><dt className="label-tech">{dict.product.dinAbrasion}</dt><dd className="data-mono">{o.din_abrasion_mm3} mm³</dd></>)}
+          {o.materials[0] && (<><dt className="label-tech">{dict.catalog.cardCompound}</dt><dd>{o.materials[0].name}</dd></>)}
         </dl>
         <span className="label-tech mt-6 inline-flex items-center gap-2 group-hover:text-primary">
-          View details <ArrowRight className="h-3.5 w-3.5" />
+          {dict.common.viewDetails} <ArrowRight className="h-3.5 w-3.5" />
         </span>
       </div>
     </Link>

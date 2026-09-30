@@ -24,8 +24,11 @@ interface InteriorHeroProps {
   description?: string;
 }
 
+import { useI18n } from "@/lib/i18n";
+
 export function InteriorHero({ config, imageUrl, eyebrow, title, description }: InteriorHeroProps) {
-  const altText = config.altText || "ODE Outsole manufacturing facility";
+  const { isIndonesian } = useI18n();
+  const altText = config.altText || (isIndonesian ? "Fasilitas manufaktur ODE Outsole" : "ODE Outsole manufacturing facility");
   const desc = description ?? config.description ?? "";
 
   return (

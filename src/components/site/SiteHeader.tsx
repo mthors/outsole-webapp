@@ -47,7 +47,7 @@ export function SiteHeader() {
           </Link>
           <button
             type="button"
-            aria-label={open ? "Close menu" : "Open menu"}
+            aria-label={open ? dict.nav.closeMenu : dict.nav.openMenu}
             aria-expanded={open}
             className="grid h-10 w-10 place-items-center border border-border md:hidden"
             onClick={() => setOpen((v) => !v)}
