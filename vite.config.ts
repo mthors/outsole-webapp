@@ -13,6 +13,7 @@ export default defineConfig(({ command }) => ({
   server: {
     host: "::",
     port: 8080,
+    //allowedHosts: ["seniors-admission-practice-union.trycloudflare.com"]
   },
   resolve: {
     alias: {
