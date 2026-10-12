@@ -168,11 +168,11 @@ function Home() {
       {/* CTA */}
       <section className="border-t border-border bg-primary text-primary-foreground">
         <div className="shell flex flex-col gap-10 py-20 lg:flex-row lg:items-end lg:justify-between">
-          <div>
+          <div className="min-w-0 flex-1">
             <p className="font-mono text-xs uppercase tracking-[0.18em] opacity-70">{dict.home.cta.eyebrow}</p>
-            <h2 className="display-lg mt-4 max-w-2xl">{dict.home.cta.title}</h2>
+            <h2 className="display-lg mt-4 max-w-2xl text-primary-foreground">{dict.home.cta.title}</h2>
           </div>
-          <div className="flex flex-col gap-3 sm:flex-row">
+          <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
             <Link to="/catalog" className="border border-primary-foreground/40 px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.14em] hover:bg-primary-foreground/10">{dict.home.cta.catalogBtn}</Link>
             <Link to="/request-sample" className="bg-primary-foreground px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.14em] text-primary hover:opacity-90">{dict.home.cta.sampleBtn}</Link>
             <Link to="/contact" className="border border-primary-foreground/40 px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.14em] hover:bg-primary-foreground/10">{dict.home.cta.contactBtn}</Link>

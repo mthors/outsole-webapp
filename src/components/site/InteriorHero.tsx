@@ -53,13 +53,13 @@ export function InteriorHero({ config, config_en, imageUrl, eyebrow, title, desc
         />
       )}
 
-      {/* Dark gradient overlay — always present, stronger when no image */}
+      {/* Warm charcoal gradient overlay — always present, stronger when no image */}
       <div
         className="interior-hero__overlay"
         style={
           imageUrl
             ? undefined
-            : { background: "linear-gradient(135deg, hsl(220 15% 5%) 0%, hsl(220 12% 9%) 100%)" }
+            : { background: "linear-gradient(135deg, oklch(0.24 0.006 90) 0%, oklch(0.20 0.006 90) 100%)" }
         }
       />
 

@@ -5,14 +5,15 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * OUTSOLE — industrial B2B design system.
- * Near-black surfaces, bone white type, one amber accent used sparingly.
- * Sharp corners, tight tracking, monospaced technical data.
+ * OUTSOLE — Premium Minimalist B2B Design System.
+ * Warm Ivory (#F5F2EC), Sand (#E5DED2), Taupe (#B4A28C),
+ * Charcoal (#292925), Muted Olive-Grey (#77796B).
+ * Material-led, architectural, tactile, design-driven technical identity.
  */
 
 @theme inline {
-  --radius-sm: 0px;
-  --radius-md: 1px;
+  --radius-sm: 1px;
+  --radius-md: 2px;
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 2px);
   --radius-2xl: calc(var(--radius) + 4px);
@@ -21,6 +22,12 @@
 
   --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --color-warm-ivory: var(--warm-ivory);
+  --color-sand: var(--sand);
+  --color-taupe: var(--taupe);
+  --color-charcoal: var(--charcoal);
+  --color-muted-olive: var(--muted-olive);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -60,52 +67,60 @@
 }
 
 :root {
-  --radius: 2px;
+  --radius: 3px;
 
-  --background: oklch(0.145 0.003 285);
-  --foreground: oklch(0.925 0.008 85);
+  /* Provisional Central Brand Palette */
+  --warm-ivory: #F5F2EC;
+  --sand: #E5DED2;
+  --taupe: #B4A28C;
+  --charcoal: #292925;
+  --muted-olive: #77796B;
 
-  --surface: oklch(0.185 0.004 285);
-  --surface-strong: oklch(0.225 0.004 285);
+  /* Semantic Theme Mappings */
+  --background: var(--warm-ivory);
+  --foreground: var(--charcoal);
 
-  --card: oklch(0.185 0.004 285);
-  --card-foreground: oklch(0.925 0.008 85);
-  --popover: oklch(0.2 0.004 285);
-  --popover-foreground: oklch(0.925 0.008 85);
+  --surface: var(--sand);
+  --surface-strong: oklch(0.86 0.015 78);
 
-  --primary: oklch(0.78 0.155 71);
-  --primary-foreground: oklch(0.17 0.02 60);
+  --card: var(--warm-ivory);
+  --card-foreground: var(--charcoal);
+  --popover: var(--warm-ivory);
+  --popover-foreground: var(--charcoal);
 
-  --secondary: oklch(0.245 0.004 285);
-  --secondary-foreground: oklch(0.925 0.008 85);
+  --primary: var(--charcoal);
+  --primary-foreground: var(--warm-ivory);
 
-  --muted: oklch(0.225 0.004 285);
-  --muted-foreground: oklch(0.68 0.008 85);
+  --secondary: var(--sand);
+  --secondary-foreground: var(--charcoal);
 
-  --accent: oklch(0.26 0.006 285);
-  --accent-foreground: oklch(0.94 0.008 85);
+  --muted: var(--sand);
+  --muted-foreground: var(--muted-olive);
 
-  --destructive: oklch(0.62 0.2 25);
-  --destructive-foreground: oklch(0.97 0.005 85);
+  --accent: var(--sand);
+  --accent-foreground: var(--charcoal);
 
-  --border: oklch(0.28 0.004 285);
-  --input: oklch(0.3 0.004 285);
-  --ring: oklch(0.78 0.155 71);
+  --destructive: oklch(0.55 0.16 28);
+  --destructive-foreground: var(--warm-ivory);
 
-  --chart-1: oklch(0.78 0.155 71);
-  --chart-2: oklch(0.7 0.02 285);
-  --chart-3: oklch(0.55 0.02 285);
-  --chart-4: oklch(0.86 0.09 90);
-  --chart-5: oklch(0.42 0.01 285);
+  --border: oklch(0.725 0.024 75 / 0.45);
+  --input: oklch(0.725 0.024 75 / 0.5);
+  --ring: var(--charcoal);
 
-  --sidebar: oklch(0.165 0.003 285);
-  --sidebar-foreground: oklch(0.9 0.008 85);
-  --sidebar-primary: oklch(0.78 0.155 71);
-  --sidebar-primary-foreground: oklch(0.17 0.02 60);
-  --sidebar-accent: oklch(0.235 0.004 285);
-  --sidebar-accent-foreground: oklch(0.94 0.008 85);
-  --sidebar-border: oklch(0.26 0.004 285);
-  --sidebar-ring: oklch(0.78 0.155 71);
+  --chart-1: var(--charcoal);
+  --chart-2: var(--taupe);
+  --chart-3: var(--muted-olive);
+  --chart-4: var(--sand);
+  --chart-5: oklch(0.45 0.015 90);
+
+  --sidebar: var(--sand);
+  --sidebar-foreground: var(--charcoal);
+  --sidebar-primary: var(--charcoal);
+  --sidebar-primary-foreground: var(--warm-ivory);
+  --sidebar-accent: var(--warm-ivory);
+  --sidebar-accent-foreground: var(--charcoal);
+  --sidebar-border: oklch(0.725 0.024 75 / 0.35);
+  --sidebar-ring: var(--charcoal);
 }
 
 @layer base {
@@ -118,6 +133,7 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1,
@@ -135,25 +151,25 @@
   }
 
   ::selection {
-    background: var(--color-primary);
-    color: var(--color-primary-foreground);
+    background: var(--color-charcoal);
+    color: var(--color-warm-ivory);
   }
 }
 
 /* Editorial display headline */
 @utility display-xl {
-  font-size: clamp(2.4rem, 6.5vw, 5rem);
-  line-height: 0.95;
-  font-weight: 700;
-  letter-spacing: -0.035em;
+  font-size: clamp(2.4rem, 6vw, 4.75rem);
+  line-height: 0.98;
+  font-weight: 650;
+  letter-spacing: -0.03em;
   text-transform: uppercase;
 }
 
 @utility display-lg {
-  font-size: clamp(1.9rem, 4vw, 3rem);
-  line-height: 1;
-  font-weight: 650;
-  letter-spacing: -0.03em;
+  font-size: clamp(1.85rem, 3.8vw, 2.85rem);
+  line-height: 1.05;
+  font-weight: 600;
+  letter-spacing: -0.025em;
   text-transform: uppercase;
 }
 
@@ -161,8 +177,8 @@
 @utility label-tech {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  line-height: 1.2;
-  letter-spacing: 0.18em;
+  line-height: 1.25;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--color-muted-foreground);
 }
@@ -173,12 +189,12 @@
   letter-spacing: -0.01em;
 }
 
-/* Thin amber rule used as a section marker */
+/* Restrained accent rule */
 @utility rule-accent {
   display: block;
-  width: 2.5rem;
+  width: 2.25rem;
   height: 2px;
-  background: var(--color-primary);
+  background: var(--color-taupe);
 }
 
 @utility shell {
@@ -197,7 +213,7 @@
    Shared editorial hero for /catalog, /about,
    /contact, /request-sample.
    ~40vh mobile · ~50vh desktop.
-   Full-bleed image with dark overlay + text.
+   Full-bleed image with warm charcoal overlay.
    Dark gradient fallback when no image.
 ───────────────────────────────────────────── */
 
@@ -208,18 +224,19 @@
   align-items: flex-end;
   min-height: 40vh;
   border-bottom: 1px solid var(--color-border);
-  background: oklch(0.12 0.003 285);
+  background: oklch(0.24 0.006 90);
+  color: var(--color-warm-ivory);
 }
 
 @media (min-width: 768px) {
   .interior-hero {
-    min-height: 50vh;
+    min-height: 48vh;
   }
 }
 
 @media (min-width: 1280px) {
   .interior-hero {
-    min-height: 55vh;
+    min-height: 52vh;
   }
 }
 
@@ -230,19 +247,19 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
-  opacity: 0.38;
+  opacity: 0.42;
   transition: opacity 0.6s ease;
 }
 
 .interior-hero__overlay {
   position: absolute;
   inset: 0;
-  /* Left-side emphasis — keeps text highly readable regardless of image content */
+  /* Left-side emphasis with warm charcoal wash — keeps text highly readable */
   background: linear-gradient(
     to right,
-    oklch(0.12 0.003 285 / 0.96) 0%,
-    oklch(0.12 0.003 285 / 0.72) 45%,
-    oklch(0.12 0.003 285 / 0.28) 100%
+    oklch(0.22 0.006 90 / 0.94) 0%,
+    oklch(0.24 0.006 90 / 0.74) 45%,
+    oklch(0.24 0.006 90 / 0.32) 100%
   );
 }
 
@@ -261,22 +278,27 @@
   }
 }
 
+.interior-hero .rule-accent {
+  background: var(--color-taupe);
+}
+
 .interior-hero__eyebrow {
-  /* label-tech is applied as a utility class — this just ensures spacing */
   margin-top: 1.25rem;
+  color: var(--color-taupe);
 }
 
 .interior-hero__title {
-  /* display-xl applied as a utility class */
-  max-width: 38rem;
+  max-width: 42rem;
   margin-top: 1rem;
+  color: var(--color-warm-ivory);
 }
 
 .interior-hero__desc {
-  max-width: 34rem;
+  max-width: 36rem;
   font-size: 1rem;
   line-height: 1.65;
-  color: var(--color-muted-foreground);
+  color: var(--color-sand);
+  opacity: 0.92;
   margin-top: 1.25rem;
 }
 
@@ -286,8 +308,6 @@
   }
 }
 
-
-
 /* ─────────────────────────────────────────────
    ADMIN PANEL
    Scoped to .admin-* classes.
@@ -296,10 +316,33 @@
 ───────────────────────────────────────────── */
 
 /* ── Layout shell ── */
-.admin-shell {
+.admin-shell,
+.admin-login-page {
+  /* Scoped dark industrial tokens ensuring ZERO leakage from public light theme */
+  --background: oklch(0.145 0.003 285);
+  --foreground: oklch(0.925 0.008 85);
+  --surface: oklch(0.185 0.004 285);
+  --surface-strong: oklch(0.225 0.004 285);
+  --card: oklch(0.185 0.004 285);
+  --card-foreground: oklch(0.925 0.008 85);
+  --popover: oklch(0.2 0.004 285);
+  --popover-foreground: oklch(0.925 0.008 85);
+  --primary: oklch(0.78 0.155 71);
+  --primary-foreground: oklch(0.17 0.02 60);
+  --secondary: oklch(0.245 0.004 285);
+  --secondary-foreground: oklch(0.925 0.008 85);
+  --muted: oklch(0.225 0.004 285);
+  --muted-foreground: oklch(0.68 0.008 85);
+  --accent: oklch(0.26 0.006 285);
+  --accent-foreground: oklch(0.94 0.008 85);
+  --border: oklch(0.28 0.004 285);
+  --input: oklch(0.3 0.004 285);
+  --ring: oklch(0.78 0.155 71);
+
   display: flex;
   min-height: 100vh;
   background: oklch(0.13 0.003 285);
+  color: oklch(0.925 0.008 85);
 }
 
 /* ── Sidebar ── */

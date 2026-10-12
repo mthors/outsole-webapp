@@ -16,13 +16,15 @@ export function SiteHeader() {
   ] as const;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-md">
       <div className="shell flex h-16 items-center justify-between gap-6">
-        <Link to="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
-          <span className="grid h-8 w-8 place-items-center bg-primary font-mono text-sm font-bold text-primary-foreground">
+        <Link to="/" className="flex items-center gap-3 group" onClick={() => setOpen(false)}>
+          <span className="grid h-8 w-8 place-items-center rounded-[2px] bg-primary font-mono text-xs font-bold tracking-wider text-primary-foreground transition-opacity group-hover:opacity-90">
             OS
           </span>
-          <span className="text-sm font-bold uppercase tracking-[0.2em]">ODE Outsole</span>
+          <span className="text-sm font-semibold uppercase tracking-[0.18em] text-foreground">
+            ODE Outsole
+          </span>
         </Link>
         <nav className="hidden items-center gap-8 md:flex">
           {nav.map((n) => (
@@ -31,7 +33,7 @@ export function SiteHeader() {
               to={n.to}
               activeOptions={{ exact: n.to === "/" }}
               className="label-tech transition-colors hover:text-foreground"
-              activeProps={{ className: "!text-foreground" }}
+              activeProps={{ className: "!text-foreground font-semibold" }}
             >
               {n.label}
             </Link>
@@ -41,7 +43,7 @@ export function SiteHeader() {
           <LanguageSwitcher />
           <Link
             to="/request-sample"
-            className="hidden bg-primary px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-primary-foreground transition-opacity hover:opacity-90 sm:inline-flex"
+            className="hidden rounded-[2px] bg-primary px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-primary-foreground transition-opacity hover:opacity-90 sm:inline-flex"
           >
             {dict.nav.requestSample}
           </Link>
@@ -49,7 +51,7 @@ export function SiteHeader() {
             type="button"
             aria-label={open ? dict.nav.closeMenu : dict.nav.openMenu}
             aria-expanded={open}
-            className="grid h-10 w-10 place-items-center border border-border md:hidden"
+            className="grid h-10 w-10 place-items-center rounded-[2px] border border-border text-foreground transition-colors hover:bg-surface md:hidden"
             onClick={() => setOpen((v) => !v)}
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -71,8 +73,8 @@ export function SiteHeader() {
                 to={n.to}
                 activeOptions={{ exact: n.to === "/" }}
                 onClick={() => setOpen(false)}
-                className="border-b border-border py-4 text-lg font-semibold uppercase tracking-wide text-muted-foreground"
-                activeProps={{ className: "!text-foreground" }}
+                className="border-b border-border py-4 text-base font-medium uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground"
+                activeProps={{ className: "!text-foreground font-semibold" }}
               >
                 {n.label}
               </Link>
@@ -80,7 +82,7 @@ export function SiteHeader() {
             <Link
               to="/request-sample"
               onClick={() => setOpen(false)}
-              className="mt-5 bg-primary py-4 text-center text-sm font-semibold uppercase tracking-[0.14em] text-primary-foreground"
+              className="mt-5 rounded-[2px] bg-primary py-3.5 text-center text-xs font-semibold uppercase tracking-[0.14em] text-primary-foreground transition-opacity hover:opacity-90"
             >
               {dict.nav.requestSample}
             </Link>

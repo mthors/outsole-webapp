@@ -12,7 +12,7 @@ export function LanguageSwitcher({ className = "" }: LanguageSwitcherProps) {
       role="group"
       aria-label="Language selection"
       data-testid="lang-switcher"
-      className={`inline-flex items-center rounded border border-border bg-surface/80 p-0.5 font-mono text-[11px] uppercase tracking-wider ${className}`}
+      className={`inline-flex items-center rounded-[2px] border border-border bg-surface p-0.5 font-mono text-[11px] uppercase tracking-wider ${className}`}
     >
       <button
         type="button"
@@ -20,9 +20,9 @@ export function LanguageSwitcher({ className = "" }: LanguageSwitcherProps) {
         onClick={() => setLocale("id")}
         aria-pressed={locale === "id"}
         title="Bahasa Indonesia"
-        className={`rounded px-2 py-1 font-semibold transition-all ${
+        className={`rounded-[1px] px-2 py-1 font-semibold transition-colors ${
           locale === "id"
-            ? "bg-primary text-primary-foreground shadow-sm"
+            ? "bg-primary text-primary-foreground shadow-xs"
             : "text-muted-foreground hover:text-foreground"
         }`}
       >
@@ -34,9 +34,9 @@ export function LanguageSwitcher({ className = "" }: LanguageSwitcherProps) {
         onClick={() => setLocale("en")}
         aria-pressed={locale === "en"}
         title="English"
-        className={`rounded px-2 py-1 font-semibold transition-all ${
+        className={`rounded-[1px] px-2 py-1 font-semibold transition-colors ${
           locale === "en"
-            ? "bg-primary text-primary-foreground shadow-sm"
+            ? "bg-primary text-primary-foreground shadow-xs"
             : "text-muted-foreground hover:text-foreground"
         }`}
       >
