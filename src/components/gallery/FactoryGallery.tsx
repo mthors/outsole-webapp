@@ -1,13 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Play,
-  Pause,
-  Maximize2,
-  Sparkles,
-  Info,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Play, Pause, Maximize2, Sparkles, Info } from "lucide-react";
 import type { GalleryItem } from "@/lib/gallery-types";
 import {
   GALLERY_CATEGORIES,
@@ -22,12 +14,20 @@ interface FactoryGalleryProps {
   items: GalleryItem[];
 }
 
+interface TransitionState {
+  fromIndex: number;
+  toIndex: number;
+  direction: "next" | "prev";
+  key: number;
+}
+
 const SLIDE_DURATION_MS = 5000;
 
 export function FactoryGallery({ items }: FactoryGalleryProps) {
   const { dict, locale } = useI18n();
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [transition, setTransition] = useState<TransitionState | null>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const [isDocumentVisible, setIsDocumentVisible] = useState(true);
@@ -37,13 +37,40 @@ export function FactoryGallery({ items }: FactoryGalleryProps) {
   const thumbStripRef = useRef<HTMLDivElement>(null);
   const activeThumbRef = useRef<HTMLButtonElement>(null);
   const touchStartXRef = useRef<number | null>(null);
+  const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastNavTimeRef = useRef<number>(0);
+  const transitionKeyRef = useRef<number>(0);
 
   // Boundary safety if items change
   useEffect(() => {
     if (currentIndex >= items.length && items.length > 0) {
       setCurrentIndex(0);
+      setTransition(null);
     }
   }, [currentIndex, items.length]);
+
+  // Clean up any pending transition timer on unmount
+  useEffect(() => {
+    return () => {
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Preload adjacent images for smooth slide animation
+  useEffect(() => {
+    if (items.length <= 1) return;
+    const nextIdx = (currentIndex + 1) % items.length;
+    const prevIdx = (currentIndex - 1 + items.length) % items.length;
+    [nextIdx, prevIdx].forEach((idx) => {
+      const item = items[idx];
+      if (item?.image_url) {
+        const img = new Image();
+        img.src = item.image_url;
+      }
+    });
+  }, [currentIndex, items]);
 
   // Reduced motion media query listener
   useEffect(() => {
@@ -71,16 +98,81 @@ export function FactoryGallery({ items }: FactoryGalleryProps) {
     return () => document.removeEventListener("visibilitychange", handleVisibility);
   }, []);
 
+  // Core navigation with direction awareness and slide transition
+  const navigateTo = useCallback(
+    (targetIndex: number, direction: "next" | "prev") => {
+      if (items.length <= 1) return;
+      if (targetIndex === currentIndex) return;
+
+      // Restrain rapid clicking to prevent overlapping or inconsistent animations
+      const now = Date.now();
+      if (now - lastNavTimeRef.current < 250) {
+        return;
+      }
+      lastNavTimeRef.current = now;
+
+      // Respect prefers-reduced-motion: instant switch without slide
+      if (prefersReducedMotion) {
+        if (transitionTimeoutRef.current) {
+          clearTimeout(transitionTimeoutRef.current);
+          transitionTimeoutRef.current = null;
+        }
+        setTransition(null);
+        setCurrentIndex(targetIndex);
+        return;
+      }
+
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current);
+      }
+
+      const fromIndex = currentIndex;
+      transitionKeyRef.current += 1;
+      const currentKey = transitionKeyRef.current;
+
+      setTransition({
+        fromIndex,
+        toIndex: targetIndex,
+        direction,
+        key: currentKey,
+      });
+      setCurrentIndex(targetIndex);
+
+      transitionTimeoutRef.current = setTimeout(() => {
+        setTransition((current) => {
+          if (current && current.key === currentKey) {
+            return null;
+          }
+          return current;
+        });
+        transitionTimeoutRef.current = null;
+      }, 420);
+    },
+    [currentIndex, items.length, prefersReducedMotion],
+  );
+
   // Slide navigation callbacks
   const handlePrev = useCallback(() => {
     if (items.length <= 1) return;
-    setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
-  }, [items.length]);
+    const targetIndex = (currentIndex - 1 + items.length) % items.length;
+    navigateTo(targetIndex, "prev");
+  }, [currentIndex, items.length, navigateTo]);
 
   const handleNext = useCallback(() => {
     if (items.length <= 1) return;
-    setCurrentIndex((prev) => (prev + 1) % items.length);
-  }, [items.length]);
+    const targetIndex = (currentIndex + 1) % items.length;
+    navigateTo(targetIndex, "next");
+  }, [currentIndex, items.length, navigateTo]);
+
+  // Thumbnail selection handler
+  const handleSelectThumbnail = useCallback(
+    (idx: number) => {
+      if (idx === currentIndex) return;
+      const direction = idx > currentIndex ? "next" : "prev";
+      navigateTo(idx, direction);
+    },
+    [currentIndex, navigateTo],
+  );
 
   // Automatic slideshow timer
   useEffect(() => {
@@ -179,6 +271,11 @@ export function FactoryGallery({ items }: FactoryGalleryProps) {
   }
 
   const currentItem = items[currentIndex];
+  const fromItem =
+    transition && transition.fromIndex < items.length ? items[transition.fromIndex] : null;
+  const toItem = transition && transition.toIndex < items.length ? items[transition.toIndex] : null;
+  const isTransitioning = Boolean(transition && fromItem && toItem);
+
   const categoryMeta = currentItem ? GALLERY_CATEGORIES[currentItem.category] : null;
   const currentCaption = currentItem ? getLocalizedCaption(currentItem, locale) : "";
   const currentCatName = currentItem ? getLocalizedCategoryName(currentItem.category, locale) : "";
@@ -195,9 +292,7 @@ export function FactoryGallery({ items }: FactoryGalleryProps) {
             <p className="label-tech">
               <span className="text-primary">01</span> / {dict.about.gallery.eyebrow}
             </p>
-            <h2 className="display-lg mt-4 text-foreground">
-              {dict.about.gallery.title}
-            </h2>
+            <h2 className="display-lg mt-4 text-foreground">{dict.about.gallery.title}</h2>
             <p className="mt-6 text-base leading-relaxed text-muted-foreground md:text-lg">
               {dict.about.gallery.intro}
             </p>
@@ -210,9 +305,7 @@ export function FactoryGallery({ items }: FactoryGalleryProps) {
                 <Sparkles className="h-3.5 w-3.5" />
                 <span>Dokumentasi Visual</span>
               </div>
-              <p className="mt-1 leading-normal">
-                {dict.about.gallery.placeholderNotice}
-              </p>
+              <p className="mt-1 leading-normal">{dict.about.gallery.placeholderNotice}</p>
             </div>
           )}
         </div>
@@ -223,9 +316,7 @@ export function FactoryGallery({ items }: FactoryGalleryProps) {
             <h3 className="text-base font-semibold uppercase text-foreground">
               {dict.about.gallery.emptyTitle}
             </h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {dict.about.gallery.emptyDesc}
-            </p>
+            <p className="mt-2 text-sm text-muted-foreground">{dict.about.gallery.emptyDesc}</p>
           </div>
         ) : (
           <div className="mt-8 space-y-4">
@@ -250,19 +341,73 @@ export function FactoryGallery({ items }: FactoryGalleryProps) {
                   style={{ backgroundImage: `url(${currentItem.image_url})` }}
                 />
 
-                {/* Primary Uncropped Photograph */}
-                <img
-                  key={currentItem.id}
-                  src={currentItem.image_url}
-                  alt={currentCaption || currentCatName}
-                  className="relative z-10 h-full w-full object-contain transition duration-500 ease-out"
-                  onError={(e) => {
-                    const fallback = FALLBACK_PLACEHOLDERS[currentItem.category];
-                    if (!e.currentTarget.src.endsWith(fallback)) {
-                      e.currentTarget.src = fallback;
-                    }
-                  }}
-                />
+                {/* Primary Uncropped Photograph(s) with smooth slide transition */}
+                <div className="absolute inset-0 z-10 overflow-hidden pointer-events-none">
+                  {isTransitioning && fromItem && toItem && transition ? (
+                    <>
+                      {/* Outgoing Photograph */}
+                      <div
+                        key={`out-${transition.key}-${fromItem.id}`}
+                        className={`absolute inset-0 flex items-center justify-center ${
+                          transition.direction === "next"
+                            ? "gallery-slide-out-left"
+                            : "gallery-slide-out-right"
+                        }`}
+                        aria-hidden="true"
+                      >
+                        <img
+                          src={fromItem.image_url}
+                          alt=""
+                          className="h-full w-full object-contain"
+                          onError={(e) => {
+                            const fallback = FALLBACK_PLACEHOLDERS[fromItem.category];
+                            if (!e.currentTarget.src.endsWith(fallback)) {
+                              e.currentTarget.src = fallback;
+                            }
+                          }}
+                        />
+                      </div>
+
+                      {/* Incoming Photograph */}
+                      <div
+                        key={`in-${transition.key}-${toItem.id}`}
+                        className={`absolute inset-0 flex items-center justify-center ${
+                          transition.direction === "next"
+                            ? "gallery-slide-in-right"
+                            : "gallery-slide-in-left"
+                        }`}
+                      >
+                        <img
+                          src={toItem.image_url}
+                          alt={currentCaption || currentCatName}
+                          className="h-full w-full object-contain"
+                          onError={(e) => {
+                            const fallback = FALLBACK_PLACEHOLDERS[toItem.category];
+                            if (!e.currentTarget.src.endsWith(fallback)) {
+                              e.currentTarget.src = fallback;
+                            }
+                          }}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    /* Static Active Photograph */
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <img
+                        key={currentItem.id}
+                        src={currentItem.image_url}
+                        alt={currentCaption || currentCatName}
+                        className="h-full w-full object-contain"
+                        onError={(e) => {
+                          const fallback = FALLBACK_PLACEHOLDERS[currentItem.category];
+                          if (!e.currentTarget.src.endsWith(fallback)) {
+                            e.currentTarget.src = fallback;
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
 
                 {/* Top Overlay Badge Bar */}
                 <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between pointer-events-none">
@@ -420,7 +565,7 @@ export function FactoryGallery({ items }: FactoryGalleryProps) {
                         key={item.id}
                         ref={isActive ? activeThumbRef : null}
                         type="button"
-                        onClick={() => setCurrentIndex(idx)}
+                        onClick={() => handleSelectThumbnail(idx)}
                         aria-label={`${cat?.name_en || item.category} (${idx + 1} of ${items.length})`}
                         className={`group relative flex-shrink-0 aspect-[16/10] w-20 sm:w-24 md:w-28 overflow-hidden rounded-sm border transition duration-200 focus:outline-none ${
                           isActive
