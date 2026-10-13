@@ -430,7 +430,7 @@ export function AdminInquiriesPage() {
                     style={{
                       borderBottom: "1px solid var(--admin-card-border)",
                       transition: "background 0.1s",
-                      background: search.inquiry === item.id ? "rgba(180, 162, 140, 0.08)" : "transparent",
+                      background: search.inquiry === item.id ? "rgba(8, 59, 123, 0.06)" : "transparent",
                     }}
                   >
                     {/* Customer */}

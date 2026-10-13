@@ -1150,10 +1150,10 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                   gap: "1rem",
                   padding: "1rem",
                   background: img.is_primary
-                    ? "rgba(180, 162, 140, 0.08)"
+                    ? "rgba(8, 59, 123, 0.06)"
                     : "var(--admin-card-bg)",
                   border: img.is_primary
-                    ? "1px solid var(--taupe)"
+                    ? "1px solid var(--deep-blue)"
                     : "1px solid var(--admin-card-border)",
                   borderRadius: "4px",
                   opacity: isBusyRow ? 0.65 : 1,

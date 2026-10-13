@@ -304,8 +304,8 @@ function AdminDashboard() {
             <div
               className="admin-stat-icon"
               style={{
-                background: "rgba(119, 121, 107, 0.16)",
-                color: "var(--muted-olive)",
+                background: "rgba(8, 59, 123, 0.12)",
+                color: "var(--deep-blue)",
               }}
             >
               <CheckCircle2 size={20} />
@@ -325,8 +325,8 @@ function AdminDashboard() {
             <div
               className="admin-stat-icon"
               style={{
-                background: "rgba(180, 162, 140, 0.25)",
-                color: "var(--charcoal)",
+                background: "rgba(168, 108, 37, 0.14)",
+                color: "var(--ochre)",
               }}
             >
               <Clock size={20} />
@@ -430,8 +430,8 @@ function AdminDashboard() {
             <div
               className="admin-stat-icon"
               style={{
-                background: "rgba(180, 162, 140, 0.25)",
-                color: "var(--charcoal)",
+                background: "rgba(168, 108, 37, 0.14)",
+                color: "var(--ochre)",
               }}
             >
               <Clock size={20} />
@@ -452,8 +452,8 @@ function AdminDashboard() {
             <div
               className="admin-stat-icon"
               style={{
-                background: "rgba(119, 121, 107, 0.16)",
-                color: "var(--muted-olive)",
+                background: "rgba(8, 59, 123, 0.1)",
+                color: "var(--deep-blue)",
               }}
             >
               <Inbox size={20} />
@@ -542,8 +542,8 @@ function AdminDashboard() {
             <div
               className="admin-stat-icon"
               style={{
-                background: "rgba(180, 162, 140, 0.25)",
-                color: "var(--charcoal)",
+                background: "rgba(8, 59, 123, 0.1)",
+                color: "var(--deep-blue)",
               }}
             >
               <Tags size={20} />
@@ -821,8 +821,9 @@ function AdminDashboard() {
                                 alignItems: "center",
                                 gap: "0.2rem",
                                 fontSize: "0.6875rem",
-                                color: "var(--charcoal)",
-                                background: "rgba(180, 162, 140, 0.25)",
+                                color: "var(--ochre)",
+                                background: "rgba(168, 108, 37, 0.14)",
+                                border: "1px solid rgba(168, 108, 37, 0.35)",
                                 padding: "0.05rem 0.35rem",
                                 borderRadius: "2px",
                               }}
@@ -905,8 +906,8 @@ function AdminDashboard() {
                   width: "36px",
                   height: "36px",
                   borderRadius: "2px",
-                  background: "rgba(180, 162, 140, 0.25)",
-                  color: "var(--charcoal)",
+                  background: "rgba(8, 59, 123, 0.12)",
+                  color: "var(--deep-blue)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -1058,7 +1059,7 @@ function AdminDashboard() {
                   width: "36px",
                   height: "36px",
                   borderRadius: "2px",
-                  background: "rgba(180, 162, 140, 0.25)",
+                  background: "rgba(119, 121, 107, 0.16)",
                   color: "var(--charcoal)",
                   display: "flex",
                   alignItems: "center",
