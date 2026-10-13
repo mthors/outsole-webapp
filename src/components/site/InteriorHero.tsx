@@ -59,7 +59,7 @@ export function InteriorHero({ config, config_en, imageUrl, eyebrow, title, desc
         style={
           imageUrl
             ? undefined
-            : { background: "linear-gradient(135deg, oklch(0.24 0.006 90) 0%, oklch(0.20 0.006 90) 100%)" }
+            : { background: "linear-gradient(135deg, #292925 0%, #1c1c19 100%)" }
         }
       />
 

@@ -5,9 +5,9 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * OUTSOLE — Premium Minimalist B2B Design System.
- * Warm Ivory (#F5F2EC), Sand (#E5DED2), Taupe (#B4A28C),
- * Charcoal (#292925), Muted Olive-Grey (#77796B).
+ * OUTSOLE — Official Brand Design System.
+ * Sand (#E5DED2), Olive-grey (#77796B), Charcoal (#292925),
+ * Deep blue (#083B7B), Ochre (#A86C25).
  * Material-led, architectural, tactile, design-driven technical identity.
  */
 
@@ -23,11 +23,17 @@
   --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
-  --color-warm-ivory: var(--warm-ivory);
+  /* Official Brand Primitives */
   --color-sand: var(--sand);
-  --color-taupe: var(--taupe);
+  --color-olive-grey: var(--olive-grey);
+  --color-muted-olive: var(--olive-grey);
   --color-charcoal: var(--charcoal);
-  --color-muted-olive: var(--muted-olive);
+  --color-deep-blue: var(--deep-blue);
+  --color-ochre: var(--ochre);
+
+  /* Deprecated provisional tokens aliased to official */
+  --color-warm-ivory: var(--sand);
+  --color-taupe: var(--olive-grey);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -69,58 +75,63 @@
 :root {
   --radius: 3px;
 
-  /* Provisional Central Brand Palette */
-  --warm-ivory: #F5F2EC;
+  /* Official Brand Palette */
   --sand: #E5DED2;
-  --taupe: #B4A28C;
+  --olive-grey: #77796B;
+  --muted-olive: #77796B; /* backwards-compatible alias */
   --charcoal: #292925;
-  --muted-olive: #77796B;
+  --deep-blue: #083B7B;
+  --ochre: #A86C25;
+
+  /* Deprecated provisional aliases */
+  --warm-ivory: var(--sand);
+  --taupe: var(--olive-grey);
 
   /* Semantic Theme Mappings */
-  --background: var(--warm-ivory);
+  --background: var(--sand);
   --foreground: var(--charcoal);
 
-  --surface: var(--sand);
-  --surface-strong: oklch(0.86 0.015 78);
+  --surface: #FFFFFF;
+  --surface-strong: oklch(0.88 0.012 75);
 
-  --card: var(--warm-ivory);
+  --card: #FFFFFF;
   --card-foreground: var(--charcoal);
-  --popover: var(--warm-ivory);
+  --popover: #FFFFFF;
   --popover-foreground: var(--charcoal);
 
-  --primary: var(--charcoal);
-  --primary-foreground: var(--warm-ivory);
+  --primary: var(--deep-blue);
+  --primary-foreground: #FFFFFF;
 
   --secondary: var(--sand);
   --secondary-foreground: var(--charcoal);
 
   --muted: var(--sand);
-  --muted-foreground: var(--muted-olive);
+  --muted-foreground: var(--olive-grey);
 
-  --accent: var(--sand);
-  --accent-foreground: var(--charcoal);
+  --accent: var(--ochre);
+  --accent-foreground: #FFFFFF;
 
   --destructive: oklch(0.55 0.16 28);
-  --destructive-foreground: var(--warm-ivory);
+  --destructive-foreground: #FFFFFF;
 
-  --border: oklch(0.725 0.024 75 / 0.45);
-  --input: oklch(0.725 0.024 75 / 0.5);
-  --ring: var(--charcoal);
+  --border: rgba(41, 41, 37, 0.16);
+  --input: rgba(41, 41, 37, 0.22);
+  --ring: var(--deep-blue);
 
-  --chart-1: var(--charcoal);
-  --chart-2: var(--taupe);
-  --chart-3: var(--muted-olive);
-  --chart-4: var(--sand);
-  --chart-5: oklch(0.45 0.015 90);
+  --chart-1: var(--deep-blue);
+  --chart-2: var(--ochre);
+  --chart-3: var(--charcoal);
+  --chart-4: var(--olive-grey);
+  --chart-5: var(--sand);
 
   --sidebar: var(--sand);
   --sidebar-foreground: var(--charcoal);
-  --sidebar-primary: var(--charcoal);
-  --sidebar-primary-foreground: var(--warm-ivory);
-  --sidebar-accent: var(--warm-ivory);
+  --sidebar-primary: var(--deep-blue);
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #FFFFFF;
   --sidebar-accent-foreground: var(--charcoal);
-  --sidebar-border: oklch(0.725 0.024 75 / 0.35);
-  --sidebar-ring: var(--charcoal);
+  --sidebar-border: rgba(41, 41, 37, 0.15);
+  --sidebar-ring: var(--deep-blue);
 }
 
 @layer base {
@@ -146,13 +157,13 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--color-deep-blue);
     outline-offset: 2px;
   }
 
   ::selection {
-    background: var(--color-charcoal);
-    color: var(--color-warm-ivory);
+    background: var(--color-deep-blue);
+    color: #FFFFFF;
   }
 }
 
@@ -194,7 +205,7 @@
   display: block;
   width: 2.25rem;
   height: 2px;
-  background: var(--color-taupe);
+  background: var(--color-ochre);
 }
 
 @utility shell {
@@ -224,8 +235,8 @@
   align-items: flex-end;
   min-height: 40vh;
   border-bottom: 1px solid var(--color-border);
-  background: oklch(0.24 0.006 90);
-  color: var(--color-warm-ivory);
+  background: var(--color-charcoal);
+  color: var(--color-sand);
 }
 
 @media (min-width: 768px) {
@@ -257,9 +268,9 @@
   /* Left-side emphasis with warm charcoal wash — keeps text highly readable */
   background: linear-gradient(
     to right,
-    oklch(0.22 0.006 90 / 0.94) 0%,
-    oklch(0.24 0.006 90 / 0.74) 45%,
-    oklch(0.24 0.006 90 / 0.32) 100%
+    rgba(41, 41, 37, 0.94) 0%,
+    rgba(41, 41, 37, 0.74) 45%,
+    rgba(41, 41, 37, 0.32) 100%
   );
 }
 
@@ -279,18 +290,18 @@
 }
 
 .interior-hero .rule-accent {
-  background: var(--color-taupe);
+  background: var(--color-ochre);
 }
 
 .interior-hero__eyebrow {
   margin-top: 1.25rem;
-  color: var(--color-taupe);
+  color: var(--color-ochre);
 }
 
 .interior-hero__title {
   max-width: 42rem;
   margin-top: 1rem;
-  color: var(--color-warm-ivory);
+  color: #FFFFFF;
 }
 
 .interior-hero__desc {
@@ -318,8 +329,8 @@
 /* ── Layout shell ── */
 .admin-shell,
 .admin-login-page {
-  /* Centralized lifestyle tokens scoped to admin */
-  --background: var(--warm-ivory);
+  /* Centralized official brand tokens scoped to admin */
+  --background: var(--sand);
   --foreground: var(--charcoal);
   --surface: #FFFFFF;
   --surface-strong: var(--sand);
@@ -327,59 +338,59 @@
   --card-foreground: var(--charcoal);
   --popover: #FFFFFF;
   --popover-foreground: var(--charcoal);
-  --primary: var(--charcoal);
-  --primary-foreground: var(--warm-ivory);
+  --primary: var(--deep-blue);
+  --primary-foreground: #FFFFFF;
   --secondary: var(--sand);
   --secondary-foreground: var(--charcoal);
   --muted: var(--sand);
-  --muted-foreground: var(--muted-olive);
-  --accent: var(--taupe);
-  --accent-foreground: var(--charcoal);
+  --muted-foreground: var(--olive-grey);
+  --accent: var(--ochre);
+  --accent-foreground: #FFFFFF;
   --destructive: oklch(0.55 0.16 28);
-  --destructive-foreground: var(--warm-ivory);
-  --border: oklch(0.725 0.024 75 / 0.45);
-  --input: oklch(0.725 0.024 75 / 0.5);
-  --ring: var(--charcoal);
+  --destructive-foreground: #FFFFFF;
+  --border: rgba(41, 41, 37, 0.15);
+  --input: rgba(41, 41, 37, 0.2);
+  --ring: var(--deep-blue);
 
   /* Specific admin semantic tokens */
-  --admin-bg: var(--warm-ivory);
-  --admin-sidebar-bg: var(--sand);
-  --admin-sidebar-border: oklch(0.725 0.024 75 / 0.35);
+  --admin-bg: var(--sand);
+  --admin-sidebar-bg: #DDD5C7;
+  --admin-sidebar-border: rgba(41, 41, 37, 0.15);
   --admin-card-bg: #FFFFFF;
-  --admin-card-border: oklch(0.725 0.024 75 / 0.45);
+  --admin-card-border: rgba(41, 41, 37, 0.15);
   --admin-input-bg: #FFFFFF;
-  --admin-input-border: oklch(0.725 0.024 75 / 0.5);
+  --admin-input-border: rgba(41, 41, 37, 0.2);
   --admin-text-main: var(--charcoal);
-  --admin-text-muted: var(--muted-olive);
-  --admin-text-dim: oklch(0.55 0.015 85);
-  --admin-hover-bg: rgba(229, 222, 210, 0.4);
+  --admin-text-muted: var(--olive-grey);
+  --admin-text-dim: rgba(41, 41, 37, 0.45);
+  --admin-hover-bg: rgba(229, 222, 210, 0.5);
   --admin-table-th-bg: var(--sand);
   --admin-table-row-hover: rgba(229, 222, 210, 0.35);
 
   /* Semantic status tokens */
-  --admin-status-pending-bg: rgba(180, 162, 140, 0.2);
-  --admin-status-pending-text: oklch(0.38 0.03 65);
-  --admin-status-pending-border: rgba(180, 162, 140, 0.5);
+  --admin-status-pending-bg: rgba(168, 108, 37, 0.12);
+  --admin-status-pending-text: var(--ochre);
+  --admin-status-pending-border: rgba(168, 108, 37, 0.35);
 
-  --admin-status-contacted-bg: rgba(119, 121, 107, 0.16);
-  --admin-status-contacted-text: oklch(0.34 0.04 135);
-  --admin-status-contacted-border: rgba(119, 121, 107, 0.4);
+  --admin-status-contacted-bg: rgba(8, 59, 123, 0.1);
+  --admin-status-contacted-text: var(--deep-blue);
+  --admin-status-contacted-border: rgba(8, 59, 123, 0.3);
 
   --admin-status-resolved-bg: oklch(0.92 0.025 140);
   --admin-status-resolved-text: oklch(0.32 0.06 145);
   --admin-status-resolved-border: oklch(0.8 0.05 140);
 
-  --admin-status-active-bg: rgba(119, 121, 107, 0.16);
-  --admin-status-active-text: oklch(0.32 0.04 135);
-  --admin-status-active-border: rgba(119, 121, 107, 0.4);
+  --admin-status-active-bg: rgba(8, 59, 123, 0.1);
+  --admin-status-active-text: var(--deep-blue);
+  --admin-status-active-border: rgba(8, 59, 123, 0.3);
 
-  --admin-status-draft-bg: rgba(180, 162, 140, 0.2);
-  --admin-status-draft-text: oklch(0.38 0.03 65);
-  --admin-status-draft-border: rgba(180, 162, 140, 0.5);
+  --admin-status-draft-bg: rgba(168, 108, 37, 0.12);
+  --admin-status-draft-text: var(--ochre);
+  --admin-status-draft-border: rgba(168, 108, 37, 0.35);
 
-  --admin-status-archived-bg: rgba(229, 222, 210, 0.6);
-  --admin-status-archived-text: oklch(0.48 0.015 85);
-  --admin-status-archived-border: oklch(0.725 0.024 75 / 0.5);
+  --admin-status-archived-bg: rgba(119, 121, 107, 0.15);
+  --admin-status-archived-text: var(--charcoal);
+  --admin-status-archived-border: rgba(119, 121, 107, 0.35);
 
   --admin-danger-bg: oklch(0.55 0.16 28 / 0.08);
   --admin-danger-text: oklch(0.52 0.16 28);
@@ -415,8 +426,8 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  background: var(--charcoal);
-  color: var(--warm-ivory);
+  background: var(--deep-blue);
+  color: #FFFFFF;
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -448,21 +459,22 @@
   border-radius: 2px;
   font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--muted-olive);
+  color: var(--olive-grey);
   text-decoration: none;
   transition: background 0.15s, color 0.15s;
 }
 
 .admin-nav-link:hover {
-  background: rgba(245, 242, 236, 0.7);
+  background: rgba(255, 255, 255, 0.5);
   color: var(--charcoal);
 }
 
 .admin-nav-link[data-status="active"] {
-  background: var(--warm-ivory);
-  color: var(--charcoal);
+  background: #FFFFFF;
+  color: var(--deep-blue);
   font-weight: 600;
   box-shadow: 0 1px 2px rgba(41, 41, 37, 0.06);
+  border-left: 3px solid var(--deep-blue);
 }
 
 /* ── Sidebar footer ── */
@@ -557,18 +569,18 @@
 }
 
 .admin-stat-icon--products {
-  background: rgba(180, 162, 140, 0.25);
-  color: var(--charcoal);
+  background: rgba(8, 59, 123, 0.12);
+  color: var(--deep-blue);
 }
 
 .admin-stat-icon--inquiries {
-  background: rgba(119, 121, 107, 0.18);
-  color: var(--muted-olive);
+  background: rgba(168, 108, 37, 0.14);
+  color: var(--ochre);
 }
 
 .admin-stat-icon--storage {
-  background: rgba(229, 222, 210, 0.6);
-  color: var(--charcoal);
+  background: rgba(119, 121, 107, 0.16);
+  color: var(--olive-grey);
 }
 
 .admin-stat-body {
@@ -602,8 +614,8 @@
   align-items: flex-start;
   gap: 0.625rem;
   padding: 1rem 1.25rem;
-  background: rgba(180, 162, 140, 0.18);
-  border: 1px solid rgba(180, 162, 140, 0.5);
+  background: rgba(168, 108, 37, 0.1);
+  border: 1px solid rgba(168, 108, 37, 0.35);
   border-radius: 2px;
   color: var(--charcoal);
   font-size: 0.8125rem;
@@ -619,7 +631,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--warm-ivory);
+  background: var(--sand);
   padding: 1.5rem;
 }
 
@@ -644,8 +656,8 @@
   justify-content: center;
   width: 44px;
   height: 44px;
-  background: var(--charcoal);
-  color: var(--warm-ivory);
+  background: var(--deep-blue);
+  color: #FFFFFF;
   font-size: 0.875rem;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -704,8 +716,8 @@
 .admin-field-input::placeholder { color: oklch(0.55 0.015 85); }
 
 .admin-field-input:focus {
-  border-color: var(--charcoal);
-  box-shadow: 0 0 0 2px rgba(41, 41, 37, 0.15);
+  border-color: var(--deep-blue);
+  box-shadow: 0 0 0 2px rgba(8, 59, 123, 0.18);
 }
 
 .admin-field-input:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -728,8 +740,8 @@
 .admin-login-submit {
   width: 100%;
   padding: 0.6875rem 1rem;
-  background: var(--charcoal);
-  color: var(--warm-ivory);
+  background: var(--deep-blue);
+  color: #FFFFFF;
   border: none;
   border-radius: 2px;
   font-size: 0.875rem;
@@ -743,7 +755,7 @@
   min-height: 42px;
 }
 
-.admin-login-submit:hover:not(:disabled) { background: oklch(0.2 0.005 60); }
+.admin-login-submit:hover:not(:disabled) { background: rgba(8, 59, 123, 0.88); }
 .admin-login-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
 /* Inline spinner */
@@ -751,8 +763,8 @@
   display: inline-block;
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(245, 242, 236, 0.3);
-  border-top-color: var(--warm-ivory);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #FFFFFF;
   border-radius: 50%;
   animation: admin-spin 0.65s linear infinite;
 }
@@ -791,8 +803,8 @@
 }
 
 .admin-search-input:focus {
-  border-color: var(--charcoal);
-  box-shadow: 0 0 0 2px rgba(41, 41, 37, 0.12);
+  border-color: var(--deep-blue);
+  box-shadow: 0 0 0 2px rgba(8, 59, 123, 0.18);
 }
 
 .admin-select {
@@ -808,7 +820,8 @@
 }
 
 .admin-select:focus {
-  border-color: var(--charcoal);
+  border-color: var(--deep-blue);
+  box-shadow: 0 0 0 2px rgba(8, 59, 123, 0.18);
 }
 
 .admin-btn {
@@ -826,12 +839,12 @@
 }
 
 .admin-btn-primary {
-  background: var(--charcoal);
-  color: var(--warm-ivory);
+  background: var(--deep-blue);
+  color: #FFFFFF;
 }
 
 .admin-btn-primary:hover:not(:disabled) {
-  background: oklch(0.2 0.005 60);
+  background: rgba(8, 59, 123, 0.88);
 }
 
 .admin-btn-secondary {
@@ -883,7 +896,7 @@
 .admin-table th {
   padding: 0.75rem 1rem;
   background: var(--sand);
-  color: var(--muted-olive);
+  color: var(--olive-grey);
   font-family: var(--font-mono, monospace);
   font-size: 0.6875rem;
   text-transform: uppercase;
@@ -1027,8 +1040,8 @@
 }
 
 .admin-textarea:focus {
-  border-color: var(--charcoal);
-  box-shadow: 0 0 0 2px rgba(41, 41, 37, 0.12);
+  border-color: var(--deep-blue);
+  box-shadow: 0 0 0 2px rgba(8, 59, 123, 0.18);
   outline: none;
 }
 
@@ -1055,7 +1068,7 @@
 
 .admin-checkbox-label:hover {
   background: rgba(229, 222, 210, 0.8);
-  border-color: var(--taupe);
+  border-color: var(--olive-grey);
 }
 
 .admin-checkbox-label input[type="checkbox"]:checked + span {

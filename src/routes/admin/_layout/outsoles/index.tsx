@@ -207,8 +207,8 @@ function ArchiveDialog({ item, onClose, onArchived }: ArchiveDialogProps) {
                     display: "inline-block",
                     width: "14px",
                     height: "14px",
-                    border: "2px solid rgba(245, 242, 236, 0.3)",
-                    borderTopColor: "var(--warm-ivory)",
+                    border: "2px solid rgba(255, 255, 255, 0.3)",
+                    borderTopColor: "#FFFFFF",
                     borderRadius: "50%",
                     animation: "admin-spin 0.65s linear infinite",
                   }}
@@ -473,7 +473,7 @@ function AdminOutsolesListPage() {
                           type="button"
                           className="admin-btn admin-btn-sm"
                           style={{
-                            background: "rgba(180, 162, 140, 0.15)",
+                            background: "rgba(119, 121, 107, 0.12)",
                             color: "var(--charcoal)",
                             border: "1px solid var(--border)",
                           }}
