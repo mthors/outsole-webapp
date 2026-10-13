@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { ArrowRight, CheckCircle2, Cog, Layers } from "lucide-react";
 import { getSiteContent, getInteriorHero } from "@/lib/public-catalog.functions";
+import { getPublicGallery } from "@/lib/gallery.functions";
 import { InteriorHero } from "@/components/site/InteriorHero";
+import { FactoryGallery } from "@/components/gallery/FactoryGallery";
 import { useI18n } from "@/lib/i18n";
 import { getLocalizedContent } from "@/lib/content-locale";
 
@@ -20,6 +21,13 @@ const interiorHeroQuery = queryOptions({
   refetchOnMount: false,
 });
 
+const factoryGalleryQuery = queryOptions({
+  queryKey: ["factory-gallery"],
+  queryFn: () => getPublicGallery(),
+  staleTime: 5 * 60 * 1000,
+  refetchOnMount: false,
+});
+
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
@@ -27,7 +35,7 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "ODE Outsole specializes in high-performance rubber outsole engineering, OEM tooling transfer, and ODM development for global footwear brands.",
+          "ODE Outsole specializes in high-performance rubber outsole engineering, precision compounding, and volume manufacturing for footwear brands.",
       },
       { property: "og:title", content: "About Us — ODE Outsole" },
       {
@@ -40,6 +48,7 @@ export const Route = createFileRoute("/about")({
   loader: ({ context }) => Promise.all([
     context.queryClient.ensureQueryData(aboutContentQuery),
     context.queryClient.ensureQueryData(interiorHeroQuery),
+    context.queryClient.ensureQueryData(factoryGalleryQuery),
   ]),
   component: AboutPage,
   pendingComponent: AboutPending,
@@ -78,13 +87,12 @@ function AboutPage() {
   const { dict, locale } = useI18n();
   const { data } = useSuspenseQuery(aboutContentQuery);
   const { data: hero } = useSuspenseQuery(interiorHeroQuery);
+  const { data: galleryData } = useSuspenseQuery(factoryGalleryQuery);
   const contentMap = Object.fromEntries(
     data.content.map((item) => [item.content_key, item]),
   );
 
   const companyLocalized = getLocalizedContent(contentMap["about_company"], locale);
-  const oemLocalized = getLocalizedContent(contentMap["about_oem"], locale);
-  const odmLocalized = getLocalizedContent(contentMap["about_odm"], locale);
 
   return (
     <>
@@ -136,120 +144,8 @@ function AboutPage() {
         </div>
       </section>
 
-      {/* OEM Capabilities Section */}
-      <section className="border-b border-border bg-surface py-20 md:py-28">
-        <div className="shell">
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div className="max-w-3xl">
-              <p className="label-tech">
-                <span className="text-primary">01</span> / {dict.about.oem.eyebrow}
-              </p>
-              <h2 className="display-lg mt-4">
-                {oemLocalized.title || "OEM Manufacturing"}
-              </h2>
-              <p className="mt-6 text-base leading-relaxed text-muted-foreground md:text-lg">
-                {clean(oemLocalized.content) ||
-                  "Precision build-to-print production: tooling transfer, compound matching, rigorous quality control, and dependable shipping lead times."}
-              </p>
-            </div>
-            <Link
-              to="/request-sample"
-              className="inline-flex items-center gap-2 border border-foreground/30 px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] hover:border-primary hover:text-primary"
-            >
-              {dict.about.oem.requestTrial} <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            <div className="border border-border bg-background p-8">
-              <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-primary/10 text-primary">
-                <Cog className="h-5 w-5" />
-              </div>
-              <h3 className="mt-5 text-lg font-semibold uppercase text-foreground">{dict.about.oem.feature1Title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                {dict.about.oem.feature1Desc}
-              </p>
-            </div>
-
-            <div className="border border-border bg-background p-8">
-              <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-primary/10 text-primary">
-                <Layers className="h-5 w-5" />
-              </div>
-              <h3 className="mt-5 text-lg font-semibold uppercase text-foreground">{dict.about.oem.feature2Title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                {dict.about.oem.feature2Desc}
-              </p>
-            </div>
-
-            <div className="border border-border bg-background p-8">
-              <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-primary/10 text-primary">
-                <CheckCircle2 className="h-5 w-5" />
-              </div>
-              <h3 className="mt-5 text-lg font-semibold uppercase text-foreground">{dict.about.oem.feature3Title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                {dict.about.oem.feature3Desc}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ODM Capabilities Section */}
-      <section className="border-b border-border bg-background py-20 md:py-28">
-        <div className="shell">
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div className="max-w-3xl">
-              <p className="label-tech">
-                <span className="text-primary">02</span> / {dict.about.odm.eyebrow}
-              </p>
-              <h2 className="display-lg mt-4">
-                {odmLocalized.title || "ODM Development"}
-              </h2>
-              <p className="mt-6 text-base leading-relaxed text-muted-foreground md:text-lg">
-                {clean(odmLocalized.content) ||
-                  "In-house tread design development: concept rendering, 3D bottom-unit modeling, rapid prototyping, and sampling cycles tailored to your brand identity."}
-              </p>
-            </div>
-            <Link
-              to="/catalog"
-              className="inline-flex items-center gap-2 border border-foreground/30 px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] hover:border-primary hover:text-primary"
-            >
-              {dict.about.odm.browseTooling} <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-
-          <div className="mt-12 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                step: "01",
-                title: dict.about.odm.step1Title,
-                desc: dict.about.odm.step1Desc,
-              },
-              {
-                step: "02",
-                title: dict.about.odm.step2Title,
-                desc: dict.about.odm.step2Desc,
-              },
-              {
-                step: "03",
-                title: dict.about.odm.step3Title,
-                desc: dict.about.odm.step3Desc,
-              },
-              {
-                step: "04",
-                title: dict.about.odm.step4Title,
-                desc: dict.about.odm.step4Desc,
-              },
-            ].map((item) => (
-              <div key={item.step} className="bg-surface p-8">
-                <p className="data-mono text-sm text-primary">{item.step}</p>
-                <h3 className="mt-5 text-base font-semibold uppercase text-foreground">{item.title}</h3>
-                <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Factory Gallery Section (Replaces OEM & ODM sections) */}
+      <FactoryGallery items={galleryData.items} />
 
       {/* Program Call-to-Action */}
       <section className="bg-primary text-primary-foreground">

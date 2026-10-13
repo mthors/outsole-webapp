@@ -13,7 +13,7 @@ export default defineConfig(({ command }) => ({
   server: {
     host: "::",
     port: 8080,
-    allowedHosts: ["modes-chair-deployment-apt.trycloudflare.com"]
+    //allowedHosts: ["modes-chair-deployment-apt.trycloudflare.com"]
   },
   resolve: {
     alias: {

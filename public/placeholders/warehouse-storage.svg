@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <pattern id="grid4" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#292925" stroke-opacity="0.06" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="wareGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E5DED2"/>
+      <stop offset="100%" stop-color="#D9D0C3"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#wareGrad)"/>
+  <rect width="800" height="600" fill="url(#grid4)"/>
+
+  <!-- Warehouse Storage Racking Schematic -->
+  <g transform="translate(110, 110)">
+    <!-- High-Bay Storage Racks Perspective -->
+    <!-- Upright 1 -->
+    <line x1="80" y1="50" x2="80" y2="340" stroke="#083B7B" stroke-width="3"/>
+    <line x1="220" y1="50" x2="220" y2="340" stroke="#083B7B" stroke-width="3"/>
+    <line x1="360" y1="50" x2="360" y2="340" stroke="#083B7B" stroke-width="3"/>
+    <line x1="500" y1="50" x2="500" y2="340" stroke="#083B7B" stroke-width="3"/>
+
+    <!-- Diagonal Bracing -->
+    <g stroke="#77796B" stroke-width="1.5" stroke-opacity="0.5">
+      <line x1="80" y1="50" x2="220" y2="120"/>
+      <line x1="220" y1="50" x2="80" y2="120"/>
+      <line x1="80" y1="120" x2="220" y2="190"/>
+      <line x1="220" y1="120" x2="80" y2="190"/>
+      <line x1="80" y1="190" x2="220" y2="260"/>
+      <line x1="220" y1="190" x2="80" y2="260"/>
+
+      <line x1="220" y1="50" x2="360" y2="120"/>
+      <line x1="360" y1="50" x2="220" y2="120"/>
+      <line x1="220" y1="120" x2="360" y2="190"/>
+      <line x1="360" y1="120" x2="220" y2="190"/>
+
+      <line x1="360" y1="50" x2="500" y2="120"/>
+      <line x1="500" y1="50" x2="360" y2="120"/>
+      <line x1="360" y1="120" x2="500" y2="190"/>
+      <line x1="500" y1="120" x2="360" y2="190"/>
+    </g>
+
+    <!-- Heavy Load Horizontal Beams -->
+    <line x1="60" y1="120" x2="520" y2="120" stroke="#A86C25" stroke-width="4"/>
+    <line x1="60" y1="190" x2="520" y2="190" stroke="#A86C25" stroke-width="4"/>
+    <line x1="60" y1="260" x2="520" y2="260" stroke="#A86C25" stroke-width="4"/>
+    <line x1="60" y1="330" x2="520" y2="330" stroke="#292925" stroke-width="4"/>
+
+    <!-- Palletized Inventory Crates & Master Cartons -->
+    <g fill="#FFFFFF" stroke="#292925" stroke-width="1.5">
+      <!-- Tier 1 -->
+      <rect x="95" y="70" width="105" height="48" fill-opacity="0.8"/>
+      <rect x="235" y="70" width="105" height="48" fill-opacity="0.8"/>
+      <rect x="375" y="70" width="105" height="48" fill-opacity="0.8"/>
+      <!-- Tier 2 -->
+      <rect x="95" y="140" width="105" height="48" fill-opacity="0.8"/>
+      <rect x="235" y="140" width="105" height="48" fill-opacity="0.8"/>
+      <rect x="375" y="140" width="105" height="48" fill-opacity="0.8"/>
+      <!-- Tier 3 -->
+      <rect x="95" y="210" width="105" height="48" fill-opacity="0.8"/>
+      <rect x="235" y="210" width="105" height="48" fill-opacity="0.8"/>
+      <rect x="375" y="210" width="105" height="48" fill-opacity="0.8"/>
+      <!-- Tier 4 Ground -->
+      <rect x="95" y="280" width="105" height="48" fill-opacity="0.8"/>
+      <rect x="235" y="280" width="105" height="48" fill-opacity="0.8"/>
+      <rect x="375" y="280" width="105" height="48" fill-opacity="0.8"/>
+    </g>
+
+    <!-- Pallet feet -->
+    <g fill="#292925">
+      <rect x="75" y="340" width="10" height="6"/>
+      <rect x="215" y="340" width="10" height="6"/>
+      <rect x="355" y="340" width="10" height="6"/>
+      <rect x="495" y="340" width="10" height="6"/>
+    </g>
+
+    <line x1="20" y1="346" x2="560" y2="346" stroke="#292925" stroke-width="3"/>
+  </g>
+
+  <!-- Technical Overlay Details -->
+  <g font-family="'IBM Plex Mono', monospace" font-size="11" fill="#77796B" letter-spacing="1.5">
+    <text x="50" y="50">04 / CATEGORY: WAREHOUSE &amp; STORAGE</text>
+    <text x="750" y="50" text-anchor="end">CAPACITY: 50,000 PAIRS</text>
+    <text x="50" y="560">FINISHED OUTSOLE &amp; RAW POLYMER STORAGE</text>
+    <text x="750" y="560" text-anchor="end">WH-BAY-03</text>
+  </g>
+
+  <!-- Center Watermark Badge -->
+  <g transform="translate(250, 480)">
+    <rect x="0" y="0" width="300" height="34" rx="2" fill="#292925" fill-opacity="0.88"/>
+    <text x="150" y="21" font-family="'IBM Plex Mono', monospace" font-size="10" font-weight="600" fill="#E5DED2" text-anchor="middle" letter-spacing="1.5">
+      [PREVIEW PLACEHOLDER]
+    </text>
+  </g>
+</svg>

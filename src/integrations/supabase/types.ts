@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      factory_gallery: {
+        Row: {
+          caption_en: string | null
+          caption_id: string | null
+          category: "factory_office" | "machinery_equipment" | "production_process" | "warehouse_storage"
+          created_at: string
+          display_order: number
+          id: string
+          image_path: string
+          is_featured: boolean
+          is_placeholder: boolean
+          is_published: boolean
+          updated_at: string
+        }
+        Insert: {
+          caption_en?: string | null
+          caption_id?: string | null
+          category: "factory_office" | "machinery_equipment" | "production_process" | "warehouse_storage"
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_path: string
+          is_featured?: boolean
+          is_placeholder?: boolean
+          is_published?: boolean
+          updated_at?: string
+        }
+        Update: {
+          caption_en?: string | null
+          caption_id?: string | null
+          category?: "factory_office" | "machinery_equipment" | "production_process" | "warehouse_storage"
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_path?: string
+          is_featured?: boolean
+          is_placeholder?: boolean
+          is_published?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string

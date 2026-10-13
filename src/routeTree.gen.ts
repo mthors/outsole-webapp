@@ -19,6 +19,7 @@ import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as OutsolesSlugRouteImport } from './routes/outsoles.$slug'
 import { Route as AdminLayoutIndexRouteImport } from './routes/admin/_layout/index'
 import { Route as AdminLayoutContentIndexRouteImport } from './routes/admin/_layout/content/index'
+import { Route as AdminLayoutGalleryIndexRouteImport } from './routes/admin/_layout/gallery/index'
 import { Route as AdminLayoutInquiriesIndexRouteImport } from './routes/admin/_layout/inquiries/index'
 import { Route as AdminLayoutOutsolesIndexRouteImport } from './routes/admin/_layout/outsoles/index'
 import { Route as AdminLayoutOutsolesNewRouteImport } from './routes/admin/_layout/outsoles/new'
@@ -75,6 +76,11 @@ const AdminLayoutContentIndexRoute = AdminLayoutContentIndexRouteImport.update({
   path: '/content/',
   getParentRoute: () => AdminLayoutRoute,
 } as any)
+const AdminLayoutGalleryIndexRoute = AdminLayoutGalleryIndexRouteImport.update({
+  id: '/gallery/',
+  path: '/gallery/',
+  getParentRoute: () => AdminLayoutRoute,
+} as any)
 const AdminLayoutInquiriesIndexRoute =
   AdminLayoutInquiriesIndexRouteImport.update({
     id: '/inquiries/',
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminLayoutIndexRoute
   '/admin/outsoles/new': typeof AdminLayoutOutsolesNewRoute
   '/admin/content/': typeof AdminLayoutContentIndexRoute
+  '/admin/gallery/': typeof AdminLayoutGalleryIndexRoute
   '/admin/inquiries/': typeof AdminLayoutInquiriesIndexRoute
   '/admin/outsoles/': typeof AdminLayoutOutsolesIndexRoute
   '/admin/taxonomy/': typeof AdminLayoutTaxonomyIndexRoute
@@ -133,6 +140,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminLayoutIndexRoute
   '/admin/outsoles/new': typeof AdminLayoutOutsolesNewRoute
   '/admin/content': typeof AdminLayoutContentIndexRoute
+  '/admin/gallery': typeof AdminLayoutGalleryIndexRoute
   '/admin/inquiries': typeof AdminLayoutInquiriesIndexRoute
   '/admin/outsoles': typeof AdminLayoutOutsolesIndexRoute
   '/admin/taxonomy': typeof AdminLayoutTaxonomyIndexRoute
@@ -151,6 +159,7 @@ export interface FileRoutesById {
   '/admin/_layout/': typeof AdminLayoutIndexRoute
   '/admin/_layout/outsoles/new': typeof AdminLayoutOutsolesNewRoute
   '/admin/_layout/content/': typeof AdminLayoutContentIndexRoute
+  '/admin/_layout/gallery/': typeof AdminLayoutGalleryIndexRoute
   '/admin/_layout/inquiries/': typeof AdminLayoutInquiriesIndexRoute
   '/admin/_layout/outsoles/': typeof AdminLayoutOutsolesIndexRoute
   '/admin/_layout/taxonomy/': typeof AdminLayoutTaxonomyIndexRoute
@@ -170,6 +179,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/outsoles/new'
     | '/admin/content/'
+    | '/admin/gallery/'
     | '/admin/inquiries/'
     | '/admin/outsoles/'
     | '/admin/taxonomy/'
@@ -186,6 +196,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/outsoles/new'
     | '/admin/content'
+    | '/admin/gallery'
     | '/admin/inquiries'
     | '/admin/outsoles'
     | '/admin/taxonomy'
@@ -203,6 +214,7 @@ export interface FileRouteTypes {
     | '/admin/_layout/'
     | '/admin/_layout/outsoles/new'
     | '/admin/_layout/content/'
+    | '/admin/_layout/gallery/'
     | '/admin/_layout/inquiries/'
     | '/admin/_layout/outsoles/'
     | '/admin/_layout/taxonomy/'
@@ -292,6 +304,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLayoutContentIndexRouteImport
       parentRoute: typeof AdminLayoutRoute
     }
+    '/admin/_layout/gallery/': {
+      id: '/admin/_layout/gallery/'
+      path: '/gallery'
+      fullPath: '/admin/gallery/'
+      preLoaderRoute: typeof AdminLayoutGalleryIndexRouteImport
+      parentRoute: typeof AdminLayoutRoute
+    }
     '/admin/_layout/inquiries/': {
       id: '/admin/_layout/inquiries/'
       path: '/inquiries'
@@ -334,6 +353,7 @@ interface AdminLayoutRouteChildren {
   AdminLayoutIndexRoute: typeof AdminLayoutIndexRoute
   AdminLayoutOutsolesNewRoute: typeof AdminLayoutOutsolesNewRoute
   AdminLayoutContentIndexRoute: typeof AdminLayoutContentIndexRoute
+  AdminLayoutGalleryIndexRoute: typeof AdminLayoutGalleryIndexRoute
   AdminLayoutInquiriesIndexRoute: typeof AdminLayoutInquiriesIndexRoute
   AdminLayoutOutsolesIndexRoute: typeof AdminLayoutOutsolesIndexRoute
   AdminLayoutTaxonomyIndexRoute: typeof AdminLayoutTaxonomyIndexRoute
@@ -344,6 +364,7 @@ const AdminLayoutRouteChildren: AdminLayoutRouteChildren = {
   AdminLayoutIndexRoute: AdminLayoutIndexRoute,
   AdminLayoutOutsolesNewRoute: AdminLayoutOutsolesNewRoute,
   AdminLayoutContentIndexRoute: AdminLayoutContentIndexRoute,
+  AdminLayoutGalleryIndexRoute: AdminLayoutGalleryIndexRoute,
   AdminLayoutInquiriesIndexRoute: AdminLayoutInquiriesIndexRoute,
   AdminLayoutOutsolesIndexRoute: AdminLayoutOutsolesIndexRoute,
   AdminLayoutTaxonomyIndexRoute: AdminLayoutTaxonomyIndexRoute,
