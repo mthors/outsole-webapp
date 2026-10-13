@@ -56,7 +56,7 @@ function AdminEditOutsolePage() {
               to="/admin/outsoles"
               style={{
                 fontSize: "0.75rem",
-                color: "oklch(0.65 0.008 85)",
+                color: "var(--admin-text-muted)",
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "0.25rem",
@@ -202,7 +202,7 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
             to="/admin/outsoles"
             style={{
               fontSize: "0.75rem",
-              color: "oklch(0.65 0.008 85)",
+              color: "var(--admin-text-muted)",
               display: "inline-flex",
               alignItems: "center",
               gap: "0.25rem",
@@ -219,7 +219,8 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
               rel="noreferrer"
               style={{
                 fontSize: "0.75rem",
-                color: "oklch(0.78 0.155 71)",
+                color: "var(--charcoal)",
+                fontWeight: 500,
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "0.25rem",
@@ -260,10 +261,10 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
           style={{
             padding: "0.75rem 1rem",
             marginBottom: "1.5rem",
-            background: "oklch(0.7 0.15 150 / 0.15)",
-            border: "1px solid oklch(0.7 0.15 150 / 0.4)",
-            borderRadius: "2px",
-            color: "oklch(0.85 0.14 150)",
+            background: "var(--admin-status-active-bg)",
+            border: "1px solid var(--admin-status-active-border)",
+            borderRadius: "4px",
+            color: "var(--admin-status-active)",
             fontSize: "0.8125rem",
             display: "flex",
             alignItems: "center",
@@ -287,7 +288,7 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
           <div className="admin-form-grid-2" style={{ marginBottom: "1rem" }}>
             <div className="admin-field">
               <label htmlFor="edit-outsole-name" className="admin-field-label">
-                Product Name <span style={{ color: "oklch(0.78 0.155 71)" }}>*</span>
+                Product Name <span style={{ color: "var(--destructive)" }}>*</span>
               </label>
               <input
                 id="edit-outsole-name"
@@ -303,7 +304,7 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
 
             <div className="admin-field">
               <label htmlFor="edit-outsole-sku" className="admin-field-label">
-                Model Number / SKU <span style={{ color: "oklch(0.78 0.155 71)" }}>*</span>
+                Model Number / SKU <span style={{ color: "var(--destructive)" }}>*</span>
               </label>
               <input
                 id="edit-outsole-sku"
@@ -321,7 +322,7 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
           <div className="admin-form-grid-2" style={{ marginBottom: "1rem" }}>
             <div className="admin-field">
               <label htmlFor="edit-outsole-slug" className="admin-field-label">
-                URL Slug <span style={{ color: "oklch(0.78 0.155 71)" }}>*</span>
+                URL Slug <span style={{ color: "var(--destructive)" }}>*</span>
               </label>
               <input
                 id="edit-outsole-slug"
@@ -333,7 +334,7 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
                 onChange={(e) => setForm((prev) => ({ ...prev, slug: e.target.value }))}
                 disabled={isSubmitting}
               />
-              <span style={{ fontSize: "0.7rem", color: "oklch(0.55 0.008 85)", marginTop: "0.25rem", display: "block" }}>
+              <span style={{ fontSize: "0.7rem", color: "var(--admin-text-muted)", marginTop: "0.25rem", display: "block" }}>
                 Preserved automatically. Only change if deliberately modifying the public URL.
               </span>
             </div>
@@ -824,7 +825,7 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
           justifyContent: "space-between",
           marginBottom: "1rem",
           paddingBottom: "0.75rem",
-          borderBottom: "1px solid oklch(0.24 0.004 285)",
+          borderBottom: "1px solid var(--admin-card-border)",
         }}
       >
         <div>
@@ -834,12 +835,12 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
               fontSize: "1rem",
               fontWeight: 700,
               letterSpacing: "-0.02em",
-              color: "oklch(0.94 0.008 85)",
+              color: "var(--admin-text-main)",
             }}
           >
             Product Images
           </h2>
-          <p style={{ margin: "0.2rem 0 0", fontSize: "0.75rem", color: "oklch(0.6 0.008 85)" }}>
+          <p style={{ margin: "0.2rem 0 0", fontSize: "0.75rem", color: "var(--admin-text-muted)" }}>
             {images.length === 0
               ? "No images attached to this product."
               : `${images.length} image${images.length === 1 ? "" : "s"} — manage primary, order, and alt text.`}
@@ -849,7 +850,7 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
           style={{
             fontSize: "0.6875rem",
             fontFamily: "var(--font-mono, monospace)",
-            color: "oklch(0.5 0.008 85)",
+            color: "var(--admin-text-muted)",
             letterSpacing: "0.06em",
             textTransform: "uppercase",
           }}
@@ -868,11 +869,11 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
             gap: "0.5rem",
             padding: "0.75rem 1rem",
             marginBottom: "1rem",
-            background: "oklch(0.62 0.2 25 / 0.1)",
-            border: "1px solid oklch(0.62 0.2 25 / 0.4)",
-            borderRadius: "2px",
+            background: "var(--admin-danger-bg)",
+            border: "1px solid var(--admin-danger-border)",
+            borderRadius: "4px",
             fontSize: "0.8125rem",
-            color: "oklch(0.8 0.12 25)",
+            color: "var(--admin-danger-text)",
             lineHeight: "1.5",
           }}
         >
@@ -893,11 +894,11 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
             gap: "0.5rem",
             padding: "0.625rem 1rem",
             marginBottom: "1rem",
-            background: "oklch(0.7 0.15 150 / 0.12)",
-            border: "1px solid oklch(0.7 0.15 150 / 0.35)",
-            borderRadius: "2px",
+            background: "var(--admin-status-active-bg)",
+            border: "1px solid var(--admin-status-active-border)",
+            borderRadius: "4px",
             fontSize: "0.8125rem",
-            color: "oklch(0.82 0.13 150)",
+            color: "var(--admin-status-active)",
           }}
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -911,9 +912,9 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
       <div
         id="image-upload-section"
         style={{
-          background: "oklch(0.16 0.003 285)",
-          border: "1px solid oklch(0.24 0.004 285)",
-          borderRadius: "2px",
+          background: "var(--admin-card-bg)",
+          border: "1px solid var(--admin-card-border)",
+          borderRadius: "4px",
           padding: "1.25rem",
           marginBottom: "1.5rem",
         }}
@@ -924,12 +925,12 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
               margin: 0,
               fontSize: "0.875rem",
               fontWeight: 600,
-              color: "oklch(0.92 0.008 85)",
+              color: "var(--admin-text-main)",
             }}
           >
             Upload New Image
           </h3>
-          <p style={{ margin: "0.2rem 0 0", fontSize: "0.75rem", color: "oklch(0.55 0.008 85)" }}>
+          <p style={{ margin: "0.2rem 0 0", fontSize: "0.75rem", color: "var(--admin-text-muted)" }}>
             Supported formats: JPG, PNG, WebP (max 8MB). Uploads directly to private storage.
           </p>
         </div>
@@ -958,12 +959,12 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
               }
             }}
             style={{
-              border: "1px dashed oklch(0.3 0.004 285)",
-              borderRadius: "2px",
+              border: "1px dashed var(--admin-card-border)",
+              borderRadius: "4px",
               padding: "1.5rem 1rem",
               textAlign: "center",
               cursor: isUploading ? "not-allowed" : "pointer",
-              background: "oklch(0.14 0.003 285)",
+              background: "var(--admin-bg)",
               transition: "border-color 0.15s ease",
             }}
           >
@@ -974,16 +975,16 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
               fill="none"
               stroke="currentColor"
               strokeWidth="1.5"
-              style={{ color: "oklch(0.5 0.008 85)", marginBottom: "0.5rem" }}
+              style={{ color: "var(--admin-text-muted)", marginBottom: "0.5rem" }}
             >
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
               <polyline points="17 8 12 3 7 8" />
               <line x1="12" y1="3" x2="12" y2="15" />
             </svg>
-            <div style={{ fontSize: "0.8125rem", color: "oklch(0.85 0.008 85)", fontWeight: 500 }}>
+            <div style={{ fontSize: "0.8125rem", color: "var(--admin-text-main)", fontWeight: 500 }}>
               Click to choose an image file from your computer
             </div>
-            <div style={{ fontSize: "0.6875rem", color: "oklch(0.5 0.008 85)", marginTop: "0.25rem" }}>
+            <div style={{ fontSize: "0.6875rem", color: "var(--admin-text-muted)", marginTop: "0.25rem" }}>
               JPG, PNG, or WebP up to 8MB
             </div>
           </div>
@@ -994,10 +995,10 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                 display: "flex",
                 alignItems: "center",
                 gap: "1rem",
-                background: "oklch(0.14 0.003 285)",
+                background: "var(--admin-bg)",
                 padding: "0.75rem 1rem",
-                borderRadius: "2px",
-                border: "1px solid oklch(0.24 0.004 285)",
+                borderRadius: "4px",
+                border: "1px solid var(--admin-card-border)",
               }}
             >
               {previewUrl && (
@@ -1008,9 +1009,9 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                     width: "56px",
                     height: "56px",
                     objectFit: "contain",
-                    background: "oklch(0.1 0.003 285)",
-                    borderRadius: "2px",
-                    border: "1px solid oklch(0.2 0.004 285)",
+                    background: "var(--admin-card-bg)",
+                    borderRadius: "4px",
+                    border: "1px solid var(--admin-card-border)",
                     flexShrink: 0,
                   }}
                 />
@@ -1020,7 +1021,7 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                   style={{
                     fontSize: "0.8125rem",
                     fontWeight: 600,
-                    color: "oklch(0.9 0.008 85)",
+                    color: "var(--admin-text-main)",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
@@ -1028,7 +1029,7 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                 >
                   {selectedFile.name}
                 </div>
-                <div style={{ fontSize: "0.6875rem", color: "oklch(0.55 0.008 85)", marginTop: "0.15rem" }}>
+                <div style={{ fontSize: "0.6875rem", color: "var(--admin-text-muted)", marginTop: "0.15rem" }}>
                   {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB • {selectedFile.type || "image"}
                 </div>
               </div>
@@ -1103,9 +1104,9 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
       {images.length === 0 && (
         <div
           style={{
-            background: "oklch(0.16 0.003 285)",
-            border: "1px dashed oklch(0.3 0.004 285)",
-            borderRadius: "2px",
+            background: "var(--admin-card-bg)",
+            border: "1px dashed var(--admin-card-border)",
+            borderRadius: "4px",
             padding: "3rem 2rem",
             textAlign: "center",
           }}
@@ -1117,16 +1118,16 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
             fill="none"
             stroke="currentColor"
             strokeWidth="1"
-            style={{ color: "oklch(0.4 0.004 285)", marginBottom: "0.75rem" }}
+            style={{ color: "var(--admin-text-muted)", marginBottom: "0.75rem" }}
           >
             <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
             <circle cx="8.5" cy="8.5" r="1.5" />
             <polyline points="21 15 16 10 5 21" />
           </svg>
-          <p style={{ margin: 0, fontSize: "0.875rem", color: "oklch(0.6 0.008 85)", fontWeight: 500 }}>
+          <p style={{ margin: 0, fontSize: "0.875rem", color: "var(--admin-text-main)", fontWeight: 500 }}>
             No images attached
           </p>
-          <p style={{ margin: "0.35rem 0 0", fontSize: "0.75rem", color: "oklch(0.45 0.008 85)" }}>
+          <p style={{ margin: "0.35rem 0 0", fontSize: "0.75rem", color: "var(--admin-text-muted)" }}>
             Use the upload section above to add product images.
           </p>
         </div>
@@ -1149,12 +1150,12 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                   gap: "1rem",
                   padding: "1rem",
                   background: img.is_primary
-                    ? "oklch(0.78 0.155 71 / 0.06)"
-                    : "oklch(0.16 0.003 285)",
+                    ? "rgba(180, 162, 140, 0.08)"
+                    : "var(--admin-card-bg)",
                   border: img.is_primary
-                    ? "1px solid oklch(0.78 0.155 71 / 0.3)"
-                    : "1px solid oklch(0.24 0.004 285)",
-                  borderRadius: "2px",
+                    ? "1px solid var(--taupe)"
+                    : "1px solid var(--admin-card-border)",
+                  borderRadius: "4px",
                   opacity: isBusyRow ? 0.65 : 1,
                   transition: "opacity 0.15s",
                 }}
@@ -1169,8 +1170,8 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                         width: "72px",
                         height: "72px",
                         objectFit: "cover",
-                        borderRadius: "2px",
-                        border: "1px solid oklch(0.28 0.004 285)",
+                        borderRadius: "4px",
+                        border: "1px solid var(--admin-card-border)",
                         display: "block",
                       }}
                     />
@@ -1179,13 +1180,13 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                       style={{
                         width: "72px",
                         height: "72px",
-                        background: "oklch(0.13 0.003 285)",
-                        border: "1px solid oklch(0.24 0.004 285)",
-                        borderRadius: "2px",
+                        background: "var(--admin-bg)",
+                        border: "1px solid var(--admin-card-border)",
+                        borderRadius: "4px",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        color: "oklch(0.4 0.004 285)",
+                        color: "var(--admin-text-muted)",
                       }}
                     >
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -1203,8 +1204,8 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                         bottom: "0",
                         left: "0",
                         right: "0",
-                        background: "oklch(0.78 0.155 71)",
-                        color: "oklch(0.17 0.02 60)",
+                        background: "var(--charcoal)",
+                        color: "#FFFFFF",
                         fontSize: "0.5rem",
                         fontWeight: 700,
                         fontFamily: "var(--font-mono, monospace)",
@@ -1212,6 +1213,7 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                         letterSpacing: "0.06em",
                         textAlign: "center",
                         padding: "2px 0",
+                        borderRadius: "0 0 4px 4px",
                       }}
                     >
                       Primary
@@ -1227,7 +1229,8 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                       style={{
                         fontFamily: "var(--font-mono, monospace)",
                         fontSize: "0.75rem",
-                        color: "oklch(0.82 0.1 71)",
+                        color: "var(--admin-text-main)",
+                        fontWeight: 600,
                         wordBreak: "break-all",
                       }}
                     >
@@ -1237,7 +1240,7 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                       style={{
                         fontSize: "0.65rem",
                         fontFamily: "var(--font-mono, monospace)",
-                        color: "oklch(0.5 0.008 85)",
+                        color: "var(--admin-text-muted)",
                         letterSpacing: "0.04em",
                       }}
                     >
@@ -1249,10 +1252,10 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                           fontSize: "0.6rem",
                           fontFamily: "var(--font-mono, monospace)",
                           fontWeight: 700,
-                          color: "oklch(0.78 0.155 71)",
-                          background: "oklch(0.78 0.155 71 / 0.12)",
-                          border: "1px solid oklch(0.78 0.155 71 / 0.3)",
-                          borderRadius: "2px",
+                          color: "var(--charcoal)",
+                          background: "var(--admin-badge-bg)",
+                          border: "1px solid var(--admin-card-border)",
+                          borderRadius: "4px",
                           padding: "1px 5px",
                           textTransform: "uppercase",
                           letterSpacing: "0.05em",
@@ -1268,7 +1271,7 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                     style={{
                       fontSize: "0.65rem",
                       fontFamily: "var(--font-mono, monospace)",
-                      color: "oklch(0.48 0.006 285)",
+                      color: "var(--admin-text-muted)",
                       marginBottom: "0.5rem",
                       wordBreak: "break-all",
                     }}
@@ -1317,7 +1320,7 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                     <div
                       style={{
                         fontSize: "0.78rem",
-                        color: img.alt_text ? "oklch(0.78 0.008 85)" : "oklch(0.45 0.004 285)",
+                        color: img.alt_text ? "var(--admin-text-main)" : "var(--admin-text-muted)",
                         fontStyle: img.alt_text ? "normal" : "italic",
                         marginBottom: "0.5rem",
                         lineHeight: "1.4",
@@ -1336,9 +1339,9 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                         type="button"
                         className="admin-btn admin-btn-sm"
                         style={{
-                          background: "oklch(0.78 0.155 71 / 0.1)",
-                          color: "oklch(0.78 0.155 71)",
-                          border: "1px solid oklch(0.78 0.155 71 / 0.3)",
+                          background: "var(--admin-badge-bg)",
+                          color: "var(--charcoal)",
+                          border: "1px solid var(--admin-card-border)",
                         }}
                         onClick={() => handleSetPrimary(img.id)}
                         disabled={!!busy}
@@ -1406,9 +1409,9 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                       type="button"
                       className="admin-btn admin-btn-sm"
                       style={{
-                        background: "oklch(0.62 0.2 25 / 0.1)",
-                        color: "oklch(0.75 0.12 25)",
-                        border: "1px solid oklch(0.62 0.2 25 / 0.3)",
+                        background: "var(--admin-danger-bg)",
+                        color: "var(--admin-danger-text)",
+                        border: "1px solid var(--admin-danger-border)",
                         marginLeft: "auto",
                       }}
                       onClick={() => setRemoveTarget(img)}
@@ -1462,7 +1465,8 @@ function RemoveImageDialog({ image, outsoleName, onConfirm, onCancel, isRemoving
         position: "fixed",
         inset: 0,
         zIndex: 50,
-        background: "oklch(0 0 0 / 0.65)",
+        background: "rgba(41, 41, 37, 0.45)",
+        backdropFilter: "blur(4px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -1478,13 +1482,13 @@ function RemoveImageDialog({ image, outsoleName, onConfirm, onCancel, isRemoving
         aria-labelledby="remove-img-dialog-title"
         aria-describedby="remove-img-dialog-desc"
         style={{
-          background: "oklch(0.185 0.004 285)",
-          border: "1px solid oklch(0.3 0.004 285)",
-          borderRadius: "2px",
+          background: "var(--admin-card-bg)",
+          border: "1px solid var(--admin-card-border)",
+          borderRadius: "6px",
           padding: "1.75rem 2rem",
           maxWidth: "480px",
           width: "100%",
-          boxShadow: "0 24px 64px oklch(0 0 0 / 0.5)",
+          boxShadow: "0 20px 48px rgba(0, 0, 0, 0.12)",
         }}
       >
         {/* Icon + Title */}
@@ -1494,13 +1498,13 @@ function RemoveImageDialog({ image, outsoleName, onConfirm, onCancel, isRemoving
               flexShrink: 0,
               width: "40px",
               height: "40px",
-              borderRadius: "2px",
-              background: "oklch(0.62 0.2 25 / 0.15)",
-              border: "1px solid oklch(0.62 0.2 25 / 0.3)",
+              borderRadius: "4px",
+              background: "var(--admin-danger-bg)",
+              border: "1px solid var(--admin-danger-border)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "oklch(0.78 0.12 25)",
+              color: "var(--admin-danger-text)",
             }}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1519,7 +1523,7 @@ function RemoveImageDialog({ image, outsoleName, onConfirm, onCancel, isRemoving
                 fontSize: "1rem",
                 fontWeight: 700,
                 letterSpacing: "-0.02em",
-                color: "oklch(0.94 0.008 85)",
+                color: "var(--admin-text-main)",
               }}
             >
               Remove Image?
@@ -1529,7 +1533,7 @@ function RemoveImageDialog({ image, outsoleName, onConfirm, onCancel, isRemoving
                 margin: 0,
                 fontSize: "0.6875rem",
                 fontFamily: "var(--font-mono, monospace)",
-                color: "oklch(0.55 0.008 85)",
+                color: "var(--admin-text-muted)",
                 letterSpacing: "0.04em",
                 wordBreak: "break-all",
               }}
@@ -1539,9 +1543,9 @@ function RemoveImageDialog({ image, outsoleName, onConfirm, onCancel, isRemoving
           </div>
         </div>
 
-        <p id="remove-img-dialog-desc" style={{ margin: "0 0 0.75rem", fontSize: "0.875rem", lineHeight: "1.6", color: "oklch(0.78 0.008 85)" }}>
+        <p id="remove-img-dialog-desc" style={{ margin: "0 0 0.75rem", fontSize: "0.875rem", lineHeight: "1.6", color: "var(--admin-text-secondary)" }}>
           This will permanently remove the image from{" "}
-          <strong style={{ color: "oklch(0.92 0.008 85)" }}>{outsoleName}</strong>.
+          <strong style={{ color: "var(--admin-text-main)" }}>{outsoleName}</strong>.
         </p>
 
         <div
@@ -1550,10 +1554,10 @@ function RemoveImageDialog({ image, outsoleName, onConfirm, onCancel, isRemoving
             padding: "0.625rem 0.875rem",
             fontSize: "0.8125rem",
             lineHeight: "1.5",
-            color: "oklch(0.8 0.12 25)",
-            background: "oklch(0.62 0.2 25 / 0.06)",
-            border: "1px solid oklch(0.62 0.2 25 / 0.25)",
-            borderRadius: "2px",
+            color: "var(--admin-danger-text)",
+            background: "var(--admin-danger-bg)",
+            border: "1px solid var(--admin-danger-border)",
+            borderRadius: "4px",
           }}
         >
           <strong>This action cannot be undone.</strong> Both the image file in Storage
@@ -1585,12 +1589,12 @@ function RemoveImageDialog({ image, outsoleName, onConfirm, onCancel, isRemoving
               alignItems: "center",
               gap: "0.5rem",
               padding: "0.5rem 1rem",
-              borderRadius: "2px",
+              borderRadius: "4px",
               fontSize: "0.8125rem",
               fontWeight: 600,
-              border: "1px solid oklch(0.62 0.2 25 / 0.5)",
-              background: isRemoving ? "oklch(0.55 0.15 25 / 0.15)" : "oklch(0.62 0.2 25 / 0.2)",
-              color: isRemoving ? "oklch(0.65 0.1 25)" : "oklch(0.8 0.15 25)",
+              border: "1px solid var(--admin-danger-border)",
+              background: isRemoving ? "var(--admin-danger-bg)" : "var(--destructive)",
+              color: "#FFFFFF",
               cursor: isRemoving ? "not-allowed" : "pointer",
               transition: "all 0.15s",
             }}
@@ -1602,8 +1606,8 @@ function RemoveImageDialog({ image, outsoleName, onConfirm, onCancel, isRemoving
                     display: "inline-block",
                     width: "14px",
                     height: "14px",
-                    border: "2px solid oklch(0.65 0.1 25 / 0.3)",
-                    borderTopColor: "oklch(0.65 0.1 25)",
+                    border: "2px solid rgba(255, 255, 255, 0.3)",
+                    borderTopColor: "#FFFFFF",
                     borderRadius: "50%",
                     animation: "admin-spin 0.65s linear infinite",
                   }}

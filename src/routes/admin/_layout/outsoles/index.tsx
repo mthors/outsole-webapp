@@ -45,7 +45,8 @@ function ArchiveDialog({ item, onClose, onArchived }: ArchiveDialogProps) {
         position: "fixed",
         inset: 0,
         zIndex: 50,
-        background: "oklch(0 0 0 / 0.65)",
+        background: "rgba(41, 41, 37, 0.45)",
+        backdropFilter: "blur(2px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -62,13 +63,13 @@ function ArchiveDialog({ item, onClose, onArchived }: ArchiveDialogProps) {
         aria-labelledby="archive-dialog-title"
         aria-describedby="archive-dialog-desc"
         style={{
-          background: "oklch(0.185 0.004 285)",
-          border: "1px solid oklch(0.3 0.004 285)",
+          background: "#FFFFFF",
+          border: "1px solid var(--border)",
           borderRadius: "2px",
           padding: "1.75rem 2rem",
           maxWidth: "480px",
           width: "100%",
-          boxShadow: "0 24px 64px oklch(0 0 0 / 0.5)",
+          boxShadow: "0 24px 64px rgba(41, 41, 37, 0.12)",
         }}
       >
         {/* Icon + Title */}
@@ -79,12 +80,12 @@ function ArchiveDialog({ item, onClose, onArchived }: ArchiveDialogProps) {
               width: "40px",
               height: "40px",
               borderRadius: "2px",
-              background: "oklch(0.65 0.12 70 / 0.15)",
-              border: "1px solid oklch(0.65 0.12 70 / 0.3)",
+              background: "var(--admin-danger-bg)",
+              border: "1px solid var(--admin-danger-border)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "oklch(0.78 0.13 70)",
+              color: "var(--admin-danger-text)",
             }}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -101,12 +102,12 @@ function ArchiveDialog({ item, onClose, onArchived }: ArchiveDialogProps) {
                 fontSize: "1rem",
                 fontWeight: 700,
                 letterSpacing: "-0.02em",
-                color: "oklch(0.94 0.008 85)",
+                color: "var(--charcoal)",
               }}
             >
               Archive {item.name}?
             </h2>
-            <p style={{ margin: 0, fontSize: "0.6875rem", fontFamily: "var(--font-mono, monospace)", color: "oklch(0.55 0.008 85)", letterSpacing: "0.05em", textTransform: "uppercase" }}>
+            <p style={{ margin: 0, fontSize: "0.6875rem", fontFamily: "var(--font-mono, monospace)", color: "var(--muted-olive)", letterSpacing: "0.05em", textTransform: "uppercase" }}>
               {item.model_number} · {item.slug}
             </p>
           </div>
@@ -119,10 +120,10 @@ function ArchiveDialog({ item, onClose, onArchived }: ArchiveDialogProps) {
             margin: "0 0 0.75rem",
             fontSize: "0.875rem",
             lineHeight: "1.6",
-            color: "oklch(0.78 0.008 85)",
+            color: "var(--charcoal)",
           }}
         >
-          This will remove <strong style={{ color: "oklch(0.92 0.008 85)" }}>{item.name}</strong> from
+          This will remove <strong style={{ color: "var(--charcoal)" }}>{item.name}</strong> from
           the public active catalog. The product, its data, and all associated images will remain
           fully intact and manageable through the admin panel.
         </p>
@@ -132,9 +133,9 @@ function ArchiveDialog({ item, onClose, onArchived }: ArchiveDialogProps) {
             padding: "0.625rem 0.875rem",
             fontSize: "0.8125rem",
             lineHeight: "1.5",
-            color: "oklch(0.75 0.01 285)",
-            background: "oklch(0.16 0.003 285)",
-            border: "1px solid oklch(0.28 0.004 285)",
+            color: "var(--charcoal)",
+            background: "var(--sand)",
+            border: "1px solid var(--border)",
             borderRadius: "2px",
           }}
         >
@@ -151,11 +152,11 @@ function ArchiveDialog({ item, onClose, onArchived }: ArchiveDialogProps) {
               gap: "0.5rem",
               padding: "0.625rem 0.75rem",
               marginBottom: "1rem",
-              background: "oklch(0.62 0.2 25 / 0.1)",
-              border: "1px solid oklch(0.62 0.2 25 / 0.4)",
+              background: "var(--admin-danger-bg)",
+              border: "1px solid var(--admin-danger-border)",
               borderRadius: "2px",
               fontSize: "0.8125rem",
-              color: "oklch(0.8 0.12 25)",
+              color: "var(--admin-danger-text)",
             }}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -191,11 +192,12 @@ function ArchiveDialog({ item, onClose, onArchived }: ArchiveDialogProps) {
               borderRadius: "2px",
               fontSize: "0.8125rem",
               fontWeight: 600,
-              border: "1px solid oklch(0.65 0.12 70 / 0.5)",
-              background: isArchiving ? "oklch(0.6 0.1 70 / 0.15)" : "oklch(0.65 0.12 70 / 0.2)",
-              color: isArchiving ? "oklch(0.65 0.06 70)" : "oklch(0.82 0.13 70)",
+              border: "none",
+              background: "var(--destructive)",
+              color: "var(--destructive-foreground)",
               cursor: isArchiving ? "not-allowed" : "pointer",
               transition: "all 0.15s",
+              opacity: isArchiving ? 0.7 : 1,
             }}
           >
             {isArchiving ? (
@@ -205,8 +207,8 @@ function ArchiveDialog({ item, onClose, onArchived }: ArchiveDialogProps) {
                     display: "inline-block",
                     width: "14px",
                     height: "14px",
-                    border: "2px solid oklch(0.65 0.06 70 / 0.3)",
-                    borderTopColor: "oklch(0.65 0.06 70)",
+                    border: "2px solid rgba(245, 242, 236, 0.3)",
+                    borderTopColor: "var(--warm-ivory)",
                     borderRadius: "50%",
                     animation: "admin-spin 0.65s linear infinite",
                   }}
@@ -306,10 +308,10 @@ function AdminOutsolesListPage() {
             gap: "0.5rem",
             padding: "0.75rem 1rem",
             marginBottom: "1.25rem",
-            background: "oklch(0.7 0.15 150 / 0.12)",
-            border: "1px solid oklch(0.7 0.15 150 / 0.35)",
+            background: "var(--admin-status-active-bg)",
+            border: "1px solid var(--admin-status-active-border)",
             borderRadius: "2px",
-            color: "oklch(0.82 0.13 150)",
+            color: "var(--admin-status-active-text)",
             fontSize: "0.8125rem",
           }}
         >
@@ -367,7 +369,7 @@ function AdminOutsolesListPage() {
           </select>
         </div>
 
-        <div style={{ fontSize: "0.75rem", color: "oklch(0.6 0.008 85)", fontFamily: "var(--font-mono, monospace)" }}>
+        <div style={{ fontSize: "0.75rem", color: "var(--muted-olive)", fontFamily: "var(--font-mono, monospace)" }}>
           Showing {filteredOutsoles.length} of {initialOutsoles.length} product{initialOutsoles.length === 1 ? "" : "s"}
         </div>
       </div>
@@ -375,7 +377,7 @@ function AdminOutsolesListPage() {
       {/* Products Table */}
       <div className="admin-table-card">
         {filteredOutsoles.length === 0 ? (
-          <div style={{ padding: "3rem 1.5rem", textAlign: "center", color: "oklch(0.55 0.008 85)" }}>
+          <div style={{ padding: "3rem 1.5rem", textAlign: "center", color: "var(--muted-olive)" }}>
             <p style={{ margin: "0 0 0.5rem", fontSize: "0.875rem", fontWeight: 500 }}>No products matched your criteria</p>
             <p style={{ margin: 0, fontSize: "0.75rem" }}>Try clearing search keywords or filter dropdowns.</p>
           </div>
@@ -415,14 +417,14 @@ function AdminOutsolesListPage() {
                       )}
                     </td>
                     <td>
-                      <div style={{ fontWeight: 600, color: "oklch(0.94 0.008 85)", marginBottom: "2px" }}>
+                      <div style={{ fontWeight: 600, color: "var(--charcoal)", marginBottom: "2px" }}>
                         {item.name}
                       </div>
-                      <div style={{ fontSize: "0.7rem", color: "oklch(0.55 0.008 85)", fontFamily: "var(--font-mono, monospace)" }}>
+                      <div style={{ fontSize: "0.7rem", color: "var(--muted-olive)", fontFamily: "var(--font-mono, monospace)" }}>
                         /{item.slug}
                       </div>
                     </td>
-                    <td style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.75rem", color: "oklch(0.78 0.155 71)" }}>
+                    <td style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.75rem", color: "var(--charcoal)", fontWeight: 500 }}>
                       {item.model_number}
                     </td>
                     <td>
@@ -433,7 +435,7 @@ function AdminOutsolesListPage() {
                           </span>
                         ))
                       ) : (
-                        <span style={{ color: "oklch(0.45 0.004 285)", fontSize: "0.75rem" }}>—</span>
+                        <span style={{ color: "var(--muted-olive)", opacity: 0.6, fontSize: "0.75rem" }}>—</span>
                       )}
                     </td>
                     <td>
@@ -443,16 +445,16 @@ function AdminOutsolesListPage() {
                     </td>
                     <td>
                       {item.is_featured ? (
-                        <span style={{ color: "oklch(0.78 0.155 71)", fontWeight: 600, fontSize: "0.75rem" }}>Yes</span>
+                        <span style={{ color: "var(--charcoal)", fontWeight: 600, fontSize: "0.75rem" }}>Yes</span>
                       ) : (
-                        <span style={{ color: "oklch(0.45 0.004 285)", fontSize: "0.75rem" }}>—</span>
+                        <span style={{ color: "var(--muted-olive)", opacity: 0.6, fontSize: "0.75rem" }}>—</span>
                       )}
                     </td>
                     <td>
                       {item.is_sampling_available ? (
-                        <span style={{ color: "oklch(0.7 0.15 150)", fontWeight: 600, fontSize: "0.75rem" }}>Available</span>
+                        <span style={{ color: "var(--admin-status-active-text)", fontWeight: 600, fontSize: "0.75rem" }}>Available</span>
                       ) : (
-                        <span style={{ color: "oklch(0.45 0.004 285)", fontSize: "0.75rem" }}>—</span>
+                        <span style={{ color: "var(--muted-olive)", opacity: 0.6, fontSize: "0.75rem" }}>—</span>
                       )}
                     </td>
                     <td style={{ textAlign: "right", whiteSpace: "nowrap" }}>
@@ -471,9 +473,9 @@ function AdminOutsolesListPage() {
                           type="button"
                           className="admin-btn admin-btn-sm"
                           style={{
-                            background: "oklch(0.65 0.12 70 / 0.1)",
-                            color: "oklch(0.75 0.1 70)",
-                            border: "1px solid oklch(0.65 0.12 70 / 0.3)",
+                            background: "rgba(180, 162, 140, 0.15)",
+                            color: "var(--charcoal)",
+                            border: "1px solid var(--border)",
                           }}
                           title="Archive product"
                           onClick={() => setArchiveTarget(item)}
@@ -489,7 +491,7 @@ function AdminOutsolesListPage() {
                             padding: "0.35rem 0.65rem",
                             fontSize: "0.7rem",
                             fontFamily: "var(--font-mono, monospace)",
-                            color: "oklch(0.5 0.01 285)",
+                            color: "var(--muted-olive)",
                             letterSpacing: "0.04em",
                           }}
                           title="Already archived"

@@ -241,20 +241,7 @@ export function AdminTaxonomyPage() {
         <button
           type="button"
           onClick={openCreateModal}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            background: "oklch(0.78 0.155 71)",
-            color: "oklch(0.17 0.02 60)",
-            padding: "0.625rem 1rem",
-            fontSize: "0.8125rem",
-            fontWeight: 600,
-            borderRadius: "2px",
-            border: "none",
-            cursor: "pointer",
-            letterSpacing: "0.02em",
-          }}
+          className="admin-btn admin-btn-primary"
         >
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <line x1="12" y1="5" x2="12" y2="19" />
@@ -268,7 +255,7 @@ export function AdminTaxonomyPage() {
       <div
         style={{
           display: "flex",
-          borderBottom: "1px solid oklch(0.24 0.004 285)",
+          borderBottom: "1px solid var(--admin-card-border)",
           marginBottom: "1.5rem",
           gap: "0.5rem",
         }}
@@ -296,8 +283,8 @@ export function AdminTaxonomyPage() {
                 padding: "0.75rem 1rem",
                 background: "transparent",
                 border: "none",
-                borderBottom: isActive ? "2px solid oklch(0.78 0.155 71)" : "2px solid transparent",
-                color: isActive ? "oklch(0.94 0.008 85)" : "oklch(0.65 0.008 85)",
+                borderBottom: isActive ? "2px solid var(--admin-accent)" : "2px solid transparent",
+                color: isActive ? "var(--admin-text-main)" : "var(--admin-text-muted)",
                 fontWeight: isActive ? 600 : 500,
                 fontSize: "0.875rem",
                 cursor: "pointer",
@@ -309,8 +296,8 @@ export function AdminTaxonomyPage() {
                 style={{
                   fontSize: "0.75rem",
                   fontFamily: "var(--font-mono, monospace)",
-                  background: isActive ? "oklch(0.78 0.155 71 / 0.2)" : "oklch(0.22 0.004 285)",
-                  color: isActive ? "oklch(0.78 0.155 71)" : "oklch(0.6 0.008 85)",
+                  background: isActive ? "var(--admin-badge-bg)" : "var(--admin-bg)",
+                  color: isActive ? "var(--charcoal)" : "var(--admin-text-muted)",
                   padding: "0.1rem 0.4rem",
                   borderRadius: "2px",
                 }}
@@ -339,7 +326,7 @@ export function AdminTaxonomyPage() {
               left: "0.75rem",
               top: "50%",
               transform: "translateY(-50%)",
-              color: "oklch(0.5 0.008 85)",
+              color: "var(--admin-text-muted)",
             }}
           >
             <circle cx="11" cy="11" r="8" />
@@ -350,15 +337,9 @@ export function AdminTaxonomyPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={`Search ${tabLabels[activeTab].plural.toLowerCase()}…`}
+            className="admin-field-input"
             style={{
-              width: "100%",
-              padding: "0.5rem 0.75rem 0.5rem 2.25rem",
-              background: "oklch(0.185 0.004 285)",
-              border: "1px solid oklch(0.26 0.004 285)",
-              borderRadius: "2px",
-              color: "oklch(0.94 0.008 85)",
-              fontSize: "0.8125rem",
-              outline: "none",
+              paddingLeft: "2.25rem",
             }}
           />
         </div>
@@ -367,9 +348,9 @@ export function AdminTaxonomyPage() {
       {/* ── Table Container ── */}
       <div
         style={{
-          background: "oklch(0.185 0.004 285)",
-          border: "1px solid oklch(0.26 0.004 285)",
-          borderRadius: "2px",
+          background: "var(--admin-card-bg)",
+          border: "1px solid var(--admin-card-border)",
+          borderRadius: "4px",
           overflow: "hidden",
         }}
       >
@@ -403,11 +384,12 @@ export function AdminTaxonomyPage() {
             position: "fixed",
             inset: 0,
             zIndex: 50,
-            background: "oklch(0 0 0 / 0.65)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             padding: "1rem",
+            background: "rgba(41, 41, 37, 0.45)",
+            backdropFilter: "blur(4px)",
           }}
           onClick={(e) => {
             if (e.target === e.currentTarget && !isSubmitting) closeModal();
@@ -418,13 +400,13 @@ export function AdminTaxonomyPage() {
             aria-modal="true"
             aria-labelledby="taxonomy-modal-title"
             style={{
-              background: "oklch(0.185 0.004 285)",
-              border: "1px solid oklch(0.3 0.004 285)",
-              borderRadius: "2px",
+              background: "var(--admin-card-bg)",
+              border: "1px solid var(--admin-card-border)",
+              borderRadius: "6px",
               padding: "1.75rem 2rem",
               maxWidth: "480px",
               width: "100%",
-              boxShadow: "0 24px 64px oklch(0 0 0 / 0.5)",
+              boxShadow: "0 20px 48px rgba(0, 0, 0, 0.12)",
             }}
           >
             <h2
@@ -433,7 +415,7 @@ export function AdminTaxonomyPage() {
                 margin: "0 0 1.25rem",
                 fontSize: "1.125rem",
                 fontWeight: 700,
-                color: "oklch(0.94 0.008 85)",
+                color: "var(--admin-text-main)",
               }}
             >
               {modalMode === "create" ? "Add" : "Edit"} {tabLabels[activeTab].singular}
@@ -442,11 +424,11 @@ export function AdminTaxonomyPage() {
             {formError && (
               <div
                 style={{
-                  background: "oklch(0.65 0.2 25 / 0.12)",
-                  border: "1px solid oklch(0.65 0.2 25 / 0.35)",
-                  color: "oklch(0.85 0.15 25)",
+                  background: "var(--admin-danger-bg)",
+                  border: "1px solid var(--admin-danger-border)",
+                  color: "var(--admin-danger-text)",
                   padding: "0.625rem 0.875rem",
-                  borderRadius: "2px",
+                  borderRadius: "4px",
                   fontSize: "0.8125rem",
                   marginBottom: "1rem",
                 }}
@@ -465,11 +447,11 @@ export function AdminTaxonomyPage() {
                     fontFamily: "var(--font-mono, monospace)",
                     letterSpacing: "0.08em",
                     textTransform: "uppercase",
-                    color: "oklch(0.6 0.008 85)",
+                    color: "var(--admin-text-muted)",
                     marginBottom: "0.375rem",
                   }}
                 >
-                  Name <span style={{ color: "oklch(0.78 0.155 71)" }}>*</span>
+                  Name <span style={{ color: "var(--destructive)" }}>*</span>
                 </label>
                 <input
                   type="text"
@@ -483,16 +465,7 @@ export function AdminTaxonomyPage() {
                         ? "Vibram Rubber"
                         : "Chevron Lug"
                   }`}
-                  style={{
-                    width: "100%",
-                    padding: "0.625rem 0.75rem",
-                    background: "oklch(0.14 0.003 285)",
-                    border: "1px solid oklch(0.28 0.004 285)",
-                    borderRadius: "2px",
-                    color: "oklch(0.94 0.008 85)",
-                    fontSize: "0.875rem",
-                    outline: "none",
-                  }}
+                  className="admin-field-input"
                 />
               </div>
 
@@ -506,11 +479,11 @@ export function AdminTaxonomyPage() {
                       fontFamily: "var(--font-mono, monospace)",
                       letterSpacing: "0.08em",
                       textTransform: "uppercase",
-                      color: "oklch(0.6 0.008 85)",
+                      color: "var(--admin-text-muted)",
                       marginBottom: "0.375rem",
                     }}
                   >
-                    Slug <span style={{ color: "oklch(0.78 0.155 71)" }}>*</span>
+                    Slug <span style={{ color: "var(--destructive)" }}>*</span>
                   </label>
                   <input
                     type="text"
@@ -518,19 +491,10 @@ export function AdminTaxonomyPage() {
                     value={formSlug}
                     onChange={(e) => setFormSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"))}
                     placeholder="e.g. trail-running"
-                    style={{
-                      width: "100%",
-                      padding: "0.625rem 0.75rem",
-                      background: "oklch(0.14 0.003 285)",
-                      border: "1px solid oklch(0.28 0.004 285)",
-                      borderRadius: "2px",
-                      color: "oklch(0.94 0.008 85)",
-                      fontSize: "0.875rem",
-                      fontFamily: "var(--font-mono, monospace)",
-                      outline: "none",
-                    }}
+                    className="admin-field-input"
+                    style={{ fontFamily: "var(--font-mono, monospace)" }}
                   />
-                  <p style={{ margin: "0.25rem 0 0", fontSize: "0.6875rem", color: "oklch(0.5 0.008 85)" }}>
+                  <p style={{ margin: "0.25rem 0 0", fontSize: "0.6875rem", color: "var(--admin-text-muted)" }}>
                     Used for URL filtering. Lowercase alphanumeric and hyphens only.
                   </p>
                 </div>
@@ -546,28 +510,19 @@ export function AdminTaxonomyPage() {
                       fontFamily: "var(--font-mono, monospace)",
                       letterSpacing: "0.08em",
                       textTransform: "uppercase",
-                      color: "oklch(0.6 0.008 85)",
+                      color: "var(--admin-text-muted)",
                       marginBottom: "0.375rem",
                     }}
                   >
-                    Description <span style={{ color: "oklch(0.5 0.008 85)" }}>(Optional)</span>
+                    Description <span style={{ color: "var(--admin-text-muted)" }}>(Optional)</span>
                   </label>
                   <textarea
                     rows={3}
                     value={formDescription}
                     onChange={(e) => setFormDescription(e.target.value)}
                     placeholder="Brief description of the material or traction geometry..."
-                    style={{
-                      width: "100%",
-                      padding: "0.625rem 0.75rem",
-                      background: "oklch(0.14 0.003 285)",
-                      border: "1px solid oklch(0.28 0.004 285)",
-                      borderRadius: "2px",
-                      color: "oklch(0.94 0.008 85)",
-                      fontSize: "0.875rem",
-                      outline: "none",
-                      resize: "vertical",
-                    }}
+                    className="admin-field-input"
+                    style={{ resize: "vertical" }}
                   />
                 </div>
               )}
@@ -578,32 +533,14 @@ export function AdminTaxonomyPage() {
                   type="button"
                   onClick={closeModal}
                   disabled={isSubmitting}
-                  style={{
-                    padding: "0.5rem 0.875rem",
-                    background: "transparent",
-                    border: "1px solid oklch(0.28 0.004 285)",
-                    borderRadius: "2px",
-                    color: "oklch(0.7 0.008 85)",
-                    fontSize: "0.8125rem",
-                    cursor: "pointer",
-                  }}
+                  className="admin-btn admin-btn-secondary"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  style={{
-                    padding: "0.5rem 1rem",
-                    background: "oklch(0.78 0.155 71)",
-                    color: "oklch(0.17 0.02 60)",
-                    border: "none",
-                    borderRadius: "2px",
-                    fontSize: "0.8125rem",
-                    fontWeight: 600,
-                    cursor: isSubmitting ? "not-allowed" : "pointer",
-                    opacity: isSubmitting ? 0.7 : 1,
-                  }}
+                  className="admin-btn admin-btn-primary"
                 >
                   {isSubmitting ? "Saving…" : modalMode === "create" ? "Create" : "Save Changes"}
                 </button>
@@ -620,7 +557,8 @@ export function AdminTaxonomyPage() {
             position: "fixed",
             inset: 0,
             zIndex: 50,
-            background: "oklch(0 0 0 / 0.65)",
+            background: "rgba(41, 41, 37, 0.45)",
+            backdropFilter: "blur(4px)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -636,13 +574,13 @@ export function AdminTaxonomyPage() {
             aria-labelledby="delete-dialog-title"
             aria-describedby="delete-dialog-desc"
             style={{
-              background: "oklch(0.185 0.004 285)",
-              border: "1px solid oklch(0.3 0.004 285)",
-              borderRadius: "2px",
+              background: "var(--admin-card-bg)",
+              border: "1px solid var(--admin-card-border)",
+              borderRadius: "6px",
               padding: "1.75rem 2rem",
               maxWidth: "480px",
               width: "100%",
-              boxShadow: "0 24px 64px oklch(0 0 0 / 0.5)",
+              boxShadow: "0 20px 48px rgba(0, 0, 0, 0.12)",
             }}
           >
             <div style={{ display: "flex", alignItems: "flex-start", gap: "1rem", marginBottom: "1rem" }}>
@@ -650,13 +588,13 @@ export function AdminTaxonomyPage() {
                 style={{
                   width: "40px",
                   height: "40px",
-                  borderRadius: "2px",
-                  background: deletingItem.productCount > 0 ? "oklch(0.65 0.12 70 / 0.15)" : "oklch(0.65 0.2 25 / 0.15)",
-                  border: deletingItem.productCount > 0 ? "1px solid oklch(0.65 0.12 70 / 0.3)" : "1px solid oklch(0.65 0.2 25 / 0.3)",
+                  borderRadius: "4px",
+                  background: deletingItem.productCount > 0 ? "var(--admin-badge-bg)" : "var(--admin-danger-bg)",
+                  border: deletingItem.productCount > 0 ? "1px solid var(--admin-card-border)" : "1px solid var(--admin-danger-border)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  color: deletingItem.productCount > 0 ? "oklch(0.78 0.13 70)" : "oklch(0.85 0.18 25)",
+                  color: deletingItem.productCount > 0 ? "var(--charcoal)" : "var(--admin-danger-text)",
                   flexShrink: 0,
                 }}
               >
@@ -673,12 +611,12 @@ export function AdminTaxonomyPage() {
                     margin: "0 0 0.25rem",
                     fontSize: "1rem",
                     fontWeight: 700,
-                    color: "oklch(0.94 0.008 85)",
+                    color: "var(--admin-text-main)",
                   }}
                 >
                   Delete {deletingItem.name}?
                 </h2>
-                <p style={{ margin: 0, fontSize: "0.6875rem", fontFamily: "var(--font-mono, monospace)", color: "oklch(0.55 0.008 85)", textTransform: "uppercase" }}>
+                <p style={{ margin: 0, fontSize: "0.6875rem", fontFamily: "var(--font-mono, monospace)", color: "var(--admin-text-muted)", textTransform: "uppercase" }}>
                   {tabLabels[activeTab].singular}
                 </p>
               </div>
@@ -687,11 +625,11 @@ export function AdminTaxonomyPage() {
             {deleteError && (
               <div
                 style={{
-                  background: "oklch(0.65 0.2 25 / 0.12)",
-                  border: "1px solid oklch(0.65 0.2 25 / 0.35)",
-                  color: "oklch(0.85 0.15 25)",
+                  background: "var(--admin-danger-bg)",
+                  border: "1px solid var(--admin-danger-border)",
+                  color: "var(--admin-danger-text)",
                   padding: "0.625rem 0.875rem",
-                  borderRadius: "2px",
+                  borderRadius: "4px",
                   fontSize: "0.8125rem",
                   marginBottom: "1rem",
                 }}
@@ -702,18 +640,18 @@ export function AdminTaxonomyPage() {
 
             {deletingItem.productCount > 0 ? (
               <div>
-                <p id="delete-dialog-desc" style={{ fontSize: "0.875rem", color: "oklch(0.7 0.008 85)", lineHeight: 1.5, margin: "0 0 1.25rem" }}>
+                <p id="delete-dialog-desc" style={{ fontSize: "0.875rem", color: "var(--admin-text-secondary)", lineHeight: 1.5, margin: "0 0 1.25rem" }}>
                   This {tabLabels[activeTab].singular.toLowerCase()} cannot be deleted because it is currently assigned to{" "}
-                  <strong>{deletingItem.productCount}</strong> product{deletingItem.productCount === 1 ? "" : "s"}.
+                  <strong style={{ color: "var(--admin-text-main)" }}>{deletingItem.productCount}</strong> product{deletingItem.productCount === 1 ? "" : "s"}.
                 </p>
                 <div
                   style={{
-                    background: "oklch(0.22 0.004 285)",
-                    border: "1px solid oklch(0.28 0.004 285)",
-                    borderRadius: "2px",
+                    background: "var(--admin-bg)",
+                    border: "1px solid var(--admin-card-border)",
+                    borderRadius: "4px",
                     padding: "0.75rem",
                     fontSize: "0.8125rem",
-                    color: "oklch(0.65 0.008 85)",
+                    color: "var(--admin-text-muted)",
                     marginBottom: "1.25rem",
                   }}
                 >
@@ -723,16 +661,7 @@ export function AdminTaxonomyPage() {
                   <button
                     type="button"
                     onClick={closeDeleteDialog}
-                    style={{
-                      padding: "0.5rem 1rem",
-                      background: "oklch(0.24 0.004 285)",
-                      border: "1px solid oklch(0.32 0.004 285)",
-                      borderRadius: "2px",
-                      color: "oklch(0.94 0.008 85)",
-                      fontSize: "0.8125rem",
-                      fontWeight: 500,
-                      cursor: "pointer",
-                    }}
+                    className="admin-btn admin-btn-secondary"
                   >
                     Close
                   </button>
@@ -740,23 +669,15 @@ export function AdminTaxonomyPage() {
               </div>
             ) : (
               <div>
-                <p id="delete-dialog-desc" style={{ fontSize: "0.875rem", color: "oklch(0.7 0.008 85)", lineHeight: 1.5, margin: "0 0 1.25rem" }}>
-                  Are you sure you want to delete <strong>{deletingItem.name}</strong>? This item is not assigned to any products and will be permanently removed.
+                <p id="delete-dialog-desc" style={{ fontSize: "0.875rem", color: "var(--admin-text-secondary)", lineHeight: 1.5, margin: "0 0 1.25rem" }}>
+                  Are you sure you want to delete <strong style={{ color: "var(--admin-text-main)" }}>{deletingItem.name}</strong>? This item is not assigned to any products and will be permanently removed.
                 </p>
                 <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.75rem" }}>
                   <button
                     type="button"
                     onClick={closeDeleteDialog}
                     disabled={isDeleting}
-                    style={{
-                      padding: "0.5rem 0.875rem",
-                      background: "transparent",
-                      border: "1px solid oklch(0.28 0.004 285)",
-                      borderRadius: "2px",
-                      color: "oklch(0.7 0.008 85)",
-                      fontSize: "0.8125rem",
-                      cursor: "pointer",
-                    }}
+                    className="admin-btn admin-btn-secondary"
                   >
                     Cancel
                   </button>
@@ -766,10 +687,10 @@ export function AdminTaxonomyPage() {
                     disabled={isDeleting}
                     style={{
                       padding: "0.5rem 1rem",
-                      background: "oklch(0.65 0.2 25)",
+                      background: isDeleting ? "var(--admin-danger-bg)" : "var(--destructive)",
                       color: "#fff",
-                      border: "none",
-                      borderRadius: "2px",
+                      border: "1px solid var(--admin-danger-border)",
+                      borderRadius: "4px",
                       fontSize: "0.8125rem",
                       fontWeight: 600,
                       cursor: isDeleting ? "not-allowed" : "pointer",
@@ -808,18 +729,18 @@ function CategoriesTable({
   return (
     <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "0.8125rem" }}>
       <thead>
-        <tr style={{ borderBottom: "1px solid oklch(0.24 0.004 285)", background: "oklch(0.16 0.003 285)" }}>
-          <th style={{ padding: "0.75rem 1rem", color: "oklch(0.55 0.008 85)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em" }}>Name</th>
-          <th style={{ padding: "0.75rem 1rem", color: "oklch(0.55 0.008 85)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em" }}>Slug</th>
-          <th style={{ padding: "0.75rem 1rem", color: "oklch(0.55 0.008 85)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em" }}>Assigned Products</th>
-          <th style={{ padding: "0.75rem 1rem", color: "oklch(0.55 0.008 85)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em", textAlign: "right" }}>Actions</th>
+        <tr style={{ borderBottom: "1px solid var(--admin-card-border)", background: "var(--admin-bg)" }}>
+          <th style={{ padding: "0.75rem 1rem", color: "var(--admin-text-muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em" }}>Name</th>
+          <th style={{ padding: "0.75rem 1rem", color: "var(--admin-text-muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em" }}>Slug</th>
+          <th style={{ padding: "0.75rem 1rem", color: "var(--admin-text-muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em" }}>Assigned Products</th>
+          <th style={{ padding: "0.75rem 1rem", color: "var(--admin-text-muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em", textAlign: "right" }}>Actions</th>
         </tr>
       </thead>
       <tbody>
         {items.map((c) => (
-          <tr key={c.id} style={{ borderBottom: "1px solid oklch(0.22 0.004 285)" }}>
-            <td style={{ padding: "0.875rem 1rem", fontWeight: 600, color: "oklch(0.92 0.008 85)" }}>{c.name}</td>
-            <td style={{ padding: "0.875rem 1rem", fontFamily: "var(--font-mono, monospace)", color: "oklch(0.65 0.008 85)", fontSize: "0.75rem" }}>{c.slug}</td>
+          <tr key={c.id} style={{ borderBottom: "1px solid var(--admin-card-border)" }}>
+            <td style={{ padding: "0.875rem 1rem", fontWeight: 600, color: "var(--admin-text-main)" }}>{c.name}</td>
+            <td style={{ padding: "0.875rem 1rem", fontFamily: "var(--font-mono, monospace)", color: "var(--admin-text-muted)", fontSize: "0.75rem" }}>{c.slug}</td>
             <td style={{ padding: "0.875rem 1rem" }}>
               <ProductCountBadge count={c.productCount} />
             </td>
@@ -828,29 +749,18 @@ function CategoriesTable({
                 <button
                   type="button"
                   onClick={() => onEdit(c)}
-                  style={{
-                    background: "transparent",
-                    border: "1px solid oklch(0.28 0.004 285)",
-                    borderRadius: "2px",
-                    color: "oklch(0.8 0.008 85)",
-                    padding: "0.35rem 0.65rem",
-                    fontSize: "0.75rem",
-                    cursor: "pointer",
-                  }}
+                  className="admin-btn admin-btn-sm admin-btn-secondary"
                 >
                   Edit
                 </button>
                 <button
                   type="button"
                   onClick={() => onDelete(c)}
+                  className="admin-btn admin-btn-sm"
                   style={{
-                    background: "transparent",
-                    border: "1px solid oklch(0.3 0.08 25 / 0.4)",
-                    borderRadius: "2px",
-                    color: "oklch(0.75 0.12 25)",
-                    padding: "0.35rem 0.65rem",
-                    fontSize: "0.75rem",
-                    cursor: "pointer",
+                    background: "var(--admin-danger-bg)",
+                    border: "1px solid var(--admin-danger-border)",
+                    color: "var(--admin-danger-text)",
                   }}
                 >
                   Delete
@@ -880,19 +790,19 @@ function MaterialsTable({
   return (
     <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "0.8125rem" }}>
       <thead>
-        <tr style={{ borderBottom: "1px solid oklch(0.24 0.004 285)", background: "oklch(0.16 0.003 285)" }}>
-          <th style={{ padding: "0.75rem 1rem", color: "oklch(0.55 0.008 85)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em", width: "24%" }}>Name</th>
-          <th style={{ padding: "0.75rem 1rem", color: "oklch(0.55 0.008 85)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em" }}>Description</th>
-          <th style={{ padding: "0.75rem 1rem", color: "oklch(0.55 0.008 85)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em", width: "18%" }}>Assigned Products</th>
-          <th style={{ padding: "0.75rem 1rem", color: "oklch(0.55 0.008 85)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em", textAlign: "right", width: "16%" }}>Actions</th>
+        <tr style={{ borderBottom: "1px solid var(--admin-card-border)", background: "var(--admin-bg)" }}>
+          <th style={{ padding: "0.75rem 1rem", color: "var(--admin-text-muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em", width: "24%" }}>Name</th>
+          <th style={{ padding: "0.75rem 1rem", color: "var(--admin-text-muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em" }}>Description</th>
+          <th style={{ padding: "0.75rem 1rem", color: "var(--admin-text-muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em", width: "18%" }}>Assigned Products</th>
+          <th style={{ padding: "0.75rem 1rem", color: "var(--admin-text-muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em", textAlign: "right", width: "16%" }}>Actions</th>
         </tr>
       </thead>
       <tbody>
         {items.map((m) => (
-          <tr key={m.id} style={{ borderBottom: "1px solid oklch(0.22 0.004 285)" }}>
-            <td style={{ padding: "0.875rem 1rem", fontWeight: 600, color: "oklch(0.92 0.008 85)" }}>{m.name}</td>
-            <td style={{ padding: "0.875rem 1rem", color: "oklch(0.65 0.008 85)", lineHeight: 1.4 }}>
-              {m.description || <span style={{ color: "oklch(0.45 0.008 85)", fontStyle: "italic" }}>No description</span>}
+          <tr key={m.id} style={{ borderBottom: "1px solid var(--admin-card-border)" }}>
+            <td style={{ padding: "0.875rem 1rem", fontWeight: 600, color: "var(--admin-text-main)" }}>{m.name}</td>
+            <td style={{ padding: "0.875rem 1rem", color: "var(--admin-text-secondary)", lineHeight: 1.4 }}>
+              {m.description || <span style={{ color: "var(--admin-text-muted)", fontStyle: "italic" }}>No description</span>}
             </td>
             <td style={{ padding: "0.875rem 1rem" }}>
               <ProductCountBadge count={m.productCount} />
@@ -902,29 +812,18 @@ function MaterialsTable({
                 <button
                   type="button"
                   onClick={() => onEdit(m)}
-                  style={{
-                    background: "transparent",
-                    border: "1px solid oklch(0.28 0.004 285)",
-                    borderRadius: "2px",
-                    color: "oklch(0.8 0.008 85)",
-                    padding: "0.35rem 0.65rem",
-                    fontSize: "0.75rem",
-                    cursor: "pointer",
-                  }}
+                  className="admin-btn admin-btn-sm admin-btn-secondary"
                 >
                   Edit
                 </button>
                 <button
                   type="button"
                   onClick={() => onDelete(m)}
+                  className="admin-btn admin-btn-sm"
                   style={{
-                    background: "transparent",
-                    border: "1px solid oklch(0.3 0.08 25 / 0.4)",
-                    borderRadius: "2px",
-                    color: "oklch(0.75 0.12 25)",
-                    padding: "0.35rem 0.65rem",
-                    fontSize: "0.75rem",
-                    cursor: "pointer",
+                    background: "var(--admin-danger-bg)",
+                    border: "1px solid var(--admin-danger-border)",
+                    color: "var(--admin-danger-text)",
                   }}
                 >
                   Delete
@@ -954,19 +853,19 @@ function TractionTable({
   return (
     <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "0.8125rem" }}>
       <thead>
-        <tr style={{ borderBottom: "1px solid oklch(0.24 0.004 285)", background: "oklch(0.16 0.003 285)" }}>
-          <th style={{ padding: "0.75rem 1rem", color: "oklch(0.55 0.008 85)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em", width: "24%" }}>Name</th>
-          <th style={{ padding: "0.75rem 1rem", color: "oklch(0.55 0.008 85)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em" }}>Description</th>
-          <th style={{ padding: "0.75rem 1rem", color: "oklch(0.55 0.008 85)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em", width: "18%" }}>Assigned Products</th>
-          <th style={{ padding: "0.75rem 1rem", color: "oklch(0.55 0.008 85)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em", textAlign: "right", width: "16%" }}>Actions</th>
+        <tr style={{ borderBottom: "1px solid var(--admin-card-border)", background: "var(--admin-bg)" }}>
+          <th style={{ padding: "0.75rem 1rem", color: "var(--admin-text-muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em", width: "24%" }}>Name</th>
+          <th style={{ padding: "0.75rem 1rem", color: "var(--admin-text-muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em" }}>Description</th>
+          <th style={{ padding: "0.75rem 1rem", color: "var(--admin-text-muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em", width: "18%" }}>Assigned Products</th>
+          <th style={{ padding: "0.75rem 1rem", color: "var(--admin-text-muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em", textAlign: "right", width: "16%" }}>Actions</th>
         </tr>
       </thead>
       <tbody>
         {items.map((t) => (
-          <tr key={t.id} style={{ borderBottom: "1px solid oklch(0.22 0.004 285)" }}>
-            <td style={{ padding: "0.875rem 1rem", fontWeight: 600, color: "oklch(0.92 0.008 85)" }}>{t.name}</td>
-            <td style={{ padding: "0.875rem 1rem", color: "oklch(0.65 0.008 85)", lineHeight: 1.4 }}>
-              {t.description || <span style={{ color: "oklch(0.45 0.008 85)", fontStyle: "italic" }}>No description</span>}
+          <tr key={t.id} style={{ borderBottom: "1px solid var(--admin-card-border)" }}>
+            <td style={{ padding: "0.875rem 1rem", fontWeight: 600, color: "var(--admin-text-main)" }}>{t.name}</td>
+            <td style={{ padding: "0.875rem 1rem", color: "var(--admin-text-secondary)", lineHeight: 1.4 }}>
+              {t.description || <span style={{ color: "var(--admin-text-muted)", fontStyle: "italic" }}>No description</span>}
             </td>
             <td style={{ padding: "0.875rem 1rem" }}>
               <ProductCountBadge count={t.productCount} />
@@ -976,29 +875,18 @@ function TractionTable({
                 <button
                   type="button"
                   onClick={() => onEdit(t)}
-                  style={{
-                    background: "transparent",
-                    border: "1px solid oklch(0.28 0.004 285)",
-                    borderRadius: "2px",
-                    color: "oklch(0.8 0.008 85)",
-                    padding: "0.35rem 0.65rem",
-                    fontSize: "0.75rem",
-                    cursor: "pointer",
-                  }}
+                  className="admin-btn admin-btn-sm admin-btn-secondary"
                 >
                   Edit
                 </button>
                 <button
                   type="button"
                   onClick={() => onDelete(t)}
+                  className="admin-btn admin-btn-sm"
                   style={{
-                    background: "transparent",
-                    border: "1px solid oklch(0.3 0.08 25 / 0.4)",
-                    borderRadius: "2px",
-                    color: "oklch(0.75 0.12 25)",
-                    padding: "0.35rem 0.65rem",
-                    fontSize: "0.75rem",
-                    cursor: "pointer",
+                    background: "var(--admin-danger-bg)",
+                    border: "1px solid var(--admin-danger-border)",
+                    color: "var(--admin-danger-text)",
                   }}
                 >
                   Delete
@@ -1019,11 +907,12 @@ function ProductCountBadge({ count }: { count: number }) {
         style={{
           display: "inline-block",
           padding: "0.2rem 0.5rem",
-          borderRadius: "2px",
+          borderRadius: "4px",
           fontSize: "0.6875rem",
           fontFamily: "var(--font-mono, monospace)",
-          background: "oklch(0.22 0.004 285)",
-          color: "oklch(0.55 0.008 85)",
+          background: "var(--admin-bg)",
+          color: "var(--admin-text-muted)",
+          border: "1px solid var(--admin-card-border)",
           letterSpacing: "0.04em",
         }}
       >
@@ -1037,12 +926,12 @@ function ProductCountBadge({ count }: { count: number }) {
       style={{
         display: "inline-block",
         padding: "0.2rem 0.5rem",
-        borderRadius: "2px",
+        borderRadius: "4px",
         fontSize: "0.6875rem",
         fontFamily: "var(--font-mono, monospace)",
-        background: "oklch(0.78 0.155 71 / 0.12)",
-        color: "oklch(0.78 0.155 71)",
-        border: "1px solid oklch(0.78 0.155 71 / 0.25)",
+        background: "var(--admin-badge-bg)",
+        color: "var(--charcoal)",
+        border: "1px solid var(--admin-card-border)",
         letterSpacing: "0.04em",
       }}
     >
@@ -1053,7 +942,7 @@ function ProductCountBadge({ count }: { count: number }) {
 
 function EmptyTable({ message }: { message: string }) {
   return (
-    <div style={{ padding: "3rem 1.5rem", textAlign: "center", color: "oklch(0.55 0.008 85)", fontSize: "0.875rem" }}>
+    <div style={{ padding: "3rem 1.5rem", textAlign: "center", color: "var(--admin-text-muted)", fontSize: "0.875rem" }}>
       {message}
     </div>
   );

@@ -118,7 +118,7 @@ function AdminCreateOutsolePage() {
             to="/admin/outsoles"
             style={{
               fontSize: "0.75rem",
-              color: "oklch(0.65 0.008 85)",
+              color: "var(--muted-olive)",
               display: "inline-flex",
               alignItems: "center",
               gap: "0.25rem",
@@ -148,10 +148,10 @@ function AdminCreateOutsolePage() {
           style={{
             padding: "0.75rem 1rem",
             marginBottom: "1.5rem",
-            background: "oklch(0.7 0.15 150 / 0.15)",
-            border: "1px solid oklch(0.7 0.15 150 / 0.4)",
+            background: "var(--admin-status-active-bg)",
+            border: "1px solid var(--admin-status-active-border)",
             borderRadius: "2px",
-            color: "oklch(0.85 0.14 150)",
+            color: "var(--admin-status-active-text)",
             fontSize: "0.8125rem",
           }}
         >
@@ -168,7 +168,7 @@ function AdminCreateOutsolePage() {
           <div className="admin-form-grid-2" style={{ marginBottom: "1rem" }}>
             <div className="admin-field">
               <label htmlFor="outsole-name" className="admin-field-label">
-                Product Name <span style={{ color: "oklch(0.78 0.155 71)" }}>*</span>
+                Product Name <span style={{ color: "var(--destructive)" }}>*</span>
               </label>
               <input
                 id="outsole-name"
@@ -184,7 +184,7 @@ function AdminCreateOutsolePage() {
 
             <div className="admin-field">
               <label htmlFor="outsole-sku" className="admin-field-label">
-                Model Number / SKU <span style={{ color: "oklch(0.78 0.155 71)" }}>*</span>
+                Model Number / SKU <span style={{ color: "var(--destructive)" }}>*</span>
               </label>
               <input
                 id="outsole-sku"
@@ -202,7 +202,7 @@ function AdminCreateOutsolePage() {
           <div className="admin-form-grid-2" style={{ marginBottom: "1rem" }}>
             <div className="admin-field">
               <label htmlFor="outsole-slug" className="admin-field-label">
-                URL Slug <span style={{ color: "oklch(0.78 0.155 71)" }}>*</span>
+                URL Slug <span style={{ color: "var(--destructive)" }}>*</span>
               </label>
               <input
                 id="outsole-slug"

@@ -221,7 +221,7 @@ export function AdminContentPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <span style={{ fontSize: "0.75rem", color: "oklch(0.6 0.008 85)", fontFamily: "var(--font-mono, monospace)" }}>
+          <span style={{ fontSize: "0.75rem", color: "var(--admin-text-muted)", fontFamily: "var(--font-mono, monospace)" }}>
             Showing {filteredItems.length} of {items.length} section{items.length === 1 ? "" : "s"}
           </span>
         </div>
@@ -263,10 +263,10 @@ export function AdminContentPage() {
             style={{
               padding: "3rem 1.5rem",
               textAlign: "center",
-              background: "oklch(0.16 0.003 285)",
-              border: "1px dashed oklch(0.26 0.004 285)",
-              borderRadius: "2px",
-              color: "oklch(0.6 0.008 85)",
+              background: "var(--admin-card-bg)",
+              border: "1px dashed var(--admin-card-border)",
+              borderRadius: "4px",
+              color: "var(--admin-text-muted)",
             }}
           >
             <p style={{ margin: 0, fontSize: "0.875rem" }}>
@@ -381,11 +381,11 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
     <div
       id={`content-card-${entry.content_key}`}
       style={{
-        background: "oklch(0.165 0.003 285)",
+        background: "var(--admin-card-bg)",
         border: isDirty
-          ? "1px solid oklch(0.78 0.155 71 / 0.6)"
-          : "1px solid oklch(0.25 0.004 285)",
-        borderRadius: "2px",
+          ? "1px solid var(--charcoal)"
+          : "1px solid var(--admin-card-border)",
+        borderRadius: "4px",
         overflow: "hidden",
         transition: "border-color 0.15s ease",
       }}
@@ -399,8 +399,8 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
           flexWrap: "wrap",
           gap: "0.75rem",
           padding: "1rem 1.25rem",
-          background: "oklch(0.18 0.004 285)",
-          borderBottom: "1px solid oklch(0.24 0.004 285)",
+          background: "var(--admin-bg)",
+          borderBottom: "1px solid var(--admin-card-border)",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
@@ -409,7 +409,7 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
               margin: 0,
               fontSize: "0.9375rem",
               fontWeight: 600,
-              color: "oklch(0.94 0.008 85)",
+              color: "var(--admin-text-main)",
               letterSpacing: "-0.01em",
             }}
           >
@@ -420,10 +420,10 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
               fontFamily: "var(--font-mono, monospace)",
               fontSize: "0.6875rem",
               padding: "0.2rem 0.5rem",
-              background: "oklch(0.22 0.004 285)",
-              color: "oklch(0.75 0.008 85)",
-              borderRadius: "2px",
-              border: "1px solid oklch(0.28 0.004 285)",
+              background: "var(--admin-badge-bg)",
+              color: "var(--admin-text-muted)",
+              borderRadius: "4px",
+              border: "1px solid var(--admin-card-border)",
             }}
           >
             {entry.content_key}
@@ -432,9 +432,9 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
             style={{
               fontSize: "0.6875rem",
               padding: "0.2rem 0.5rem",
-              background: "oklch(0.78 0.155 71 / 0.12)",
-              color: "oklch(0.78 0.155 71)",
-              borderRadius: "2px",
+              background: "var(--sand)",
+              color: "var(--charcoal)",
+              borderRadius: "4px",
               fontWeight: 600,
               letterSpacing: "0.02em",
             }}
@@ -449,7 +449,7 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
               style={{
                 fontFamily: "var(--font-mono, monospace)",
                 fontSize: "0.6875rem",
-                color: "oklch(0.78 0.155 71)",
+                color: "var(--charcoal)",
                 fontWeight: 600,
                 letterSpacing: "0.04em",
               }}
@@ -461,7 +461,7 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
             style={{
               fontFamily: "var(--font-mono, monospace)",
               fontSize: "0.6875rem",
-              color: "oklch(0.55 0.008 85)",
+              color: "var(--admin-text-muted)",
             }}
             title={entry.updated_at}
           >
@@ -482,10 +482,10 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
               gap: "0.5rem",
               padding: "0.625rem 0.875rem",
               marginBottom: "1rem",
-              background: "oklch(0.62 0.2 25 / 0.12)",
-              border: "1px solid oklch(0.62 0.2 25 / 0.4)",
-              borderRadius: "2px",
-              color: "oklch(0.85 0.12 25)",
+              background: "var(--admin-danger-bg)",
+              border: "1px solid var(--admin-danger-border)",
+              borderRadius: "4px",
+              color: "var(--admin-danger-text)",
               fontSize: "0.8125rem",
             }}
           >
@@ -508,10 +508,10 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
               gap: "0.5rem",
               padding: "0.625rem 0.875rem",
               marginBottom: "1rem",
-              background: "oklch(0.7 0.15 150 / 0.12)",
-              border: "1px solid oklch(0.7 0.15 150 / 0.4)",
-              borderRadius: "2px",
-              color: "oklch(0.85 0.13 150)",
+              background: "var(--admin-status-active-bg)",
+              border: "1px solid var(--admin-status-active-border)",
+              borderRadius: "4px",
+              color: "var(--admin-status-active-text)",
               fontSize: "0.8125rem",
             }}
           >
@@ -527,9 +527,9 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
           style={{
             marginBottom: "1.25rem",
             padding: "1rem 1.25rem",
-            background: "oklch(0.145 0.003 285)",
-            border: "1px solid oklch(0.24 0.004 285)",
-            borderRadius: "2px",
+            background: "var(--admin-bg)",
+            border: "1px solid var(--admin-card-border)",
+            borderRadius: "4px",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1rem" }}>
@@ -541,10 +541,10 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
                 letterSpacing: "0.08em",
                 textTransform: "uppercase",
                 padding: "0.2rem 0.5rem",
-                borderRadius: "2px",
-                background: "oklch(0.78 0.155 71 / 0.15)",
-                color: "oklch(0.85 0.13 75)",
-                border: "1px solid oklch(0.78 0.155 71 / 0.3)",
+                borderRadius: "4px",
+                background: "var(--sand)",
+                color: "var(--charcoal)",
+                border: "1px solid var(--admin-card-border)",
               }}
             >
               Bahasa Indonesia (Default)
@@ -565,7 +565,7 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
                 style={{
                   fontFamily: "var(--font-mono, monospace)",
                   fontSize: "0.6875rem",
-                  color: title.length > 240 ? "oklch(0.78 0.155 71)" : "oklch(0.5 0.008 85)",
+                  color: title.length > 240 ? "var(--charcoal)" : "var(--admin-text-muted)",
                 }}
               >
                 {title.length} / 255
@@ -581,7 +581,7 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
               placeholder={meta.titleHint}
               maxLength={255}
             />
-            <span style={{ fontSize: "0.6875rem", color: "oklch(0.55 0.008 85)" }}>
+            <span style={{ fontSize: "0.6875rem", color: "var(--admin-text-muted)" }}>
               {meta.titleHint}
             </span>
           </div>
@@ -600,7 +600,7 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
                 style={{
                   fontFamily: "var(--font-mono, monospace)",
                   fontSize: "0.6875rem",
-                  color: content.length > 4800 ? "oklch(0.78 0.155 71)" : "oklch(0.5 0.008 85)",
+                  color: content.length > 4800 ? "var(--charcoal)" : "var(--admin-text-muted)",
                 }}
               >
                 {content.length} / 5000
@@ -617,7 +617,7 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
               maxLength={5000}
               style={{ resize: "vertical", lineHeight: 1.5 }}
             />
-            <span style={{ fontSize: "0.6875rem", color: "oklch(0.55 0.008 85)" }}>
+            <span style={{ fontSize: "0.6875rem", color: "var(--admin-text-muted)" }}>
               {meta.contentHint}
             </span>
           </div>
@@ -628,9 +628,9 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
           style={{
             marginBottom: "1.25rem",
             padding: "1rem 1.25rem",
-            background: "oklch(0.145 0.003 285)",
-            border: "1px solid oklch(0.24 0.004 285)",
-            borderRadius: "2px",
+            background: "var(--admin-bg)",
+            border: "1px solid var(--admin-card-border)",
+            borderRadius: "4px",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1rem" }}>
@@ -642,15 +642,15 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
                 letterSpacing: "0.08em",
                 textTransform: "uppercase",
                 padding: "0.2rem 0.5rem",
-                borderRadius: "2px",
-                background: "oklch(0.65 0.18 250 / 0.15)",
-                color: "oklch(0.8 0.12 250)",
-                border: "1px solid oklch(0.65 0.18 250 / 0.3)",
+                borderRadius: "4px",
+                background: "var(--sand)",
+                color: "var(--charcoal)",
+                border: "1px solid var(--admin-card-border)",
               }}
             >
               English (EN)
             </span>
-            <span style={{ fontSize: "0.6875rem", color: "oklch(0.55 0.008 85)" }}>
+            <span style={{ fontSize: "0.6875rem", color: "var(--admin-text-muted)" }}>
               (Optional — falls back to Indonesian if omitted)
             </span>
           </div>
@@ -669,7 +669,7 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
                 style={{
                   fontFamily: "var(--font-mono, monospace)",
                   fontSize: "0.6875rem",
-                  color: titleEn.length > 240 ? "oklch(0.78 0.155 71)" : "oklch(0.5 0.008 85)",
+                  color: titleEn.length > 240 ? "var(--charcoal)" : "var(--admin-text-muted)",
                 }}
               >
                 {titleEn.length} / 255
@@ -685,7 +685,7 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
               placeholder="English headline (displayed when visitor selects English)"
               maxLength={255}
             />
-            <span style={{ fontSize: "0.6875rem", color: "oklch(0.55 0.008 85)" }}>
+            <span style={{ fontSize: "0.6875rem", color: "var(--admin-text-muted)" }}>
               English headline displayed on public site when English locale is selected.
             </span>
           </div>
@@ -704,7 +704,7 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
                 style={{
                   fontFamily: "var(--font-mono, monospace)",
                   fontSize: "0.6875rem",
-                  color: contentEn.length > 4800 ? "oklch(0.78 0.155 71)" : "oklch(0.5 0.008 85)",
+                  color: contentEn.length > 4800 ? "var(--charcoal)" : "var(--admin-text-muted)",
                 }}
               >
                 {contentEn.length} / 5000
@@ -721,7 +721,7 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
               maxLength={5000}
               style={{ resize: "vertical", lineHeight: 1.5 }}
             />
-            <span style={{ fontSize: "0.6875rem", color: "oklch(0.55 0.008 85)" }}>
+            <span style={{ fontSize: "0.6875rem", color: "var(--admin-text-muted)" }}>
               English narrative body copy.
             </span>
           </div>
@@ -735,7 +735,7 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
             alignItems: "center",
             gap: "0.75rem",
             paddingTop: "0.75rem",
-            borderTop: "1px solid oklch(0.22 0.004 285)",
+            borderTop: "1px solid var(--admin-card-border)",
           }}
         >
           {isDirty && (
@@ -763,8 +763,8 @@ function ContentCard({ entry, onSaved }: ContentCardProps) {
                     display: "inline-block",
                     width: "12px",
                     height: "12px",
-                    border: "2px solid oklch(0.17 0.02 60 / 0.3)",
-                    borderTopColor: "oklch(0.17 0.02 60)",
+                    border: "2px solid rgba(255, 255, 255, 0.3)",
+                    borderTopColor: "#FFFFFF",
                     borderRadius: "50%",
                     animation: "admin-spin 0.65s linear infinite",
                   }}
@@ -797,7 +797,9 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
       const parsed = JSON.parse(raw);
       const result = contactContentSchema.safeParse(parsed);
       if (result.success) return result.data;
-    } catch {}
+    } catch {
+      // Fall back to default contact content when JSON parsing fails
+    }
     return isId ? DEFAULT_CONTACT_CONTENT_ID : DEFAULT_CONTACT_CONTENT;
   }
 
@@ -968,9 +970,9 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
   }
 
   const subPanelStyle: React.CSSProperties = {
-    background: "oklch(0.145 0.003 285)",
-    border: "1px solid oklch(0.24 0.004 285)",
-    borderRadius: "2px",
+    background: "var(--admin-bg)",
+    border: "1px solid var(--admin-card-border)",
+    borderRadius: "4px",
     padding: "1.25rem",
     marginBottom: "1.25rem",
   };
@@ -980,7 +982,7 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
     fontSize: "0.75rem",
     fontWeight: 700,
     letterSpacing: "0.08em",
-    color: "oklch(0.78 0.155 71)",
+    color: "var(--charcoal)",
     textTransform: "uppercase",
     marginBottom: "1rem",
     display: "flex",
@@ -993,7 +995,7 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
     fontSize: "0.75rem",
     fontWeight: 700,
     letterSpacing: "0.08em",
-    color: "oklch(0.8 0.12 250)",
+    color: "var(--charcoal)",
     textTransform: "uppercase",
     marginBottom: "1rem",
     display: "flex",
@@ -1008,11 +1010,11 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
     <div
       id="content-card-contact_information"
       style={{
-        background: "oklch(0.165 0.003 285)",
+        background: "var(--admin-card-bg)",
         border: isDirty
-          ? "1px solid oklch(0.78 0.155 71 / 0.6)"
-          : "1px solid oklch(0.25 0.004 285)",
-        borderRadius: "2px",
+          ? "1px solid var(--charcoal)"
+          : "1px solid var(--admin-card-border)",
+        borderRadius: "4px",
         overflow: "hidden",
         transition: "border-color 0.15s ease",
       }}
@@ -1026,8 +1028,8 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
           flexWrap: "wrap",
           gap: "0.75rem",
           padding: "1rem 1.25rem",
-          background: "oklch(0.18 0.004 285)",
-          borderBottom: "1px solid oklch(0.24 0.004 285)",
+          background: "var(--admin-bg)",
+          borderBottom: "1px solid var(--admin-card-border)",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
@@ -1036,7 +1038,7 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
               margin: 0,
               fontSize: "0.9375rem",
               fontWeight: 600,
-              color: "oklch(0.94 0.008 85)",
+              color: "var(--admin-text-main)",
               letterSpacing: "-0.01em",
             }}
           >
@@ -1047,10 +1049,10 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
               fontFamily: "var(--font-mono, monospace)",
               fontSize: "0.6875rem",
               padding: "0.2rem 0.5rem",
-              background: "oklch(0.22 0.004 285)",
-              color: "oklch(0.75 0.008 85)",
-              borderRadius: "2px",
-              border: "1px solid oklch(0.28 0.004 285)",
+              background: "var(--admin-badge-bg)",
+              color: "var(--admin-text-muted)",
+              borderRadius: "4px",
+              border: "1px solid var(--admin-card-border)",
             }}
           >
             {entry.content_key}
@@ -1059,9 +1061,9 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
             style={{
               fontSize: "0.6875rem",
               padding: "0.2rem 0.5rem",
-              background: "oklch(0.78 0.155 71 / 0.12)",
-              color: "oklch(0.78 0.155 71)",
-              borderRadius: "2px",
+              background: "var(--sand)",
+              color: "var(--charcoal)",
+              borderRadius: "4px",
               fontWeight: 600,
               letterSpacing: "0.02em",
             }}
@@ -1076,7 +1078,7 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
               style={{
                 fontFamily: "var(--font-mono, monospace)",
                 fontSize: "0.6875rem",
-                color: "oklch(0.78 0.155 71)",
+                color: "var(--charcoal)",
                 fontWeight: 600,
                 letterSpacing: "0.04em",
               }}
@@ -1088,7 +1090,7 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
             style={{
               fontFamily: "var(--font-mono, monospace)",
               fontSize: "0.6875rem",
-              color: "oklch(0.55 0.008 85)",
+              color: "var(--admin-text-muted)",
             }}
             title={entry.updated_at}
           >
@@ -1104,11 +1106,11 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
           alignItems: "center",
           gap: "0.5rem",
           padding: "0.75rem 1.25rem",
-          background: "oklch(0.14 0.002 285)",
-          borderBottom: "1px solid oklch(0.22 0.004 285)",
+          background: "var(--admin-bg)",
+          borderBottom: "1px solid var(--admin-card-border)",
         }}
       >
-        <span style={{ fontSize: "0.75rem", color: "oklch(0.6 0.008 85)", fontWeight: 500 }}>
+        <span style={{ fontSize: "0.75rem", color: "var(--admin-text-muted)", fontWeight: 500 }}>
           View Fields:
         </span>
         <button
@@ -1152,10 +1154,10 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
               gap: "0.5rem",
               padding: "0.625rem 0.875rem",
               marginBottom: "1rem",
-              background: "oklch(0.62 0.2 25 / 0.12)",
-              border: "1px solid oklch(0.62 0.2 25 / 0.4)",
-              borderRadius: "2px",
-              color: "oklch(0.85 0.12 25)",
+              background: "var(--admin-danger-bg)",
+              border: "1px solid var(--admin-danger-border)",
+              borderRadius: "4px",
+              color: "var(--admin-danger-text)",
               fontSize: "0.8125rem",
             }}
           >
@@ -1178,10 +1180,10 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
               gap: "0.5rem",
               padding: "0.625rem 0.875rem",
               marginBottom: "1rem",
-              background: "oklch(0.7 0.15 150 / 0.12)",
-              border: "1px solid oklch(0.7 0.15 150 / 0.4)",
-              borderRadius: "2px",
-              color: "oklch(0.85 0.13 150)",
+              background: "var(--admin-status-active-bg)",
+              border: "1px solid var(--admin-status-active-border)",
+              borderRadius: "4px",
+              color: "var(--admin-status-active-text)",
               fontSize: "0.8125rem",
             }}
           >
@@ -1200,9 +1202,9 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
             style={{
               marginBottom: showEn ? "2rem" : "1.25rem",
               padding: "1.25rem",
-              background: "oklch(0.15 0.003 285)",
-              border: "1px solid oklch(0.78 0.155 71 / 0.4)",
-              borderRadius: "2px",
+              background: "var(--admin-card-bg)",
+              border: "1px solid var(--admin-card-border)",
+              borderRadius: "4px",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1.25rem" }}>
@@ -1214,10 +1216,10 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
                   padding: "0.2rem 0.5rem",
-                  borderRadius: "2px",
-                  background: "oklch(0.78 0.155 71 / 0.15)",
-                  color: "oklch(0.85 0.13 75)",
-                  border: "1px solid oklch(0.78 0.155 71 / 0.3)",
+                  borderRadius: "4px",
+                  background: "var(--sand)",
+                  color: "var(--charcoal)",
+                  border: "1px solid var(--admin-card-border)",
                 }}
               >
                 Bahasa Indonesia (ID) — Default Public
@@ -1235,7 +1237,7 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
                     <label htmlFor="title-contact_information" className="admin-field-label" style={{ fontWeight: 600 }}>
                       Judul / Headline Halaman
                     </label>
-                    <span style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.6875rem", color: "oklch(0.5 0.008 85)" }}>
+                    <span style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.6875rem", color: "var(--admin-text-muted)" }}>
                       {title.length} / 255
                     </span>
                   </div>
@@ -1256,7 +1258,7 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
                     <label htmlFor="contact-intro" className="admin-field-label" style={{ fontWeight: 600 }}>
                       Deskripsi Pengantar / Intro
                     </label>
-                    <span style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.6875rem", color: "oklch(0.5 0.008 85)" }}>
+                    <span style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.6875rem", color: "var(--admin-text-muted)" }}>
                       {data.intro.length} / 1000
                     </span>
                   </div>
@@ -1679,9 +1681,9 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
             style={{
               marginBottom: "1.25rem",
               padding: "1.25rem",
-              background: "oklch(0.145 0.003 285)",
-              border: "1px solid oklch(0.65 0.18 250 / 0.4)",
-              borderRadius: "2px",
+              background: "var(--admin-card-bg)",
+              border: "1px solid var(--admin-card-border)",
+              borderRadius: "4px",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1.25rem" }}>
@@ -1693,15 +1695,15 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
                   padding: "0.2rem 0.5rem",
-                  borderRadius: "2px",
-                  background: "oklch(0.65 0.18 250 / 0.15)",
-                  color: "oklch(0.8 0.12 250)",
-                  border: "1px solid oklch(0.65 0.18 250 / 0.3)",
+                  borderRadius: "4px",
+                  background: "var(--sand)",
+                  color: "var(--charcoal)",
+                  border: "1px solid var(--admin-card-border)",
                 }}
               >
                 English (EN) — Bilingual Public
               </span>
-              <span style={{ fontSize: "0.6875rem", color: "oklch(0.55 0.008 85)" }}>
+              <span style={{ fontSize: "0.6875rem", color: "var(--admin-text-muted)" }}>
                 (Shown when visitor selects English)
               </span>
             </div>
@@ -1717,7 +1719,7 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
                     <label htmlFor="title-en-contact_information" className="admin-field-label" style={{ fontWeight: 600 }}>
                       Headline / Title (EN)
                     </label>
-                    <span style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.6875rem", color: "oklch(0.5 0.008 85)" }}>
+                    <span style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.6875rem", color: "var(--admin-text-muted)" }}>
                       {titleEn.length} / 255
                     </span>
                   </div>
@@ -1738,7 +1740,7 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
                     <label htmlFor="contact-intro-en" className="admin-field-label" style={{ fontWeight: 600 }}>
                       Intro Narrative / Tagline (EN)
                     </label>
-                    <span style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.6875rem", color: "oklch(0.5 0.008 85)" }}>
+                    <span style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.6875rem", color: "var(--admin-text-muted)" }}>
                       {dataEn.intro.length} / 1000
                     </span>
                   </div>
@@ -2161,7 +2163,7 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
             alignItems: "center",
             gap: "0.75rem",
             paddingTop: "0.75rem",
-            borderTop: "1px solid oklch(0.22 0.004 285)",
+            borderTop: "1px solid var(--admin-card-border)",
           }}
         >
           {isDirty && (
@@ -2189,8 +2191,8 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
                     display: "inline-block",
                     width: "12px",
                     height: "12px",
-                    border: "2px solid oklch(0.17 0.02 60 / 0.3)",
-                    borderTopColor: "oklch(0.17 0.02 60)",
+                    border: "2px solid rgba(255, 255, 255, 0.3)",
+                    borderTopColor: "#FFFFFF",
                     borderRadius: "50%",
                     animation: "admin-spin 0.65s linear infinite",
                   }}
@@ -2460,11 +2462,11 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
     <div
       id={`content-card-${entry.content_key}`}
       style={{
-        background: "oklch(0.165 0.003 285)",
+        background: "var(--admin-card-bg)",
         border: selectedFile || isMetaDirty
-          ? "1px solid oklch(0.78 0.155 71 / 0.6)"
-          : "1px solid oklch(0.25 0.004 285)",
-        borderRadius: "2px",
+          ? "1px solid var(--charcoal)"
+          : "1px solid var(--admin-card-border)",
+        borderRadius: "4px",
         overflow: "hidden",
         transition: "border-color 0.15s ease",
       }}
@@ -2478,8 +2480,8 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
           flexWrap: "wrap",
           gap: "0.75rem",
           padding: "1rem 1.25rem",
-          background: "oklch(0.18 0.004 285)",
-          borderBottom: "1px solid oklch(0.24 0.004 285)",
+          background: "var(--admin-bg)",
+          borderBottom: "1px solid var(--admin-card-border)",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
@@ -2488,7 +2490,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
               margin: 0,
               fontSize: "0.9375rem",
               fontWeight: 600,
-              color: "oklch(0.94 0.008 85)",
+              color: "var(--admin-text-main)",
               letterSpacing: "-0.01em",
             }}
           >
@@ -2499,10 +2501,10 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
               fontFamily: "var(--font-mono, monospace)",
               fontSize: "0.6875rem",
               padding: "0.2rem 0.5rem",
-              background: "oklch(0.22 0.004 285)",
-              color: "oklch(0.75 0.008 85)",
-              borderRadius: "2px",
-              border: "1px solid oklch(0.28 0.004 285)",
+              background: "var(--admin-badge-bg)",
+              color: "var(--admin-text-muted)",
+              borderRadius: "4px",
+              border: "1px solid var(--admin-card-border)",
             }}
           >
             {entry.content_key}
@@ -2514,10 +2516,10 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
               textTransform: "uppercase",
               letterSpacing: "0.05em",
               padding: "0.2rem 0.5rem",
-              borderRadius: "2px",
-              background: "oklch(0.78 0.155 71 / 0.12)",
-              color: "oklch(0.85 0.13 75)",
-              border: "1px solid oklch(0.78 0.155 71 / 0.3)",
+              borderRadius: "4px",
+              background: "var(--sand)",
+              color: "var(--charcoal)",
+              border: "1px solid var(--admin-card-border)",
             }}
           >
             Shared Background
@@ -2528,7 +2530,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
           <span
             style={{
               fontSize: "0.75rem",
-              color: "oklch(0.5 0.008 85)",
+              color: "var(--admin-text-muted)",
               fontFamily: "var(--font-mono, monospace)",
             }}
           >
@@ -2541,17 +2543,17 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
       <div
         style={{
           padding: "0.75rem 1.25rem",
-          background: "oklch(0.14 0.002 285)",
-          borderBottom: "1px solid oklch(0.22 0.004 285)",
+          background: "var(--admin-bg)",
+          borderBottom: "1px solid var(--admin-card-border)",
           fontSize: "0.75rem",
-          color: "oklch(0.65 0.008 85)",
+          color: "var(--admin-text-muted)",
           display: "flex",
           alignItems: "center",
           flexWrap: "wrap",
           gap: "0.5rem",
         }}
       >
-        <span style={{ fontWeight: 600, color: "oklch(0.85 0.008 85)" }}>Public Scope:</span>
+        <span style={{ fontWeight: 600, color: "var(--admin-text-main)" }}>Public Scope:</span>
         <span
           style={{
             display: "inline-flex",
@@ -2566,9 +2568,9 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
             rel="noreferrer"
             style={{
               padding: "0.15rem 0.4rem",
-              background: "oklch(0.20 0.004 285)",
-              borderRadius: "2px",
-              color: "oklch(0.85 0.008 85)",
+              background: "var(--admin-badge-bg)",
+              borderRadius: "4px",
+              color: "var(--admin-text-main)",
               textDecoration: "none",
             }}
           >
@@ -2580,9 +2582,9 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
             rel="noreferrer"
             style={{
               padding: "0.15rem 0.4rem",
-              background: "oklch(0.20 0.004 285)",
-              borderRadius: "2px",
-              color: "oklch(0.85 0.008 85)",
+              background: "var(--admin-badge-bg)",
+              borderRadius: "4px",
+              color: "var(--admin-text-main)",
               textDecoration: "none",
             }}
           >
@@ -2594,9 +2596,9 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
             rel="noreferrer"
             style={{
               padding: "0.15rem 0.4rem",
-              background: "oklch(0.20 0.004 285)",
-              borderRadius: "2px",
-              color: "oklch(0.85 0.008 85)",
+              background: "var(--admin-badge-bg)",
+              borderRadius: "4px",
+              color: "var(--admin-text-main)",
               textDecoration: "none",
             }}
           >
@@ -2608,16 +2610,16 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
             rel="noreferrer"
             style={{
               padding: "0.15rem 0.4rem",
-              background: "oklch(0.20 0.004 285)",
-              borderRadius: "2px",
-              color: "oklch(0.85 0.008 85)",
+              background: "var(--admin-badge-bg)",
+              borderRadius: "4px",
+              color: "var(--admin-text-main)",
               textDecoration: "none",
             }}
           >
             /request-sample ↗
           </a>
         </span>
-        <span style={{ color: "oklch(0.5 0.008 85)", marginLeft: "auto" }}>
+        <span style={{ color: "var(--admin-text-muted)", marginLeft: "auto" }}>
           Homepage hero (/) is separate &amp; untouched.
         </span>
       </div>
@@ -2629,10 +2631,10 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
             role="alert"
             style={{
               padding: "0.75rem 1rem",
-              borderRadius: "2px",
-              background: "oklch(0.40 0.14 25 / 0.15)",
-              border: "1px solid oklch(0.55 0.18 25 / 0.5)",
-              color: "oklch(0.75 0.14 25)",
+              borderRadius: "4px",
+              background: "var(--admin-danger-bg)",
+              border: "1px solid var(--admin-danger-border)",
+              color: "var(--admin-danger-text)",
               fontSize: "0.8125rem",
               display: "flex",
               justifyContent: "space-between",
@@ -2661,10 +2663,10 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
             role="status"
             style={{
               padding: "0.75rem 1rem",
-              borderRadius: "2px",
-              background: "oklch(0.45 0.12 145 / 0.15)",
-              border: "1px solid oklch(0.55 0.15 145 / 0.5)",
-              color: "oklch(0.75 0.12 145)",
+              borderRadius: "4px",
+              background: "var(--admin-status-active-bg)",
+              border: "1px solid var(--admin-status-active-border)",
+              color: "var(--admin-status-active-text)",
               fontSize: "0.8125rem",
             }}
           >
@@ -2686,7 +2688,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
               style={{
                 fontSize: "0.8125rem",
                 fontWeight: 600,
-                color: "oklch(0.85 0.008 85)",
+                color: "var(--admin-text-main)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
               }}
@@ -2698,11 +2700,11 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                 style={{
                   fontSize: "0.6875rem",
                   fontFamily: "var(--font-mono, monospace)",
-                  color: "oklch(0.6 0.008 85)",
-                  background: "oklch(0.14 0.002 285)",
+                  color: "var(--admin-text-muted)",
+                  background: "var(--admin-bg)",
                   padding: "0.2rem 0.5rem",
-                  borderRadius: "2px",
-                  border: "1px solid oklch(0.22 0.004 285)",
+                  borderRadius: "4px",
+                  border: "1px solid var(--admin-card-border)",
                 }}
               >
                 {initialConfig.imagePath}
@@ -2717,10 +2719,10 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                 position: "relative",
                 width: "100%",
                 height: "220px",
-                borderRadius: "2px",
+                borderRadius: "4px",
                 overflow: "hidden",
-                border: "1px solid oklch(0.28 0.004 285)",
-                background: "oklch(0.12 0.002 285)",
+                border: "1px solid var(--admin-card-border)",
+                background: "var(--admin-bg)",
               }}
             >
               <img
@@ -2740,7 +2742,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                   position: "absolute",
                   inset: 0,
                   background:
-                    "linear-gradient(180deg, oklch(0 0 0 / 0.3) 0%, oklch(0 0 0 / 0.75) 100%)",
+                    "linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.65) 100%)",
                   pointerEvents: "none",
                 }}
               />
@@ -2764,10 +2766,10 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                       fontWeight: 600,
                       textTransform: "uppercase",
                       letterSpacing: "0.08em",
-                      color: "oklch(0.78 0.155 71)",
-                      background: "oklch(0 0 0 / 0.6)",
+                      color: "#FFFFFF",
+                      background: "rgba(41, 41, 37, 0.75)",
                       padding: "0.2rem 0.45rem",
-                      borderRadius: "2px",
+                      borderRadius: "4px",
                       backdropFilter: "blur(4px)",
                       marginBottom: "0.25rem",
                     }}
@@ -2778,7 +2780,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                     style={{
                       margin: 0,
                       fontSize: "0.75rem",
-                      color: "oklch(0.9 0.008 85)",
+                      color: "#FFFFFF",
                       textShadow: "0 1px 3px rgba(0,0,0,0.8)",
                     }}
                   >
@@ -2788,10 +2790,10 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                 <span
                   style={{
                     fontSize: "0.6875rem",
-                    color: "oklch(0.7 0.008 85)",
-                    background: "oklch(0 0 0 / 0.6)",
+                    color: "rgba(255, 255, 255, 0.8)",
+                    background: "rgba(41, 41, 37, 0.75)",
                     padding: "0.2rem 0.45rem",
-                    borderRadius: "2px",
+                    borderRadius: "4px",
                     backdropFilter: "blur(4px)",
                   }}
                 >
@@ -2809,10 +2811,10 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                 alignItems: "center",
                 justifyContent: "center",
                 gap: "0.5rem",
-                background: "oklch(0.14 0.002 285)",
-                border: "1px dashed oklch(0.26 0.004 285)",
-                borderRadius: "2px",
-                color: "oklch(0.6 0.008 85)",
+                background: "var(--admin-bg)",
+                border: "1px dashed var(--admin-card-border)",
+                borderRadius: "4px",
+                color: "var(--admin-text-muted)",
               }}
             >
               <span
@@ -2820,8 +2822,8 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                   display: "inline-block",
                   width: "18px",
                   height: "18px",
-                  border: "2px solid oklch(0.4 0.008 85)",
-                  borderTopColor: "oklch(0.8 0.008 85)",
+                  border: "2px solid var(--sand)",
+                  borderTopColor: "var(--charcoal)",
                   borderRadius: "50%",
                   animation: "admin-spin 0.65s linear infinite",
                 }}
@@ -2834,22 +2836,22 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
               style={{
                 padding: "2rem 1.5rem",
                 textAlign: "center",
-                background: "oklch(0.13 0.002 285)",
-                border: "1px dashed oklch(0.28 0.004 285)",
-                borderRadius: "2px",
+                background: "var(--admin-bg)",
+                border: "1px dashed var(--admin-card-border)",
+                borderRadius: "4px",
               }}
             >
               <div
                 style={{
                   display: "inline-block",
                   padding: "0.3rem 0.75rem",
-                  background: "oklch(0.20 0.004 285)",
-                  color: "oklch(0.7 0.008 85)",
+                  background: "var(--sand)",
+                  color: "var(--charcoal)",
                   fontSize: "0.75rem",
                   fontWeight: 600,
                   textTransform: "uppercase",
                   letterSpacing: "0.06em",
-                  borderRadius: "2px",
+                  borderRadius: "4px",
                   marginBottom: "0.5rem",
                 }}
               >
@@ -2859,7 +2861,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                 style={{
                   margin: "0 0 0.5rem 0",
                   fontSize: "0.8125rem",
-                  color: "oklch(0.6 0.008 85)",
+                  color: "var(--admin-text-muted)",
                 }}
               >
                 Public interior pages (/catalog, /about, /contact, /request-sample) are currently displaying the dark architectural fallback.
@@ -2868,7 +2870,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                 style={{
                   margin: 0,
                   fontSize: "0.75rem",
-                  color: "oklch(0.45 0.008 85)",
+                  color: "var(--admin-text-muted)",
                 }}
               >
                 Upload an image below to set a unified hero background across all interior pages.
@@ -2880,9 +2882,9 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
         {/* 2. UPLOAD / REPLACE IMAGE SECTION */}
         <div
           style={{
-            background: "oklch(0.145 0.002 285)",
-            border: "1px solid oklch(0.24 0.004 285)",
-            borderRadius: "2px",
+            background: "var(--admin-bg)",
+            border: "1px solid var(--admin-card-border)",
+            borderRadius: "4px",
             padding: "1.25rem",
           }}
         >
@@ -2902,7 +2904,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                   margin: 0,
                   fontSize: "0.875rem",
                   fontWeight: 600,
-                  color: "oklch(0.92 0.008 85)",
+                  color: "var(--admin-text-main)",
                 }}
               >
                 {initialConfig.imagePath ? "Replace Hero Image" : "Upload Hero Image"}
@@ -2911,7 +2913,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                 style={{
                   margin: "0.2rem 0 0 0",
                   fontSize: "0.75rem",
-                  color: "oklch(0.6 0.008 85)",
+                  color: "var(--admin-text-muted)",
                 }}
               >
                 JPG, PNG, or WebP · Maximum 8 MB · Stored in private storage &amp; verified via magic bytes
@@ -2948,9 +2950,9 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
               style={{
                 marginTop: "0.75rem",
                 padding: "1rem",
-                background: "oklch(0.18 0.004 285)",
-                border: "1px solid oklch(0.78 0.155 71 / 0.5)",
-                borderRadius: "2px",
+                background: "var(--admin-card-bg)",
+                border: "1px solid var(--admin-card-border)",
+                borderRadius: "4px",
                 display: "grid",
                 gap: "1rem",
               }}
@@ -2967,11 +2969,11 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                   style={{
                     width: "120px",
                     height: "75px",
-                    borderRadius: "2px",
+                    borderRadius: "4px",
                     overflow: "hidden",
-                    border: "1px solid oklch(0.3 0.004 285)",
+                    border: "1px solid var(--admin-card-border)",
                     flexShrink: 0,
-                    background: "oklch(0.1 0.002 285)",
+                    background: "var(--admin-bg)",
                   }}
                 >
                   <img
@@ -2991,7 +2993,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                     style={{
                       fontSize: "0.8125rem",
                       fontWeight: 600,
-                      color: "oklch(0.94 0.008 85)",
+                      color: "var(--admin-text-main)",
                       wordBreak: "break-all",
                     }}
                   >
@@ -3000,7 +3002,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                   <div
                     style={{
                       fontSize: "0.75rem",
-                      color: "oklch(0.6 0.008 85)",
+                      color: "var(--admin-text-muted)",
                       fontFamily: "var(--font-mono, monospace)",
                       marginTop: "0.2rem",
                     }}
@@ -3010,8 +3012,9 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                   <div
                     style={{
                       fontSize: "0.6875rem",
-                      color: "oklch(0.78 0.155 71)",
+                      color: "var(--charcoal)",
                       marginTop: "0.25rem",
+                      fontWeight: 500,
                     }}
                   >
                     Ready to upload. Click &ldquo;Upload &amp; Apply Hero Image&rdquo; to process.
@@ -3042,11 +3045,6 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                     className="admin-btn admin-btn-primary admin-btn-sm"
                     onClick={handleUploadImage}
                     disabled={isUploading}
-                    style={{
-                      background: "oklch(0.78 0.155 71)",
-                      color: "oklch(0.12 0.002 285)",
-                      fontWeight: 600,
-                    }}
                   >
                     {isUploading ? (
                       <>
@@ -3055,8 +3053,8 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                             display: "inline-block",
                             width: "12px",
                             height: "12px",
-                            border: "2px solid oklch(0.12 0.002 285 / 0.3)",
-                            borderTopColor: "oklch(0.12 0.002 285)",
+                            border: "2px solid rgba(255, 255, 255, 0.3)",
+                            borderTopColor: "#FFFFFF",
                             borderRadius: "50%",
                             animation: "admin-spin 0.65s linear infinite",
                           }}
@@ -3079,24 +3077,24 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                 marginTop: "0.5rem",
                 padding: "1.25rem",
                 textAlign: "center",
-                background: "oklch(0.16 0.003 285)",
-                border: "1px dashed oklch(0.28 0.004 285)",
-                borderRadius: "2px",
+                background: "var(--admin-card-bg)",
+                border: "1px dashed var(--admin-card-border)",
+                borderRadius: "4px",
                 cursor: "pointer",
                 transition: "border-color 0.15s ease",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "oklch(0.78 0.155 71 / 0.6)";
+                e.currentTarget.style.borderColor = "var(--charcoal)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "oklch(0.28 0.004 285)";
+                e.currentTarget.style.borderColor = "var(--admin-card-border)";
               }}
             >
               <p
                 style={{
                   margin: 0,
                   fontSize: "0.8125rem",
-                  color: "oklch(0.7 0.008 85)",
+                  color: "var(--admin-text-main)",
                 }}
               >
                 Click or drag &amp; drop an image here to stage for upload
@@ -3105,7 +3103,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                 style={{
                   margin: "0.25rem 0 0 0",
                   fontSize: "0.6875rem",
-                  color: "oklch(0.5 0.008 85)",
+                  color: "var(--admin-text-muted)",
                 }}
               >
                 PNG, JPG, or WebP up to 8 MB
@@ -3119,7 +3117,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
           <div
             style={{
               paddingBottom: "0.5rem",
-              borderBottom: "1px solid oklch(0.22 0.004 285)",
+              borderBottom: "1px solid var(--admin-card-border)",
             }}
           >
             <h3
@@ -3127,7 +3125,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                 margin: 0,
                 fontSize: "0.875rem",
                 fontWeight: 600,
-                color: "oklch(0.92 0.008 85)",
+                color: "var(--admin-text-main)",
               }}
             >
               Hero Metadata &amp; Accessibility
@@ -3136,7 +3134,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
               style={{
                 margin: "0.2rem 0 0 0",
                 fontSize: "0.75rem",
-                color: "oklch(0.6 0.008 85)",
+                color: "var(--admin-text-muted)",
               }}
             >
               Configure image accessibility attributes and default narrative fields. Note: individual interior pages inject their own specific page titles and descriptions.
@@ -3147,9 +3145,9 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
           <div
             style={{
               padding: "1rem 1.25rem",
-              background: "oklch(0.15 0.003 285)",
-              border: "1px solid oklch(0.78 0.155 71 / 0.4)",
-              borderRadius: "2px",
+              background: "var(--admin-bg)",
+              border: "1px solid var(--admin-card-border)",
+              borderRadius: "4px",
               display: "grid",
               gap: "1rem",
             }}
@@ -3163,10 +3161,10 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
                   padding: "0.2rem 0.5rem",
-                  borderRadius: "2px",
-                  background: "oklch(0.78 0.155 71 / 0.15)",
-                  color: "oklch(0.85 0.13 75)",
-                  border: "1px solid oklch(0.78 0.155 71 / 0.3)",
+                  borderRadius: "4px",
+                  background: "var(--sand)",
+                  color: "var(--charcoal)",
+                  border: "1px solid var(--admin-card-border)",
                 }}
               >
                 Bahasa Indonesia (ID) — Default
@@ -3260,9 +3258,9 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
           <div
             style={{
               padding: "1rem 1.25rem",
-              background: "oklch(0.145 0.003 285)",
-              border: "1px solid oklch(0.65 0.18 250 / 0.4)",
-              borderRadius: "2px",
+              background: "var(--admin-bg)",
+              border: "1px solid var(--admin-card-border)",
+              borderRadius: "4px",
               display: "grid",
               gap: "1rem",
             }}
@@ -3276,10 +3274,10 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
                   padding: "0.2rem 0.5rem",
-                  borderRadius: "2px",
-                  background: "oklch(0.65 0.18 250 / 0.15)",
-                  color: "oklch(0.8 0.12 250)",
-                  border: "1px solid oklch(0.65 0.18 250 / 0.3)",
+                  borderRadius: "4px",
+                  background: "var(--sand)",
+                  color: "var(--charcoal)",
+                  border: "1px solid var(--admin-card-border)",
                 }}
               >
                 English (EN) — Bilingual Public
@@ -3377,7 +3375,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
               alignItems: "center",
               gap: "0.75rem",
               paddingTop: "0.5rem",
-              borderTop: "1px solid oklch(0.22 0.004 285)",
+              borderTop: "1px solid var(--admin-card-border)",
             }}
           >
             {isMetaDirty && (
@@ -3405,8 +3403,8 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                       display: "inline-block",
                       width: "12px",
                       height: "12px",
-                      border: "2px solid oklch(0.17 0.02 60 / 0.3)",
-                      borderTopColor: "oklch(0.17 0.02 60)",
+                      border: "2px solid rgba(255, 255, 255, 0.3)",
+                      borderTopColor: "#FFFFFF",
                       borderRadius: "50%",
                       animation: "admin-spin 0.65s linear infinite",
                     }}

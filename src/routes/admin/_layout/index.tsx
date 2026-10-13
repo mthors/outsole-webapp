@@ -57,8 +57,8 @@ function AdminDashboardError({ error, reset }: { error: unknown; reset: () => vo
 
       <div
         style={{
-          background: "oklch(0.62 0.2 25 / 0.1)",
-          border: "1px solid oklch(0.62 0.2 25 / 0.35)",
+          background: "var(--admin-danger-bg)",
+          border: "1px solid var(--admin-danger-border)",
           borderRadius: "2px",
           padding: "2rem",
           display: "flex",
@@ -68,12 +68,12 @@ function AdminDashboardError({ error, reset }: { error: unknown; reset: () => vo
           gap: "1rem",
         }}
       >
-        <AlertTriangle size={36} style={{ color: "oklch(0.8 0.15 25)" }} />
+        <AlertTriangle size={36} style={{ color: "var(--admin-danger-text)" }} />
         <div>
-          <h2 style={{ fontSize: "1.125rem", fontWeight: 600, color: "oklch(0.92 0.008 85)", margin: "0 0 0.5rem" }}>
+          <h2 style={{ fontSize: "1.125rem", fontWeight: 600, color: "var(--charcoal)", margin: "0 0 0.5rem" }}>
             Unable to Load Dashboard
           </h2>
-          <p style={{ fontSize: "0.875rem", color: "oklch(0.7 0.008 85)", maxWidth: "480px", margin: 0 }}>
+          <p style={{ fontSize: "0.875rem", color: "var(--muted-olive)", maxWidth: "480px", margin: 0 }}>
             {errorMessage}
           </p>
         </div>
@@ -97,21 +97,21 @@ function AdminDashboardError({ error, reset }: { error: unknown; reset: () => vo
 function InquiryStatusBadge({ status }: { status: "pending" | "contacted" | "resolved" }) {
   const styles: Record<"pending" | "contacted" | "resolved", { bg: string; color: string; border: string; label: string }> = {
     pending: {
-      bg: "oklch(0.78 0.155 71 / 0.12)",
-      color: "oklch(0.78 0.155 71)",
-      border: "oklch(0.78 0.155 71 / 0.3)",
+      bg: "var(--admin-status-pending-bg)",
+      color: "var(--admin-status-pending-text)",
+      border: "var(--admin-status-pending-border)",
       label: "Pending",
     },
     contacted: {
-      bg: "oklch(0.65 0.14 230 / 0.12)",
-      color: "oklch(0.7 0.14 230)",
-      border: "oklch(0.65 0.14 230 / 0.3)",
+      bg: "var(--admin-status-contacted-bg)",
+      color: "var(--admin-status-contacted-text)",
+      border: "var(--admin-status-contacted-border)",
       label: "Contacted",
     },
     resolved: {
-      bg: "oklch(0.65 0.15 155 / 0.12)",
-      color: "oklch(0.72 0.15 155)",
-      border: "oklch(0.65 0.15 155 / 0.3)",
+      bg: "var(--admin-status-resolved-bg)",
+      color: "var(--admin-status-resolved-text)",
+      border: "var(--admin-status-resolved-border)",
       label: "Resolved",
     },
   };
@@ -141,21 +141,21 @@ function InquiryStatusBadge({ status }: { status: "pending" | "contacted" | "res
 function ProductStatusBadge({ status }: { status: "active" | "draft" | "archived" }) {
   const styles: Record<"active" | "draft" | "archived", { bg: string; color: string; border: string; label: string }> = {
     active: {
-      bg: "oklch(0.65 0.15 155 / 0.12)",
-      color: "oklch(0.72 0.15 155)",
-      border: "oklch(0.65 0.15 155 / 0.3)",
+      bg: "var(--admin-status-active-bg)",
+      color: "var(--admin-status-active-text)",
+      border: "var(--admin-status-active-border)",
       label: "Active",
     },
     draft: {
-      bg: "oklch(0.78 0.155 71 / 0.12)",
-      color: "oklch(0.78 0.155 71)",
-      border: "oklch(0.78 0.155 71 / 0.3)",
+      bg: "var(--admin-status-draft-bg)",
+      color: "var(--admin-status-draft-text)",
+      border: "var(--admin-status-draft-border)",
       label: "Draft",
     },
     archived: {
-      bg: "oklch(0.3 0.004 285 / 0.4)",
-      color: "oklch(0.65 0.008 85)",
-      border: "oklch(0.35 0.004 285)",
+      bg: "var(--admin-status-archived-bg)",
+      color: "var(--admin-status-archived-text)",
+      border: "var(--admin-status-archived-border)",
       label: "Archived",
     },
   };
@@ -251,7 +251,7 @@ function AdminDashboard() {
               fontFamily: "var(--font-mono, monospace)",
               letterSpacing: "0.08em",
               textTransform: "uppercase",
-              color: "oklch(0.65 0.008 85)",
+              color: "var(--muted-olive)",
               margin: 0,
             }}
           >
@@ -261,12 +261,12 @@ function AdminDashboard() {
             to="/admin/outsoles"
             style={{
               fontSize: "0.75rem",
-              color: "oklch(0.78 0.155 71)",
+              color: "var(--charcoal)",
               textDecoration: "none",
               display: "inline-flex",
               alignItems: "center",
               gap: "0.25rem",
-              fontWeight: 500,
+              fontWeight: 600,
             }}
           >
             Manage Products <ArrowRight size={12} />
@@ -304,8 +304,8 @@ function AdminDashboard() {
             <div
               className="admin-stat-icon"
               style={{
-                background: "oklch(0.65 0.15 155 / 0.12)",
-                color: "oklch(0.72 0.15 155)",
+                background: "rgba(119, 121, 107, 0.16)",
+                color: "var(--muted-olive)",
               }}
             >
               <CheckCircle2 size={20} />
@@ -325,8 +325,8 @@ function AdminDashboard() {
             <div
               className="admin-stat-icon"
               style={{
-                background: "oklch(0.78 0.155 71 / 0.12)",
-                color: "oklch(0.78 0.155 71)",
+                background: "rgba(180, 162, 140, 0.25)",
+                color: "var(--charcoal)",
               }}
             >
               <Clock size={20} />
@@ -346,8 +346,8 @@ function AdminDashboard() {
             <div
               className="admin-stat-icon"
               style={{
-                background: "oklch(0.3 0.004 285 / 0.4)",
-                color: "oklch(0.65 0.008 85)",
+                background: "rgba(229, 222, 210, 0.6)",
+                color: "var(--muted-olive)",
               }}
             >
               <Archive size={20} />
@@ -376,7 +376,7 @@ function AdminDashboard() {
               fontFamily: "var(--font-mono, monospace)",
               letterSpacing: "0.08em",
               textTransform: "uppercase",
-              color: "oklch(0.65 0.008 85)",
+              color: "var(--muted-olive)",
               margin: 0,
             }}
           >
@@ -386,12 +386,12 @@ function AdminDashboard() {
             to="/admin/inquiries"
             style={{
               fontSize: "0.75rem",
-              color: "oklch(0.78 0.155 71)",
+              color: "var(--charcoal)",
               textDecoration: "none",
               display: "inline-flex",
               alignItems: "center",
               gap: "0.25rem",
-              fontWeight: 500,
+              fontWeight: 600,
             }}
           >
             View All Inquiries <ArrowRight size={12} />
@@ -430,8 +430,8 @@ function AdminDashboard() {
             <div
               className="admin-stat-icon"
               style={{
-                background: "oklch(0.78 0.155 71 / 0.15)",
-                color: "oklch(0.78 0.155 71)",
+                background: "rgba(180, 162, 140, 0.25)",
+                color: "var(--charcoal)",
               }}
             >
               <Clock size={20} />
@@ -452,8 +452,8 @@ function AdminDashboard() {
             <div
               className="admin-stat-icon"
               style={{
-                background: "oklch(0.65 0.14 230 / 0.15)",
-                color: "oklch(0.7 0.14 230)",
+                background: "rgba(119, 121, 107, 0.16)",
+                color: "var(--muted-olive)",
               }}
             >
               <Inbox size={20} />
@@ -474,8 +474,8 @@ function AdminDashboard() {
             <div
               className="admin-stat-icon"
               style={{
-                background: "oklch(0.65 0.15 155 / 0.15)",
-                color: "oklch(0.72 0.15 155)",
+                background: "var(--admin-status-active-bg)",
+                color: "var(--admin-status-active-text)",
               }}
             >
               <CheckCircle2 size={20} />
@@ -504,7 +504,7 @@ function AdminDashboard() {
               fontFamily: "var(--font-mono, monospace)",
               letterSpacing: "0.08em",
               textTransform: "uppercase",
-              color: "oklch(0.65 0.008 85)",
+              color: "var(--muted-olive)",
               margin: 0,
             }}
           >
@@ -514,12 +514,12 @@ function AdminDashboard() {
             to="/admin/taxonomy"
             style={{
               fontSize: "0.75rem",
-              color: "oklch(0.78 0.155 71)",
+              color: "var(--charcoal)",
               textDecoration: "none",
               display: "inline-flex",
               alignItems: "center",
               gap: "0.25rem",
-              fontWeight: 500,
+              fontWeight: 600,
             }}
           >
             Manage Taxonomy <ArrowRight size={12} />
@@ -542,8 +542,8 @@ function AdminDashboard() {
             <div
               className="admin-stat-icon"
               style={{
-                background: "oklch(0.6 0.14 300 / 0.15)",
-                color: "oklch(0.75 0.14 300)",
+                background: "rgba(180, 162, 140, 0.25)",
+                color: "var(--charcoal)",
               }}
             >
               <Tags size={20} />
@@ -563,8 +563,8 @@ function AdminDashboard() {
             <div
               className="admin-stat-icon"
               style={{
-                background: "oklch(0.6 0.12 180 / 0.15)",
-                color: "oklch(0.72 0.12 180)",
+                background: "rgba(229, 222, 210, 0.6)",
+                color: "var(--charcoal)",
               }}
             >
               <Layers size={20} />
@@ -584,8 +584,8 @@ function AdminDashboard() {
             <div
               className="admin-stat-icon"
               style={{
-                background: "oklch(0.6 0.15 45 / 0.15)",
-                color: "oklch(0.75 0.15 45)",
+                background: "rgba(119, 121, 107, 0.16)",
+                color: "var(--muted-olive)",
               }}
             >
               <TrendingUp size={20} />
@@ -610,9 +610,10 @@ function AdminDashboard() {
         {/* Left: Recent Inquiries */}
         <div
           style={{
-            background: "oklch(0.185 0.004 285)",
-            border: "1px solid oklch(0.26 0.004 285)",
+            background: "#FFFFFF",
+            border: "1px solid var(--border)",
             borderRadius: "2px",
+            boxShadow: "0 1px 2px rgba(41, 41, 37, 0.04)",
             display: "flex",
             flexDirection: "column",
           }}
@@ -620,15 +621,15 @@ function AdminDashboard() {
           <div
             style={{
               padding: "1rem 1.25rem",
-              borderBottom: "1px solid oklch(0.24 0.004 285)",
+              borderBottom: "1px solid var(--admin-card-border)",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <Inbox size={16} style={{ color: "oklch(0.78 0.155 71)" }} />
-              <h3 style={{ fontSize: "0.9375rem", fontWeight: 600, color: "oklch(0.94 0.008 85)", margin: 0 }}>
+              <Inbox size={16} style={{ color: "var(--charcoal)" }} />
+              <h3 style={{ fontSize: "0.9375rem", fontWeight: 600, color: "var(--charcoal)", margin: 0 }}>
                 Recent Inquiries
               </h3>
             </div>
@@ -636,9 +637,9 @@ function AdminDashboard() {
               to="/admin/inquiries"
               style={{
                 fontSize: "0.75rem",
-                color: "oklch(0.78 0.155 71)",
+                color: "var(--charcoal)",
                 textDecoration: "none",
-                fontWeight: 500,
+                fontWeight: 600,
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "0.25rem",
@@ -650,7 +651,7 @@ function AdminDashboard() {
 
           <div style={{ flex: 1, padding: "0.5rem 0" }}>
             {recentInquiries.length === 0 ? (
-              <div style={{ padding: "3rem 1.5rem", textAlign: "center", color: "oklch(0.55 0.008 85)" }}>
+              <div style={{ padding: "3rem 1.5rem", textAlign: "center", color: "var(--muted-olive)" }}>
                 <Inbox size={32} style={{ margin: "0 auto 0.75rem", opacity: 0.35 }} />
                 <p style={{ margin: 0, fontSize: "0.8125rem" }}>No customer sample inquiries found.</p>
               </div>
@@ -669,11 +670,11 @@ function AdminDashboard() {
                         padding: "0.75rem 1.25rem",
                         textDecoration: "none",
                         color: "inherit",
-                        borderBottom: "1px solid oklch(0.22 0.004 285)",
+                        borderBottom: "1px solid var(--admin-card-border)",
                         transition: "background 0.12s",
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "oklch(0.22 0.004 285 / 0.5)";
+                        e.currentTarget.style.background = "var(--admin-hover-bg)";
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.background = "transparent";
@@ -681,10 +682,10 @@ function AdminDashboard() {
                     >
                       <div style={{ minWidth: 0, flex: 1 }}>
                         <div style={{ display: "flex", alignItems: "baseline", gap: "0.5rem", flexWrap: "wrap" }}>
-                          <span style={{ fontWeight: 600, color: "oklch(0.92 0.008 85)", fontSize: "0.8125rem" }}>
+                          <span style={{ fontWeight: 600, color: "var(--charcoal)", fontSize: "0.8125rem" }}>
                             {inq.client_name}
                           </span>
-                          <span style={{ fontSize: "0.75rem", color: "oklch(0.6 0.008 85)" }}>
+                          <span style={{ fontSize: "0.75rem", color: "var(--muted-olive)" }}>
                             {inq.company_name}
                           </span>
                         </div>
@@ -694,8 +695,8 @@ function AdminDashboard() {
                               style={{
                                 fontSize: "0.6875rem",
                                 fontFamily: "var(--font-mono, monospace)",
-                                color: "oklch(0.78 0.155 71)",
-                                background: "oklch(0.78 0.155 71 / 0.1)",
+                                color: "var(--charcoal)",
+                                background: "var(--sand)",
                                 padding: "0.1rem 0.35rem",
                                 borderRadius: "2px",
                               }}
@@ -703,7 +704,7 @@ function AdminDashboard() {
                               {inq.product_model ? `${inq.product_model} · ` : ""}{inq.product_name}
                             </span>
                           ) : (
-                            <span style={{ fontSize: "0.6875rem", color: "oklch(0.5 0.008 85)", fontStyle: "italic" }}>
+                            <span style={{ fontSize: "0.6875rem", color: "var(--muted-olive)", fontStyle: "italic" }}>
                               General Inquiry
                             </span>
                           )}
@@ -712,7 +713,7 @@ function AdminDashboard() {
 
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.25rem", flexShrink: 0 }}>
                         <InquiryStatusBadge status={inq.status} />
-                        <span style={{ fontSize: "0.6875rem", color: "oklch(0.5 0.008 85)", fontFamily: "var(--font-mono, monospace)" }}>
+                        <span style={{ fontSize: "0.6875rem", color: "var(--muted-olive)", fontFamily: "var(--font-mono, monospace)" }}>
                           {formatRelativeTime(inq.created_at)}
                         </span>
                       </div>
@@ -727,9 +728,10 @@ function AdminDashboard() {
         {/* Right: Recently Updated Products */}
         <div
           style={{
-            background: "oklch(0.185 0.004 285)",
-            border: "1px solid oklch(0.26 0.004 285)",
+            background: "#FFFFFF",
+            border: "1px solid var(--border)",
             borderRadius: "2px",
+            boxShadow: "0 1px 2px rgba(41, 41, 37, 0.04)",
             display: "flex",
             flexDirection: "column",
           }}
@@ -737,15 +739,15 @@ function AdminDashboard() {
           <div
             style={{
               padding: "1rem 1.25rem",
-              borderBottom: "1px solid oklch(0.24 0.004 285)",
+              borderBottom: "1px solid var(--admin-card-border)",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <Package size={16} style={{ color: "oklch(0.78 0.155 71)" }} />
-              <h3 style={{ fontSize: "0.9375rem", fontWeight: 600, color: "oklch(0.94 0.008 85)", margin: 0 }}>
+              <Package size={16} style={{ color: "var(--charcoal)" }} />
+              <h3 style={{ fontSize: "0.9375rem", fontWeight: 600, color: "var(--charcoal)", margin: 0 }}>
                 Recently Updated Products
               </h3>
             </div>
@@ -753,9 +755,9 @@ function AdminDashboard() {
               to="/admin/outsoles"
               style={{
                 fontSize: "0.75rem",
-                color: "oklch(0.78 0.155 71)",
+                color: "var(--charcoal)",
                 textDecoration: "none",
-                fontWeight: 500,
+                fontWeight: 600,
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "0.25rem",
@@ -767,7 +769,7 @@ function AdminDashboard() {
 
           <div style={{ flex: 1, padding: "0.5rem 0" }}>
             {recentProducts.length === 0 ? (
-              <div style={{ padding: "3rem 1.5rem", textAlign: "center", color: "oklch(0.55 0.008 85)" }}>
+              <div style={{ padding: "3rem 1.5rem", textAlign: "center", color: "var(--muted-olive)" }}>
                 <Package size={32} style={{ margin: "0 auto 0.75rem", opacity: 0.35 }} />
                 <p style={{ margin: 0, fontSize: "0.8125rem" }}>No outsole products found.</p>
               </div>
@@ -786,11 +788,11 @@ function AdminDashboard() {
                         padding: "0.75rem 1.25rem",
                         textDecoration: "none",
                         color: "inherit",
-                        borderBottom: "1px solid oklch(0.22 0.004 285)",
+                        borderBottom: "1px solid var(--admin-card-border)",
                         transition: "background 0.12s",
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "oklch(0.22 0.004 285 / 0.5)";
+                        e.currentTarget.style.background = "var(--admin-hover-bg)";
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.background = "transparent";
@@ -798,14 +800,14 @@ function AdminDashboard() {
                     >
                       <div style={{ minWidth: 0, flex: 1 }}>
                         <div style={{ display: "flex", alignItems: "baseline", gap: "0.5rem", flexWrap: "wrap" }}>
-                          <span style={{ fontWeight: 600, color: "oklch(0.92 0.008 85)", fontSize: "0.8125rem" }}>
+                          <span style={{ fontWeight: 600, color: "var(--charcoal)", fontSize: "0.8125rem" }}>
                             {prod.name}
                           </span>
                           <span
                             style={{
                               fontSize: "0.6875rem",
                               fontFamily: "var(--font-mono, monospace)",
-                              color: "oklch(0.78 0.155 71)",
+                              color: "var(--muted-olive)",
                             }}
                           >
                             {prod.model_number}
@@ -819,8 +821,8 @@ function AdminDashboard() {
                                 alignItems: "center",
                                 gap: "0.2rem",
                                 fontSize: "0.6875rem",
-                                color: "oklch(0.78 0.155 71)",
-                                background: "oklch(0.78 0.155 71 / 0.1)",
+                                color: "var(--charcoal)",
+                                background: "rgba(180, 162, 140, 0.25)",
                                 padding: "0.05rem 0.35rem",
                                 borderRadius: "2px",
                               }}
@@ -829,7 +831,7 @@ function AdminDashboard() {
                               Featured
                             </span>
                           )}
-                          <span style={{ fontSize: "0.6875rem", color: "oklch(0.5 0.008 85)", fontFamily: "var(--font-mono, monospace)" }}>
+                          <span style={{ fontSize: "0.6875rem", color: "var(--muted-olive)", fontFamily: "var(--font-mono, monospace)" }}>
                             Updated {formatRelativeTime(prod.updated_at)}
                           </span>
                         </div>
@@ -856,7 +858,7 @@ function AdminDashboard() {
               fontFamily: "var(--font-mono, monospace)",
               letterSpacing: "0.08em",
               textTransform: "uppercase",
-              color: "oklch(0.65 0.008 85)",
+              color: "var(--muted-olive)",
               margin: 0,
             }}
           >
@@ -880,18 +882,21 @@ function AdminDashboard() {
               flexDirection: "column",
               gap: "0.5rem",
               padding: "1.25rem",
-              background: "oklch(0.185 0.004 285)",
-              border: "1px solid oklch(0.26 0.004 285)",
+              background: "#FFFFFF",
+              border: "1px solid var(--border)",
               borderRadius: "2px",
+              boxShadow: "0 1px 2px rgba(41, 41, 37, 0.04)",
               textDecoration: "none",
               color: "inherit",
-              transition: "border-color 0.15s, transform 0.1s",
+              transition: "border-color 0.15s, transform 0.1s, box-shadow 0.15s",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "oklch(0.78 0.155 71)";
+              e.currentTarget.style.borderColor = "var(--charcoal)";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(41, 41, 37, 0.06)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "oklch(0.26 0.004 285)";
+              e.currentTarget.style.borderColor = "var(--border)";
+              e.currentTarget.style.boxShadow = "0 1px 2px rgba(41, 41, 37, 0.04)";
             }}
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -900,8 +905,8 @@ function AdminDashboard() {
                   width: "36px",
                   height: "36px",
                   borderRadius: "2px",
-                  background: "oklch(0.78 0.155 71 / 0.12)",
-                  color: "oklch(0.78 0.155 71)",
+                  background: "rgba(180, 162, 140, 0.25)",
+                  color: "var(--charcoal)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -909,12 +914,12 @@ function AdminDashboard() {
               >
                 <Plus size={18} />
               </div>
-              <ArrowRight size={14} style={{ color: "oklch(0.5 0.008 85)" }} />
+              <ArrowRight size={14} style={{ color: "var(--muted-olive)" }} />
             </div>
-            <div style={{ fontWeight: 600, color: "oklch(0.92 0.008 85)", fontSize: "0.875rem" }}>
+            <div style={{ fontWeight: 600, color: "var(--charcoal)", fontSize: "0.875rem" }}>
               Add Product
             </div>
-            <div style={{ fontSize: "0.75rem", color: "oklch(0.58 0.008 85)", lineHeight: 1.4 }}>
+            <div style={{ fontSize: "0.75rem", color: "var(--muted-olive)", lineHeight: 1.4 }}>
               Create a new outsole model and configure technical specifications.
             </div>
           </Link>
@@ -928,18 +933,21 @@ function AdminDashboard() {
               flexDirection: "column",
               gap: "0.5rem",
               padding: "1.25rem",
-              background: "oklch(0.185 0.004 285)",
-              border: "1px solid oklch(0.26 0.004 285)",
+              background: "#FFFFFF",
+              border: "1px solid var(--border)",
               borderRadius: "2px",
+              boxShadow: "0 1px 2px rgba(41, 41, 37, 0.04)",
               textDecoration: "none",
               color: "inherit",
-              transition: "border-color 0.15s",
+              transition: "border-color 0.15s, box-shadow 0.15s",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "oklch(0.78 0.155 71)";
+              e.currentTarget.style.borderColor = "var(--charcoal)";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(41, 41, 37, 0.06)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "oklch(0.26 0.004 285)";
+              e.currentTarget.style.borderColor = "var(--border)";
+              e.currentTarget.style.boxShadow = "0 1px 2px rgba(41, 41, 37, 0.04)";
             }}
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -948,8 +956,8 @@ function AdminDashboard() {
                   width: "36px",
                   height: "36px",
                   borderRadius: "2px",
-                  background: "oklch(0.6 0.12 230 / 0.12)",
-                  color: "oklch(0.65 0.12 230)",
+                  background: "rgba(229, 222, 210, 0.6)",
+                  color: "var(--charcoal)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -957,12 +965,12 @@ function AdminDashboard() {
               >
                 <Package size={18} />
               </div>
-              <ArrowRight size={14} style={{ color: "oklch(0.5 0.008 85)" }} />
+              <ArrowRight size={14} style={{ color: "var(--muted-olive)" }} />
             </div>
-            <div style={{ fontWeight: 600, color: "oklch(0.92 0.008 85)", fontSize: "0.875rem" }}>
+            <div style={{ fontWeight: 600, color: "var(--charcoal)", fontSize: "0.875rem" }}>
               Manage Products
             </div>
-            <div style={{ fontSize: "0.75rem", color: "oklch(0.58 0.008 85)", lineHeight: 1.4 }}>
+            <div style={{ fontSize: "0.75rem", color: "var(--muted-olive)", lineHeight: 1.4 }}>
               Browse, filter, edit specs, and archive outsole products.
             </div>
           </Link>
@@ -976,18 +984,21 @@ function AdminDashboard() {
               flexDirection: "column",
               gap: "0.5rem",
               padding: "1.25rem",
-              background: "oklch(0.185 0.004 285)",
-              border: "1px solid oklch(0.26 0.004 285)",
+              background: "#FFFFFF",
+              border: "1px solid var(--border)",
               borderRadius: "2px",
+              boxShadow: "0 1px 2px rgba(41, 41, 37, 0.04)",
               textDecoration: "none",
               color: "inherit",
-              transition: "border-color 0.15s",
+              transition: "border-color 0.15s, box-shadow 0.15s",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "oklch(0.78 0.155 71)";
+              e.currentTarget.style.borderColor = "var(--charcoal)";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(41, 41, 37, 0.06)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "oklch(0.26 0.004 285)";
+              e.currentTarget.style.borderColor = "var(--border)";
+              e.currentTarget.style.boxShadow = "0 1px 2px rgba(41, 41, 37, 0.04)";
             }}
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -996,8 +1007,8 @@ function AdminDashboard() {
                   width: "36px",
                   height: "36px",
                   borderRadius: "2px",
-                  background: "oklch(0.55 0.12 155 / 0.12)",
-                  color: "oklch(0.62 0.12 155)",
+                  background: "rgba(119, 121, 107, 0.16)",
+                  color: "var(--muted-olive)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -1005,12 +1016,12 @@ function AdminDashboard() {
               >
                 <Inbox size={18} />
               </div>
-              <ArrowRight size={14} style={{ color: "oklch(0.5 0.008 85)" }} />
+              <ArrowRight size={14} style={{ color: "var(--muted-olive)" }} />
             </div>
-            <div style={{ fontWeight: 600, color: "oklch(0.92 0.008 85)", fontSize: "0.875rem" }}>
+            <div style={{ fontWeight: 600, color: "var(--charcoal)", fontSize: "0.875rem" }}>
               View Inquiries
             </div>
-            <div style={{ fontSize: "0.75rem", color: "oklch(0.58 0.008 85)", lineHeight: 1.4 }}>
+            <div style={{ fontSize: "0.75rem", color: "var(--muted-olive)", lineHeight: 1.4 }}>
               Review customer sample requests and manage communication workflow.
             </div>
           </Link>
@@ -1024,18 +1035,21 @@ function AdminDashboard() {
               flexDirection: "column",
               gap: "0.5rem",
               padding: "1.25rem",
-              background: "oklch(0.185 0.004 285)",
-              border: "1px solid oklch(0.26 0.004 285)",
+              background: "#FFFFFF",
+              border: "1px solid var(--border)",
               borderRadius: "2px",
+              boxShadow: "0 1px 2px rgba(41, 41, 37, 0.04)",
               textDecoration: "none",
               color: "inherit",
-              transition: "border-color 0.15s",
+              transition: "border-color 0.15s, box-shadow 0.15s",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "oklch(0.78 0.155 71)";
+              e.currentTarget.style.borderColor = "var(--charcoal)";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(41, 41, 37, 0.06)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "oklch(0.26 0.004 285)";
+              e.currentTarget.style.borderColor = "var(--border)";
+              e.currentTarget.style.boxShadow = "0 1px 2px rgba(41, 41, 37, 0.04)";
             }}
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -1044,8 +1058,8 @@ function AdminDashboard() {
                   width: "36px",
                   height: "36px",
                   borderRadius: "2px",
-                  background: "oklch(0.6 0.14 300 / 0.12)",
-                  color: "oklch(0.75 0.14 300)",
+                  background: "rgba(180, 162, 140, 0.25)",
+                  color: "var(--charcoal)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -1053,12 +1067,12 @@ function AdminDashboard() {
               >
                 <Tags size={18} />
               </div>
-              <ArrowRight size={14} style={{ color: "oklch(0.5 0.008 85)" }} />
+              <ArrowRight size={14} style={{ color: "var(--muted-olive)" }} />
             </div>
-            <div style={{ fontWeight: 600, color: "oklch(0.92 0.008 85)", fontSize: "0.875rem" }}>
+            <div style={{ fontWeight: 600, color: "var(--charcoal)", fontSize: "0.875rem" }}>
               Manage Taxonomy
             </div>
-            <div style={{ fontSize: "0.75rem", color: "oklch(0.58 0.008 85)", lineHeight: 1.4 }}>
+            <div style={{ fontSize: "0.75rem", color: "var(--muted-olive)", lineHeight: 1.4 }}>
               Organize categories, rubber materials, and traction pattern types.
             </div>
           </Link>
@@ -1072,18 +1086,21 @@ function AdminDashboard() {
               flexDirection: "column",
               gap: "0.5rem",
               padding: "1.25rem",
-              background: "oklch(0.185 0.004 285)",
-              border: "1px solid oklch(0.26 0.004 285)",
+              background: "#FFFFFF",
+              border: "1px solid var(--border)",
               borderRadius: "2px",
+              boxShadow: "0 1px 2px rgba(41, 41, 37, 0.04)",
               textDecoration: "none",
               color: "inherit",
-              transition: "border-color 0.15s",
+              transition: "border-color 0.15s, box-shadow 0.15s",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "oklch(0.78 0.155 71)";
+              e.currentTarget.style.borderColor = "var(--charcoal)";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(41, 41, 37, 0.06)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "oklch(0.26 0.004 285)";
+              e.currentTarget.style.borderColor = "var(--border)";
+              e.currentTarget.style.boxShadow = "0 1px 2px rgba(41, 41, 37, 0.04)";
             }}
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -1092,8 +1109,8 @@ function AdminDashboard() {
                   width: "36px",
                   height: "36px",
                   borderRadius: "2px",
-                  background: "oklch(0.6 0.12 180 / 0.12)",
-                  color: "oklch(0.72 0.12 180)",
+                  background: "rgba(229, 222, 210, 0.6)",
+                  color: "var(--charcoal)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -1101,12 +1118,12 @@ function AdminDashboard() {
               >
                 <FileText size={18} />
               </div>
-              <ArrowRight size={14} style={{ color: "oklch(0.5 0.008 85)" }} />
+              <ArrowRight size={14} style={{ color: "var(--muted-olive)" }} />
             </div>
-            <div style={{ fontWeight: 600, color: "oklch(0.92 0.008 85)", fontSize: "0.875rem" }}>
+            <div style={{ fontWeight: 600, color: "var(--charcoal)", fontSize: "0.875rem" }}>
               Edit Site Content
             </div>
-            <div style={{ fontSize: "0.75rem", color: "oklch(0.58 0.008 85)", lineHeight: 1.4 }}>
+            <div style={{ fontSize: "0.75rem", color: "var(--muted-olive)", lineHeight: 1.4 }}>
               Update copy on public homepage, capabilities, factory about, and contact.
             </div>
           </Link>

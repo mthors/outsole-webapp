@@ -232,12 +232,13 @@ export function AdminInquiriesPage() {
               alignItems: "center",
               gap: "0.5rem",
               padding: "0.45rem 0.85rem",
-              background: "oklch(0.78 0.155 71 / 0.12)",
-              border: "1px solid oklch(0.78 0.155 71 / 0.3)",
-              borderRadius: "2px",
+              background: "var(--admin-badge-bg)",
+              border: "1px solid var(--admin-card-border)",
+              borderRadius: "4px",
               fontSize: "0.75rem",
-              color: "oklch(0.85 0.155 71)",
+              color: "var(--charcoal)",
               fontFamily: "var(--font-mono, monospace)",
+              fontWeight: 600,
             }}
           >
             <Sparkles size={14} />
@@ -250,7 +251,7 @@ export function AdminInquiriesPage() {
       <div
         style={{
           display: "flex",
-          borderBottom: "1px solid oklch(0.24 0.004 285)",
+          borderBottom: "1px solid var(--admin-card-border)",
           marginBottom: "1.5rem",
           gap: "0.5rem",
           overflowX: "auto",
@@ -277,8 +278,8 @@ export function AdminInquiriesPage() {
                 padding: "0.75rem 1rem",
                 background: "transparent",
                 border: "none",
-                borderBottom: isActive ? "2px solid oklch(0.78 0.155 71)" : "2px solid transparent",
-                color: isActive ? "oklch(0.94 0.008 85)" : "oklch(0.65 0.008 85)",
+                borderBottom: isActive ? "2px solid var(--admin-accent)" : "2px solid transparent",
+                color: isActive ? "var(--admin-text-main)" : "var(--admin-text-muted)",
                 fontWeight: isActive ? 600 : 500,
                 fontSize: "0.875rem",
                 cursor: "pointer",
@@ -291,10 +292,10 @@ export function AdminInquiriesPage() {
                 style={{
                   fontSize: "0.75rem",
                   fontFamily: "var(--font-mono, monospace)",
-                  background: isActive ? "oklch(0.78 0.155 71 / 0.2)" : "oklch(0.22 0.004 285)",
-                  color: isActive ? "oklch(0.78 0.155 71)" : "oklch(0.6 0.008 85)",
+                  background: isActive ? "var(--admin-badge-bg)" : "var(--admin-bg)",
+                  color: isActive ? "var(--charcoal)" : "var(--admin-text-muted)",
                   padding: "0.1rem 0.45rem",
-                  borderRadius: "2px",
+                  borderRadius: "4px",
                 }}
               >
                 {tab.count}
@@ -323,7 +324,7 @@ export function AdminInquiriesPage() {
               left: "0.75rem",
               top: "50%",
               transform: "translateY(-50%)",
-              color: "oklch(0.5 0.008 85)",
+              color: "var(--admin-text-muted)",
               pointerEvents: "none",
             }}
           />
@@ -332,15 +333,10 @@ export function AdminInquiriesPage() {
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search by customer, company, email, or product…"
+            className="admin-field-input"
             style={{
-              width: "100%",
-              padding: "0.55rem 2.25rem 0.55rem 2.25rem",
-              background: "oklch(0.185 0.004 285)",
-              border: "1px solid oklch(0.26 0.004 285)",
-              borderRadius: "2px",
-              color: "oklch(0.94 0.008 85)",
-              fontSize: "0.8125rem",
-              outline: "none",
+              paddingLeft: "2.25rem",
+              paddingRight: searchInput.length > 0 ? "2.25rem" : "0.75rem",
             }}
           />
           {searchInput.length > 0 && (
@@ -354,7 +350,7 @@ export function AdminInquiriesPage() {
                 transform: "translateY(-50%)",
                 background: "transparent",
                 border: "none",
-                color: "oklch(0.55 0.008 85)",
+                color: "var(--admin-text-muted)",
                 cursor: "pointer",
                 padding: "0.2rem",
                 display: "flex",
@@ -372,7 +368,7 @@ export function AdminInquiriesPage() {
             style={{
               fontSize: "0.75rem",
               fontFamily: "var(--font-mono, monospace)",
-              color: "oklch(0.55 0.008 85)",
+              color: "var(--admin-text-muted)",
             }}
           >
             Showing {startIdx}–{endIdx} of {total}
@@ -383,19 +379,19 @@ export function AdminInquiriesPage() {
       {/* ── Table Container ── */}
       <div
         style={{
-          background: "oklch(0.185 0.004 285)",
-          border: "1px solid oklch(0.26 0.004 285)",
-          borderRadius: "2px",
+          background: "var(--admin-card-bg)",
+          border: "1px solid var(--admin-card-border)",
+          borderRadius: "4px",
           overflowX: "auto",
         }}
       >
         {inquiries.length === 0 ? (
-          <div style={{ padding: "4rem 1.5rem", textAlign: "center", color: "oklch(0.6 0.008 85)" }}>
+          <div style={{ padding: "4rem 1.5rem", textAlign: "center", color: "var(--admin-text-muted)" }}>
             <Inbox size={40} style={{ margin: "0 auto 1rem", opacity: 0.4 }} />
-            <p style={{ margin: "0 0 0.5rem", fontSize: "0.9375rem", fontWeight: 600, color: "oklch(0.85 0.008 85)" }}>
+            <p style={{ margin: "0 0 0.5rem", fontSize: "0.9375rem", fontWeight: 600, color: "var(--admin-text-main)" }}>
               No inquiries found
             </p>
-            <p style={{ margin: "0 0 1.25rem", fontSize: "0.8125rem", color: "oklch(0.55 0.008 85)" }}>
+            <p style={{ margin: "0 0 1.25rem", fontSize: "0.8125rem", color: "var(--admin-text-muted)" }}>
               {search.search || (search.status && search.status !== "all")
                 ? "No sample inquiries match your current search and filter criteria."
                 : "No customer sample inquiries have been received yet."}
@@ -404,19 +400,7 @@ export function AdminInquiriesPage() {
               <button
                 type="button"
                 onClick={handleClearFilters}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "0.4rem",
-                  padding: "0.45rem 0.85rem",
-                  background: "oklch(0.22 0.004 285)",
-                  border: "1px solid oklch(0.3 0.004 285)",
-                  borderRadius: "2px",
-                  color: "oklch(0.9 0.008 85)",
-                  fontSize: "0.75rem",
-                  fontWeight: 500,
-                  cursor: "pointer",
-                }}
+                className="admin-btn admin-btn-sm admin-btn-secondary"
               >
                 <RotateCcw size={13} />
                 Reset filters & show all
@@ -426,13 +410,13 @@ export function AdminInquiriesPage() {
         ) : (
           <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "0.8125rem", minWidth: "860px" }}>
             <thead>
-              <tr style={{ borderBottom: "1px solid oklch(0.24 0.004 285)", background: "oklch(0.16 0.003 285)" }}>
-                <th style={{ padding: "0.75rem 1rem", color: "oklch(0.55 0.008 85)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em" }}>Customer</th>
-                <th style={{ padding: "0.75rem 1rem", color: "oklch(0.55 0.008 85)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em" }}>Requested Product</th>
-                <th style={{ padding: "0.75rem 1rem", color: "oklch(0.55 0.008 85)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em" }}>Message</th>
-                <th style={{ padding: "0.75rem 1rem", color: "oklch(0.55 0.008 85)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em" }}>Status</th>
-                <th style={{ padding: "0.75rem 1rem", color: "oklch(0.55 0.008 85)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em" }}>Date</th>
-                <th style={{ padding: "0.75rem 1rem", color: "oklch(0.55 0.008 85)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em", textAlign: "right" }}>Actions</th>
+              <tr style={{ borderBottom: "1px solid var(--admin-card-border)", background: "var(--admin-bg)" }}>
+                <th style={{ padding: "0.75rem 1rem", color: "var(--admin-text-muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em" }}>Customer</th>
+                <th style={{ padding: "0.75rem 1rem", color: "var(--admin-text-muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em" }}>Requested Product</th>
+                <th style={{ padding: "0.75rem 1rem", color: "var(--admin-text-muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em" }}>Message</th>
+                <th style={{ padding: "0.75rem 1rem", color: "var(--admin-text-muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em" }}>Status</th>
+                <th style={{ padding: "0.75rem 1rem", color: "var(--admin-text-muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em" }}>Date</th>
+                <th style={{ padding: "0.75rem 1rem", color: "var(--admin-text-muted)", fontWeight: 600, textTransform: "uppercase", fontSize: "0.6875rem", letterSpacing: "0.08em", textAlign: "right" }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -444,15 +428,15 @@ export function AdminInquiriesPage() {
                   <tr
                     key={item.id}
                     style={{
-                      borderBottom: "1px solid oklch(0.22 0.004 285)",
+                      borderBottom: "1px solid var(--admin-card-border)",
                       transition: "background 0.1s",
-                      background: search.inquiry === item.id ? "oklch(0.78 0.155 71 / 0.04)" : "transparent",
+                      background: search.inquiry === item.id ? "rgba(180, 162, 140, 0.08)" : "transparent",
                     }}
                   >
                     {/* Customer */}
                     <td style={{ padding: "0.875rem 1rem" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
-                        <span style={{ fontWeight: 600, color: "oklch(0.92 0.008 85)" }}>{item.client_name}</span>
+                        <span style={{ fontWeight: 600, color: "var(--admin-text-main)" }}>{item.client_name}</span>
                         {isNew && (
                           <span
                             style={{
@@ -460,18 +444,18 @@ export function AdminInquiriesPage() {
                               fontWeight: 700,
                               letterSpacing: "0.05em",
                               textTransform: "uppercase",
-                              background: "oklch(0.78 0.155 71 / 0.2)",
-                              color: "oklch(0.85 0.155 71)",
+                              background: "var(--admin-badge-bg)",
+                              color: "var(--charcoal)",
                               padding: "0.1rem 0.35rem",
-                              borderRadius: "2px",
+                              borderRadius: "4px",
                             }}
                           >
                             New
                           </span>
                         )}
                       </div>
-                      <div style={{ fontSize: "0.75rem", color: "oklch(0.65 0.008 85)", marginTop: "1px" }}>{item.company_name}</div>
-                      <div style={{ fontSize: "0.6875rem", fontFamily: "var(--font-mono, monospace)", color: "oklch(0.55 0.008 85)", marginTop: "2px" }}>
+                      <div style={{ fontSize: "0.75rem", color: "var(--admin-text-muted)", marginTop: "1px" }}>{item.company_name}</div>
+                      <div style={{ fontSize: "0.6875rem", fontFamily: "var(--font-mono, monospace)", color: "var(--admin-text-muted)", marginTop: "2px" }}>
                         {item.email}
                       </div>
                     </td>
@@ -488,9 +472,9 @@ export function AdminInquiriesPage() {
                                 width: "36px",
                                 height: "36px",
                                 objectFit: "cover",
-                                borderRadius: "2px",
-                                border: "1px solid oklch(0.28 0.004 285)",
-                                background: "oklch(0.14 0.003 285)",
+                                borderRadius: "4px",
+                                border: "1px solid var(--admin-card-border)",
+                                background: "var(--admin-bg)",
                                 flexShrink: 0,
                               }}
                             />
@@ -500,24 +484,24 @@ export function AdminInquiriesPage() {
                               style={{
                                 display: "inline-block",
                                 padding: "0.15rem 0.45rem",
-                                borderRadius: "2px",
+                                borderRadius: "4px",
                                 fontSize: "0.6875rem",
                                 fontFamily: "var(--font-mono, monospace)",
-                                background: "oklch(0.78 0.155 71 / 0.12)",
-                                color: "oklch(0.78 0.155 71)",
-                                border: "1px solid oklch(0.78 0.155 71 / 0.25)",
+                                background: "var(--admin-badge-bg)",
+                                color: "var(--charcoal)",
+                                border: "1px solid var(--admin-card-border)",
                                 marginBottom: "2px",
                               }}
                             >
                               {item.outsole.model_number}
                             </span>
-                            <div style={{ fontWeight: 500, color: "oklch(0.85 0.008 85)", fontSize: "0.75rem" }}>
+                            <div style={{ fontWeight: 500, color: "var(--admin-text-main)", fontSize: "0.75rem" }}>
                               {item.outsole.name}
                             </div>
                           </div>
                         </div>
                       ) : (
-                        <span style={{ color: "oklch(0.45 0.008 85)", fontStyle: "italic", fontSize: "0.75rem" }}>
+                        <span style={{ color: "var(--admin-text-muted)", fontStyle: "italic", fontSize: "0.75rem" }}>
                           General Inquiry
                         </span>
                       )}
@@ -533,7 +517,7 @@ export function AdminInquiriesPage() {
                           display: "-webkit-box",
                           WebkitLineClamp: 2,
                           WebkitBoxOrient: "vertical",
-                          color: "oklch(0.7 0.008 85)",
+                          color: "var(--admin-text-secondary)",
                           lineHeight: 1.4,
                         }}
                       >
@@ -547,7 +531,7 @@ export function AdminInquiriesPage() {
                     </td>
 
                     {/* Date */}
-                    <td style={{ padding: "0.875rem 1rem", fontSize: "0.75rem", fontFamily: "var(--font-mono, monospace)", color: "oklch(0.6 0.008 85)", whiteSpace: "nowrap" }}>
+                    <td style={{ padding: "0.875rem 1rem", fontSize: "0.75rem", fontFamily: "var(--font-mono, monospace)", color: "var(--admin-text-muted)", whiteSpace: "nowrap" }}>
                       <div>
                         {new Date(item.created_at).toLocaleDateString("en-US", {
                           year: "numeric",
@@ -555,7 +539,7 @@ export function AdminInquiriesPage() {
                           day: "numeric",
                         })}
                       </div>
-                      <div style={{ fontSize: "0.6875rem", color: "oklch(0.45 0.008 85)", marginTop: "1px" }}>
+                      <div style={{ fontSize: "0.6875rem", color: "var(--admin-text-muted)", marginTop: "1px" }}>
                         {formatRelativeTime(item.created_at)}
                       </div>
                     </td>
@@ -570,10 +554,10 @@ export function AdminInquiriesPage() {
                             disabled={isUpdating}
                             onClick={() => handleStatusChange(item.id, "contacted")}
                             style={{
-                              background: "oklch(0.65 0.14 230 / 0.12)",
-                              border: "1px solid oklch(0.65 0.14 230 / 0.3)",
-                              color: "oklch(0.75 0.14 230)",
-                              borderRadius: "2px",
+                              background: "var(--admin-status-contacted-bg)",
+                              border: "1px solid var(--admin-status-contacted-border)",
+                              color: "var(--admin-status-contacted)",
+                              borderRadius: "4px",
                               padding: "0.35rem 0.6rem",
                               fontSize: "0.75rem",
                               fontWeight: 500,
@@ -595,10 +579,10 @@ export function AdminInquiriesPage() {
                             disabled={isUpdating}
                             onClick={() => handleStatusChange(item.id, "resolved")}
                             style={{
-                              background: "oklch(0.65 0.15 155 / 0.12)",
-                              border: "1px solid oklch(0.65 0.15 155 / 0.3)",
-                              color: "oklch(0.75 0.15 155)",
-                              borderRadius: "2px",
+                              background: "var(--admin-status-resolved-bg)",
+                              border: "1px solid var(--admin-status-resolved-border)",
+                              color: "var(--admin-status-resolved)",
+                              borderRadius: "4px",
                               padding: "0.35rem 0.6rem",
                               fontSize: "0.75rem",
                               fontWeight: 500,
@@ -618,16 +602,7 @@ export function AdminInquiriesPage() {
                         <button
                           type="button"
                           onClick={() => openDetail(item.id)}
-                          style={{
-                            background: "transparent",
-                            border: "1px solid oklch(0.28 0.004 285)",
-                            borderRadius: "2px",
-                            color: "oklch(0.85 0.008 85)",
-                            padding: "0.35rem 0.65rem",
-                            fontSize: "0.75rem",
-                            fontWeight: 500,
-                            cursor: "pointer",
-                          }}
+                          className="admin-btn admin-btn-sm admin-btn-secondary"
                         >
                           View Details
                         </button>
@@ -652,7 +627,7 @@ export function AdminInquiriesPage() {
             padding: "0.5rem 0",
           }}
         >
-          <span style={{ fontSize: "0.75rem", color: "oklch(0.55 0.008 85)", fontFamily: "var(--font-mono, monospace)" }}>
+          <span style={{ fontSize: "0.75rem", color: "var(--admin-text-muted)", fontFamily: "var(--font-mono, monospace)" }}>
             Page {page} of {totalPages}
           </span>
           <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -660,15 +635,8 @@ export function AdminInquiriesPage() {
               type="button"
               disabled={page <= 1}
               onClick={() => handlePageChange(page - 1)}
-              style={{
-                padding: "0.4rem 0.75rem",
-                background: "oklch(0.185 0.004 285)",
-                border: "1px solid oklch(0.28 0.004 285)",
-                borderRadius: "2px",
-                color: page <= 1 ? "oklch(0.4 0.008 85)" : "oklch(0.85 0.008 85)",
-                fontSize: "0.75rem",
-                cursor: page <= 1 ? "not-allowed" : "pointer",
-              }}
+              className="admin-btn admin-btn-sm admin-btn-secondary"
+              style={{ opacity: page <= 1 ? 0.4 : 1 }}
             >
               Previous
             </button>
@@ -676,15 +644,8 @@ export function AdminInquiriesPage() {
               type="button"
               disabled={page >= totalPages}
               onClick={() => handlePageChange(page + 1)}
-              style={{
-                padding: "0.4rem 0.75rem",
-                background: "oklch(0.185 0.004 285)",
-                border: "1px solid oklch(0.28 0.004 285)",
-                borderRadius: "2px",
-                color: page >= totalPages ? "oklch(0.4 0.008 85)" : "oklch(0.85 0.008 85)",
-                fontSize: "0.75rem",
-                cursor: page >= totalPages ? "not-allowed" : "pointer",
-              }}
+              className="admin-btn admin-btn-sm admin-btn-secondary"
+              style={{ opacity: page >= totalPages ? 0.4 : 1 }}
             >
               Next
             </button>
@@ -699,7 +660,7 @@ export function AdminInquiriesPage() {
             position: "fixed",
             inset: 0,
             zIndex: 50,
-            background: "oklch(0 0 0 / 0.7)",
+            background: "rgba(41, 41, 37, 0.45)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -715,13 +676,13 @@ export function AdminInquiriesPage() {
             aria-modal="true"
             aria-labelledby="inquiry-detail-title"
             style={{
-              background: "oklch(0.185 0.004 285)",
-              border: "1px solid oklch(0.3 0.004 285)",
-              borderRadius: "2px",
+              background: "var(--admin-card-bg)",
+              border: "1px solid var(--admin-card-border)",
+              borderRadius: "6px",
               padding: "1.75rem 2rem",
               maxWidth: "640px",
               width: "100%",
-              boxShadow: "0 24px 64px oklch(0 0 0 / 0.55)",
+              boxShadow: "0 20px 48px rgba(0, 0, 0, 0.12)",
               maxHeight: "90vh",
               overflowY: "auto",
             }}
@@ -736,7 +697,7 @@ export function AdminInquiriesPage() {
                       margin: 0,
                       fontSize: "1.1875rem",
                       fontWeight: 700,
-                      color: "oklch(0.95 0.008 85)",
+                      color: "var(--admin-text-main)",
                     }}
                   >
                     Sample Request Detail
@@ -748,17 +709,18 @@ export function AdminInquiriesPage() {
                         fontWeight: 700,
                         letterSpacing: "0.06em",
                         textTransform: "uppercase",
-                        background: "oklch(0.78 0.155 71 / 0.2)",
-                        color: "oklch(0.85 0.155 71)",
+                        background: "var(--admin-badge-bg)",
+                        color: "var(--charcoal)",
+                        border: "1px solid var(--admin-card-border)",
                         padding: "0.15rem 0.45rem",
-                        borderRadius: "2px",
+                        borderRadius: "4px",
                       }}
                     >
                       Awaiting Action
                     </span>
                   )}
                 </div>
-                <p style={{ margin: 0, fontSize: "0.75rem", fontFamily: "var(--font-mono, monospace)", color: "oklch(0.55 0.008 85)", display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                <p style={{ margin: 0, fontSize: "0.75rem", fontFamily: "var(--font-mono, monospace)", color: "var(--admin-text-muted)", display: "flex", alignItems: "center", gap: "0.4rem" }}>
                   <Clock size={13} />
                   Submitted on {new Date(activeInquiry.created_at).toLocaleString("en-US", {
                     dateStyle: "medium",
@@ -773,7 +735,7 @@ export function AdminInquiriesPage() {
                 style={{
                   background: "transparent",
                   border: "none",
-                  color: "oklch(0.6 0.008 85)",
+                  color: "var(--admin-text-muted)",
                   cursor: "pointer",
                   padding: "0.25rem",
                   display: "flex",
@@ -788,9 +750,9 @@ export function AdminInquiriesPage() {
             {/* Workflow Status Bar & Quick Actions */}
             <div
               style={{
-                background: "oklch(0.14 0.003 285)",
-                border: "1px solid oklch(0.24 0.004 285)",
-                borderRadius: "2px",
+                background: "var(--admin-bg)",
+                border: "1px solid var(--admin-card-border)",
+                borderRadius: "4px",
                 padding: "0.875rem 1rem",
                 display: "flex",
                 alignItems: "center",
@@ -801,7 +763,7 @@ export function AdminInquiriesPage() {
               }}
             >
               <div>
-                <span style={{ display: "block", fontSize: "0.6875rem", fontFamily: "var(--font-mono, monospace)", textTransform: "uppercase", color: "oklch(0.55 0.008 85)", marginBottom: "4px" }}>
+                <span style={{ display: "block", fontSize: "0.6875rem", fontFamily: "var(--font-mono, monospace)", textTransform: "uppercase", color: "var(--admin-text-muted)", marginBottom: "4px" }}>
                   Current Status
                 </span>
                 <StatusBadge status={activeInquiry.status} />
@@ -816,10 +778,10 @@ export function AdminInquiriesPage() {
                     onClick={() => handleStatusChange(activeInquiry.id, "contacted")}
                     style={{
                       padding: "0.38rem 0.75rem",
-                      background: "oklch(0.65 0.14 230 / 0.15)",
-                      border: "1px solid oklch(0.65 0.14 230 / 0.4)",
-                      borderRadius: "2px",
-                      color: "oklch(0.85 0.14 230)",
+                      background: "var(--admin-status-contacted-bg)",
+                      border: "1px solid var(--admin-status-contacted-border)",
+                      borderRadius: "4px",
+                      color: "var(--admin-status-contacted)",
                       fontSize: "0.75rem",
                       fontWeight: 600,
                       cursor: "pointer",
@@ -840,10 +802,10 @@ export function AdminInquiriesPage() {
                     onClick={() => handleStatusChange(activeInquiry.id, "resolved")}
                     style={{
                       padding: "0.38rem 0.75rem",
-                      background: "oklch(0.65 0.15 155 / 0.15)",
-                      border: "1px solid oklch(0.65 0.15 155 / 0.4)",
-                      borderRadius: "2px",
-                      color: "oklch(0.85 0.15 155)",
+                      background: "var(--admin-status-resolved-bg)",
+                      border: "1px solid var(--admin-status-resolved-border)",
+                      borderRadius: "4px",
+                      color: "var(--admin-status-resolved)",
                       fontSize: "0.75rem",
                       fontWeight: 600,
                       cursor: "pointer",
@@ -863,15 +825,11 @@ export function AdminInquiriesPage() {
                   value={activeInquiry.status}
                   disabled={updatingId === activeInquiry.id}
                   onChange={(e) => handleStatusChange(activeInquiry.id, e.target.value as InquiryStatus)}
+                  className="admin-select"
                   style={{
                     padding: "0.38rem 0.65rem",
-                    background: "oklch(0.2 0.004 285)",
-                    border: "1px solid oklch(0.3 0.004 285)",
-                    borderRadius: "2px",
-                    color: "oklch(0.92 0.008 85)",
                     fontSize: "0.8125rem",
-                    cursor: "pointer",
-                    outline: "none",
+                    borderRadius: "4px",
                   }}
                 >
                   <option value="pending">Pending</option>
@@ -887,13 +845,13 @@ export function AdminInquiriesPage() {
                 style={{
                   marginBottom: "1.25rem",
                   padding: "1rem",
-                  background: "oklch(0.16 0.003 285)",
-                  border: "1px solid oklch(0.24 0.004 285)",
-                  borderRadius: "2px",
+                  background: "var(--admin-bg)",
+                  border: "1px solid var(--admin-card-border)",
+                  borderRadius: "4px",
                 }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.5rem" }}>
-                  <span style={{ fontSize: "0.6875rem", fontFamily: "var(--font-mono, monospace)", textTransform: "uppercase", color: "oklch(0.55 0.008 85)", letterSpacing: "0.05em" }}>
+                  <span style={{ fontSize: "0.6875rem", fontFamily: "var(--font-mono, monospace)", textTransform: "uppercase", color: "var(--admin-text-muted)", letterSpacing: "0.05em" }}>
                     Requested Outsole Model
                   </span>
                   <div style={{ display: "flex", gap: "0.75rem" }}>
@@ -906,7 +864,7 @@ export function AdminInquiriesPage() {
                         alignItems: "center",
                         gap: "0.25rem",
                         fontSize: "0.75rem",
-                        color: "oklch(0.78 0.155 71)",
+                        color: "var(--charcoal)",
                         textDecoration: "none",
                         fontWeight: 500,
                       }}
@@ -921,7 +879,7 @@ export function AdminInquiriesPage() {
                         alignItems: "center",
                         gap: "0.25rem",
                         fontSize: "0.75rem",
-                        color: "oklch(0.75 0.008 85)",
+                        color: "var(--admin-text-muted)",
                         textDecoration: "none",
                         fontWeight: 500,
                       }}
@@ -941,9 +899,9 @@ export function AdminInquiriesPage() {
                         width: "60px",
                         height: "60px",
                         objectFit: "cover",
-                        borderRadius: "2px",
-                        border: "1px solid oklch(0.28 0.004 285)",
-                        background: "oklch(0.12 0.003 285)",
+                        borderRadius: "4px",
+                        border: "1px solid var(--admin-card-border)",
+                        background: "var(--admin-card-bg)",
                         flexShrink: 0,
                       }}
                     />
@@ -952,13 +910,13 @@ export function AdminInquiriesPage() {
                       style={{
                         width: "60px",
                         height: "60px",
-                        borderRadius: "2px",
-                        border: "1px solid oklch(0.24 0.004 285)",
-                        background: "oklch(0.14 0.003 285)",
+                        borderRadius: "4px",
+                        border: "1px solid var(--admin-card-border)",
+                        background: "var(--admin-card-bg)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        color: "oklch(0.4 0.008 85)",
+                        color: "var(--admin-text-muted)",
                         flexShrink: 0,
                       }}
                     >
@@ -968,25 +926,25 @@ export function AdminInquiriesPage() {
 
                   <div>
                     <div style={{ display: "flex", alignItems: "baseline", gap: "0.5rem" }}>
-                      <span style={{ fontWeight: 700, color: "oklch(0.95 0.008 85)", fontSize: "1rem" }}>
+                      <span style={{ fontWeight: 700, color: "var(--admin-text-main)", fontSize: "1rem" }}>
                         {activeInquiry.outsole.name}
                       </span>
                       <span
                         style={{
                           fontFamily: "var(--font-mono, monospace)",
                           fontSize: "0.75rem",
-                          color: "oklch(0.78 0.155 71)",
-                          background: "oklch(0.78 0.155 71 / 0.12)",
+                          color: "var(--charcoal)",
+                          background: "var(--admin-badge-bg)",
                           padding: "0.1rem 0.4rem",
-                          borderRadius: "2px",
-                          border: "1px solid oklch(0.78 0.155 71 / 0.25)",
+                          borderRadius: "4px",
+                          border: "1px solid var(--admin-card-border)",
                         }}
                       >
                         {activeInquiry.outsole.model_number}
                       </span>
                     </div>
                     {activeInquiry.outsole.description && (
-                      <p style={{ margin: "0.35rem 0 0", fontSize: "0.75rem", color: "oklch(0.65 0.008 85)", lineHeight: 1.4 }}>
+                      <p style={{ margin: "0.35rem 0 0", fontSize: "0.75rem", color: "var(--admin-text-secondary)", lineHeight: 1.4 }}>
                         {activeInquiry.outsole.description}
                       </p>
                     )}
@@ -998,14 +956,14 @@ export function AdminInquiriesPage() {
                 style={{
                   marginBottom: "1.25rem",
                   padding: "0.875rem 1rem",
-                  background: "oklch(0.15 0.003 285)",
-                  border: "1px solid oklch(0.22 0.004 285)",
-                  borderRadius: "2px",
+                  background: "var(--admin-bg)",
+                  border: "1px solid var(--admin-card-border)",
+                  borderRadius: "4px",
                   fontSize: "0.8125rem",
-                  color: "oklch(0.65 0.008 85)",
+                  color: "var(--admin-text-secondary)",
                 }}
               >
-                <span style={{ fontWeight: 600, color: "oklch(0.85 0.008 85)" }}>General Inquiry:</span> No specific outsole model was attached to this request.
+                <strong style={{ color: "var(--admin-text-main)" }}>General Inquiry:</strong> No specific outsole model was attached to this request.
               </div>
             )}
 
@@ -1017,38 +975,38 @@ export function AdminInquiriesPage() {
                 gap: "1rem",
                 marginBottom: "1.25rem",
                 padding: "1rem",
-                background: "oklch(0.16 0.003 285)",
-                border: "1px solid oklch(0.24 0.004 285)",
-                borderRadius: "2px",
+                background: "var(--admin-bg)",
+                border: "1px solid var(--admin-card-border)",
+                borderRadius: "4px",
               }}
             >
               <div>
-                <span style={{ fontSize: "0.6875rem", fontFamily: "var(--font-mono, monospace)", textTransform: "uppercase", color: "oklch(0.55 0.008 85)", display: "block" }}>
+                <span style={{ fontSize: "0.6875rem", fontFamily: "var(--font-mono, monospace)", textTransform: "uppercase", color: "var(--admin-text-muted)", display: "block" }}>
                   Client Name
                 </span>
-                <span style={{ fontWeight: 600, color: "oklch(0.94 0.008 85)", fontSize: "0.875rem" }}>
+                <span style={{ fontWeight: 600, color: "var(--admin-text-main)", fontSize: "0.875rem" }}>
                   {activeInquiry.client_name}
                 </span>
               </div>
 
               <div>
-                <span style={{ fontSize: "0.6875rem", fontFamily: "var(--font-mono, monospace)", textTransform: "uppercase", color: "oklch(0.55 0.008 85)", display: "block" }}>
+                <span style={{ fontSize: "0.6875rem", fontFamily: "var(--font-mono, monospace)", textTransform: "uppercase", color: "var(--admin-text-muted)", display: "block" }}>
                   Company
                 </span>
-                <span style={{ fontWeight: 600, color: "oklch(0.94 0.008 85)", fontSize: "0.875rem" }}>
+                <span style={{ fontWeight: 600, color: "var(--admin-text-main)", fontSize: "0.875rem" }}>
                   {activeInquiry.company_name}
                 </span>
               </div>
 
               <div>
-                <span style={{ fontSize: "0.6875rem", fontFamily: "var(--font-mono, monospace)", textTransform: "uppercase", color: "oklch(0.55 0.008 85)", display: "block" }}>
+                <span style={{ fontSize: "0.6875rem", fontFamily: "var(--font-mono, monospace)", textTransform: "uppercase", color: "var(--admin-text-muted)", display: "block" }}>
                   Email Address
                 </span>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "2px" }}>
                   <a
                     href={`mailto:${activeInquiry.email}`}
                     style={{
-                      color: "oklch(0.78 0.155 71)",
+                      color: "var(--charcoal)",
                       fontSize: "0.8125rem",
                       fontFamily: "var(--font-mono, monospace)",
                       textDecoration: "underline",
@@ -1063,20 +1021,20 @@ export function AdminInquiriesPage() {
                     style={{
                       background: "transparent",
                       border: "none",
-                      color: "oklch(0.6 0.008 85)",
+                      color: "var(--admin-text-muted)",
                       cursor: "pointer",
                       padding: "2px",
                       display: "inline-flex",
                     }}
                     title="Copy email"
                   >
-                    {copiedField === "email" ? <Check size={13} style={{ color: "oklch(0.75 0.15 155)" }} /> : <Copy size={13} />}
+                    {copiedField === "email" ? <Check size={13} style={{ color: "var(--admin-status-resolved)" }} /> : <Copy size={13} />}
                   </button>
                 </div>
               </div>
 
               <div>
-                <span style={{ fontSize: "0.6875rem", fontFamily: "var(--font-mono, monospace)", textTransform: "uppercase", color: "oklch(0.55 0.008 85)", display: "block" }}>
+                <span style={{ fontSize: "0.6875rem", fontFamily: "var(--font-mono, monospace)", textTransform: "uppercase", color: "var(--admin-text-muted)", display: "block" }}>
                   Phone Number
                 </span>
                 {activeInquiry.phone ? (
@@ -1084,7 +1042,7 @@ export function AdminInquiriesPage() {
                     <a
                       href={`tel:${activeInquiry.phone}`}
                       style={{
-                        color: "oklch(0.85 0.008 85)",
+                        color: "var(--admin-text-main)",
                         fontSize: "0.8125rem",
                         fontFamily: "var(--font-mono, monospace)",
                         textDecoration: "none",
@@ -1098,18 +1056,18 @@ export function AdminInquiriesPage() {
                       style={{
                         background: "transparent",
                         border: "none",
-                        color: "oklch(0.6 0.008 85)",
+                        color: "var(--admin-text-muted)",
                         cursor: "pointer",
                         padding: "2px",
                         display: "inline-flex",
                       }}
                       title="Copy phone"
                     >
-                      {copiedField === "phone" ? <Check size={13} style={{ color: "oklch(0.75 0.15 155)" }} /> : <Copy size={13} />}
+                      {copiedField === "phone" ? <Check size={13} style={{ color: "var(--admin-status-resolved)" }} /> : <Copy size={13} />}
                     </button>
                   </div>
                 ) : (
-                  <span style={{ color: "oklch(0.45 0.008 85)", fontStyle: "italic", fontSize: "0.8125rem", marginTop: "2px", display: "inline-block" }}>
+                  <span style={{ color: "var(--admin-text-muted)", fontStyle: "italic", fontSize: "0.8125rem", marginTop: "2px", display: "inline-block" }}>
                     Not provided
                   </span>
                 )}
@@ -1118,18 +1076,18 @@ export function AdminInquiriesPage() {
 
             {/* Customer Message */}
             <div style={{ marginBottom: "1.5rem" }}>
-              <span style={{ fontSize: "0.6875rem", fontFamily: "var(--font-mono, monospace)", textTransform: "uppercase", color: "oklch(0.55 0.008 85)", display: "block", marginBottom: "0.375rem" }}>
+              <span style={{ fontSize: "0.6875rem", fontFamily: "var(--font-mono, monospace)", textTransform: "uppercase", color: "var(--admin-text-muted)", display: "block", marginBottom: "0.375rem" }}>
                 Program / Inquiry Message
               </span>
               <div
                 style={{
-                  background: "oklch(0.14 0.003 285)",
-                  border: "1px solid oklch(0.24 0.004 285)",
-                  borderRadius: "2px",
+                  background: "var(--admin-bg)",
+                  border: "1px solid var(--admin-card-border)",
+                  borderRadius: "4px",
                   padding: "1rem",
                   fontSize: "0.875rem",
                   lineHeight: 1.55,
-                  color: "oklch(0.92 0.008 85)",
+                  color: "var(--admin-text-main)",
                   whiteSpace: "pre-wrap",
                 }}
               >
@@ -1147,17 +1105,10 @@ export function AdminInquiriesPage() {
                     activeInquiry.outsole ? ` and the ${activeInquiry.outsole.name} (${activeInquiry.outsole.model_number})` : ""
                   }.\n\nBest regards,\nODE Outsole Team`,
                 )}`}
+                className="admin-btn admin-btn-primary"
                 style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "0.4rem",
-                  padding: "0.5rem 0.95rem",
-                  background: "oklch(0.78 0.155 71)",
-                  color: "oklch(0.14 0.003 285)",
-                  borderRadius: "2px",
-                  fontSize: "0.8125rem",
-                  fontWeight: 600,
                   textDecoration: "none",
+                  gap: "0.4rem",
                 }}
               >
                 <Mail size={14} />
@@ -1167,16 +1118,7 @@ export function AdminInquiriesPage() {
               <button
                 type="button"
                 onClick={closeDetail}
-                style={{
-                  padding: "0.5rem 1rem",
-                  background: "oklch(0.24 0.004 285)",
-                  border: "1px solid oklch(0.32 0.004 285)",
-                  borderRadius: "2px",
-                  color: "oklch(0.94 0.008 85)",
-                  fontSize: "0.8125rem",
-                  fontWeight: 500,
-                  cursor: "pointer",
-                }}
+                className="admin-btn admin-btn-secondary"
               >
                 Close
               </button>
@@ -1195,21 +1137,21 @@ export function AdminInquiriesPage() {
 function StatusBadge({ status }: { status: InquiryStatus }) {
   const styles: Record<InquiryStatus, { bg: string; color: string; border: string; label: string }> = {
     pending: {
-      bg: "oklch(0.78 0.155 71 / 0.12)",
-      color: "oklch(0.78 0.155 71)",
-      border: "oklch(0.78 0.155 71 / 0.3)",
+      bg: "var(--admin-status-pending-bg)",
+      color: "var(--admin-status-pending)",
+      border: "var(--admin-status-pending-border)",
       label: "Pending",
     },
     contacted: {
-      bg: "oklch(0.65 0.14 230 / 0.12)",
-      color: "oklch(0.7 0.14 230)",
-      border: "oklch(0.65 0.14 230 / 0.3)",
+      bg: "var(--admin-status-contacted-bg)",
+      color: "var(--admin-status-contacted)",
+      border: "var(--admin-status-contacted-border)",
       label: "Contacted",
     },
     resolved: {
-      bg: "oklch(0.65 0.15 155 / 0.12)",
-      color: "oklch(0.72 0.15 155)",
-      border: "oklch(0.65 0.15 155 / 0.3)",
+      bg: "var(--admin-status-resolved-bg)",
+      color: "var(--admin-status-resolved)",
+      border: "var(--admin-status-resolved-border)",
       label: "Resolved",
     },
   };
@@ -1221,7 +1163,7 @@ function StatusBadge({ status }: { status: InquiryStatus }) {
       style={{
         display: "inline-block",
         padding: "0.2rem 0.5rem",
-        borderRadius: "2px",
+        borderRadius: "4px",
         fontSize: "0.6875rem",
         fontFamily: "var(--font-mono, monospace)",
         letterSpacing: "0.04em",
