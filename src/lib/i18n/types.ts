@@ -224,6 +224,31 @@ export interface I18nDictionary {
       sampleBtn: string;
       contactBtn: string;
     };
+    gallery: {
+      eyebrow: string;
+      title: string;
+      intro: string;
+      placeholderNotice: string;
+      categories: {
+        all: string;
+        factory_office: string;
+        machinery_equipment: string;
+        production_process: string;
+        warehouse_storage: string;
+      };
+      featuredBadge: string;
+      viewLarge: string;
+      lightboxClose: string;
+      lightboxPrev: string;
+      lightboxNext: string;
+      imageCounter: string;
+      play: string;
+      pause: string;
+      prevSlide: string;
+      nextSlide: string;
+      emptyTitle: string;
+      emptyDesc: string;
+    };
     loading: string;
     errorTitle: string;
     notFound: string;

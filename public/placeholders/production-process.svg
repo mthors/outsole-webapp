@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <pattern id="grid3" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#292925" stroke-opacity="0.06" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="procGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E5DED2"/>
+      <stop offset="100%" stop-color="#D9D0C3"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#procGrad)"/>
+  <rect width="800" height="600" fill="url(#grid3)"/>
+
+  <!-- Rubber Production Process Diagram -->
+  <g transform="translate(90, 150)">
+    <!-- Stage 1: Compounding / Kneading -->
+    <g transform="translate(0, 40)">
+      <circle cx="60" cy="60" r="50" fill="#FFFFFF" stroke="#292925" stroke-width="2"/>
+      <circle cx="60" cy="60" r="32" fill="none" stroke="#083B7B" stroke-dasharray="6 4" stroke-width="2"/>
+      <text x="60" y="65" font-family="'IBM Plex Mono', monospace" font-size="11" font-weight="600" fill="#292925" text-anchor="middle">MIX</text>
+      <text x="60" y="130" font-family="'IBM Plex Mono', monospace" font-size="10" fill="#77796B" text-anchor="middle">1. COMPOUND</text>
+    </g>
+
+    <line x1="120" y1="100" x2="180" y2="100" stroke="#083B7B" stroke-width="2" marker-end="url(#arrow)"/>
+    <polygon points="175,96 185,100 175,104" fill="#083B7B"/>
+
+    <!-- Stage 2: Calendering & Sheeting -->
+    <g transform="translate(190, 40)">
+      <rect x="0" y="10" width="110" height="100" fill="#FFFFFF" stroke="#292925" stroke-width="2"/>
+      <circle cx="35" cy="60" r="22" fill="#77796B" fill-opacity="0.2" stroke="#292925" stroke-width="2"/>
+      <circle cx="75" cy="60" r="22" fill="#77796B" fill-opacity="0.2" stroke="#292925" stroke-width="2"/>
+      <path d="M 0 60 Q 55 50 110 60" fill="none" stroke="#A86C25" stroke-width="3"/>
+      <text x="55" y="130" font-family="'IBM Plex Mono', monospace" font-size="10" fill="#77796B" text-anchor="middle">2. CALENDER</text>
+    </g>
+
+    <polygon points="315,96 325,100 315,104" fill="#083B7B"/>
+
+    <!-- Stage 3: Compression Molding -->
+    <g transform="translate(335, 40)">
+      <rect x="0" y="10" width="110" height="100" fill="#FFFFFF" stroke="#292925" stroke-width="2"/>
+      <rect x="15" y="30" width="80" height="16" fill="#A86C25" fill-opacity="0.25" stroke="#A86C25" stroke-width="2"/>
+      <rect x="15" y="74" width="80" height="16" fill="#A86C25" fill-opacity="0.25" stroke="#A86C25" stroke-width="2"/>
+      <!-- Outsole lug cross section -->
+      <path d="M 20 58 L 30 50 L 40 58 L 50 50 L 60 58 L 70 50 L 80 58 L 90 50" fill="none" stroke="#292925" stroke-width="2"/>
+      <text x="55" y="130" font-family="'IBM Plex Mono', monospace" font-size="10" fill="#77796B" text-anchor="middle">3. VULCANIZE</text>
+    </g>
+
+    <polygon points="460,96 470,100 460,104" fill="#083B7B"/>
+
+    <!-- Stage 4: Flash Trimming & QC -->
+    <g transform="translate(480, 40)">
+      <rect x="0" y="10" width="110" height="100" fill="#FFFFFF" stroke="#292925" stroke-width="2"/>
+      <!-- Sole contour silhouette -->
+      <path d="M 25 35 Q 55 30 85 45 Q 85 75 75 90 Q 55 85 30 80 Z" fill="#083B7B" fill-opacity="0.1" stroke="#083B7B" stroke-width="2"/>
+      <!-- QC Check badge -->
+      <circle cx="78" cy="35" r="12" fill="#FFFFFF" stroke="#A86C25" stroke-width="2"/>
+      <polyline points="73,35 77,39 84,31" fill="none" stroke="#A86C25" stroke-width="2"/>
+      <text x="55" y="130" font-family="'IBM Plex Mono', monospace" font-size="10" fill="#77796B" text-anchor="middle">4. TRIM &amp; QC</text>
+    </g>
+  </g>
+
+  <!-- Technical Overlay Details -->
+  <g font-family="'IBM Plex Mono', monospace" font-size="11" fill="#77796B" letter-spacing="1.5">
+    <text x="50" y="50">03 / CATEGORY: PRODUCTION PROCESS</text>
+    <text x="750" y="50" text-anchor="end">QC STANDARD: SATRA &amp; DIN</text>
+    <text x="50" y="560">PRECISION RUBBER OUTSOLE MANUFACTURING CYCLE</text>
+    <text x="750" y="560" text-anchor="end">PROC-FLOW-V2</text>
+  </g>
+
+  <!-- Center Watermark Badge -->
+  <g transform="translate(250, 480)">
+    <rect x="0" y="0" width="300" height="34" rx="2" fill="#292925" fill-opacity="0.88"/>
+    <text x="150" y="21" font-family="'IBM Plex Mono', monospace" font-size="10" font-weight="600" fill="#E5DED2" text-anchor="middle" letter-spacing="1.5">
+      [PREVIEW PLACEHOLDER]
+    </text>
+  </g>
+</svg>
