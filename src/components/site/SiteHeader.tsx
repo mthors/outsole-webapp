@@ -32,7 +32,7 @@ export function SiteHeader() {
               key={n.to}
               to={n.to}
               activeOptions={{ exact: n.to === "/" }}
-              className="label-tech transition-colors hover:text-foreground"
+              className="label-tech font-ortica transition-colors hover:text-foreground"
               activeProps={{ className: "!text-foreground font-semibold" }}
             >
               {n.label}
