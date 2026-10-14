@@ -18,10 +18,20 @@ import {
   type ContactContent,
 } from "@/lib/contact-content";
 import { parseInteriorHero, type InteriorHeroConfig } from "@/lib/interior-hero";
+import { listAdminFactoryInfoRows } from "@/lib/admin-factory-info.functions";
+import { FactoryInfoRowEditorCard } from "@/components/admin/FactoryInfoRowEditorCard";
 
 export const Route = createFileRoute("/admin/_layout/content/")({
   loader: async () => {
-    return await listAdminSiteContent();
+    const [siteContent, factoryInfo] = await Promise.all([
+      listAdminSiteContent(),
+      listAdminFactoryInfoRows(),
+    ]);
+    return {
+      items: siteContent.items,
+      factoryInfoRows: factoryInfo.rows,
+      factoryInfoTableExists: factoryInfo.tableExists,
+    };
   },
   component: AdminContentPage,
 });
@@ -102,7 +112,7 @@ const METADATA_MAP: Record<ContentKey, ContentMetadata> = {
   },
 };
 
-type FilterCategory = "all" | "homepage" | "about" | "contact" | "shared";
+type FilterCategory = "all" | "homepage" | "about" | "factory_info" | "contact" | "shared";
 
 function formatDate(isoString: string): string {
   try {
@@ -120,7 +130,7 @@ function formatDate(isoString: string): string {
 }
 
 export function AdminContentPage() {
-  const { items } = Route.useLoaderData();
+  const { items, factoryInfoRows, factoryInfoTableExists } = Route.useLoaderData();
   const router = useRouter();
 
   const [filterCategory, setFilterCategory] = useState<FilterCategory>("all");
@@ -194,6 +204,7 @@ export function AdminContentPage() {
               { id: "all", label: "All Sections" },
               { id: "homepage", label: "Homepage" },
               { id: "about", label: "About Factory" },
+              { id: "factory_info", label: "Factory Information" },
               { id: "contact", label: "Contact Coordinates" },
               { id: "shared", label: "Shared" },
             ] as const
@@ -255,6 +266,78 @@ export function AdminContentPage() {
               }}
             />
           ),
+        )}
+
+        {/* Factory Information Rows (2 independently editable rows) */}
+        {(filterCategory === "all" || filterCategory === "about" || filterCategory === "factory_info") && (
+          <div
+            id="admin-factory-info-section"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "1.5rem",
+              marginTop: "0.5rem",
+              paddingTop: "1.5rem",
+              borderTop: "2px solid var(--admin-card-border)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: "0.5rem",
+              }}
+            >
+              <div>
+                <h2
+                  style={{
+                    fontSize: "1.0625rem",
+                    fontWeight: 600,
+                    color: "var(--admin-text-main)",
+                    margin: 0,
+                  }}
+                >
+                  Factory Information Rows
+                </h2>
+                <p
+                  style={{
+                    fontSize: "0.8125rem",
+                    color: "var(--admin-text-muted)",
+                    margin: "0.25rem 0 0",
+                  }}
+                >
+                  Independently edit bilingual copy and upload private storage images for the two horizontal blocks on the About page.
+                </p>
+              </div>
+
+              <span
+                style={{
+                  fontFamily: "var(--font-mono, monospace)",
+                  fontSize: "0.6875rem",
+                  background: "var(--admin-badge-bg)",
+                  padding: "0.25rem 0.6rem",
+                  borderRadius: "4px",
+                  color: "var(--admin-text-muted)",
+                  border: "1px solid var(--admin-card-border)",
+                }}
+              >
+                2 public rows · private storage &amp; bilingual RLS
+              </span>
+            </div>
+
+            {factoryInfoRows?.map((row) => (
+              <FactoryInfoRowEditorCard
+                key={row.id}
+                row={row}
+                tableExists={factoryInfoTableExists}
+                onSaved={async () => {
+                  await router.invalidate();
+                }}
+              />
+            ))}
+          </div>
         )}
 
 

@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      factory_info_rows: {
+        Row: {
+          alt_text_en: string | null
+          alt_text_id: string | null
+          created_at: string
+          description_en: string | null
+          description_id: string | null
+          id: string
+          image_path: string | null
+          is_published: boolean
+          row_order: number
+          title_en: string | null
+          title_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          alt_text_en?: string | null
+          alt_text_id?: string | null
+          created_at?: string
+          description_en?: string | null
+          description_id?: string | null
+          id: string
+          image_path?: string | null
+          is_published?: boolean
+          row_order?: number
+          title_en?: string | null
+          title_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          alt_text_en?: string | null
+          alt_text_id?: string | null
+          created_at?: string
+          description_en?: string | null
+          description_id?: string | null
+          id?: string
+          image_path?: string | null
+          is_published?: boolean
+          row_order?: number
+          title_en?: string | null
+          title_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       factory_gallery: {
         Row: {
           caption_en: string | null
