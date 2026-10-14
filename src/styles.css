@@ -5,6 +5,36 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
+ * Ortica Linear Font
+ * Designed by Collletttivo (https://www.collletttivo.it/)
+ * Licensed under the SIL Open Font License, Version 1.1 (https://scripts.sil.org/OFL)
+ * Commercial use allowed (see Befonts-License.txt / LICENSE.txt in public/fonts/ortica/)
+ */
+@font-face {
+  font-family: "Ortica Linear";
+  src: url("/fonts/ortica/OrticaLinear-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Ortica Linear";
+  src: url("/fonts/ortica/OrticaLinear-Bold.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Ortica Linear";
+  src: url("/fonts/ortica/OrticaLinear-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/*
  * OUTSOLE — Official Brand Design System.
  * Sand (#E5DED2), Olive-grey (#77796B), Charcoal (#292925),
  * Deep blue (#083B7B), Ochre (#A86C25).
@@ -192,6 +222,10 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--color-muted-foreground);
+}
+
+@utility font-ortica {
+  font-family: "Ortica Linear", sans-serif;
 }
 
 @utility data-mono {
