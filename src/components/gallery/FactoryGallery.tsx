@@ -8,6 +8,7 @@ import {
   getLocalizedCategoryName,
 } from "@/lib/gallery-types";
 import { GalleryLightbox } from "./GalleryLightbox";
+import { FactoryInfoRows } from "./FactoryInfoRows";
 import { useI18n } from "@/lib/i18n";
 
 interface FactoryGalleryProps {
@@ -309,6 +310,9 @@ export function FactoryGallery({ items }: FactoryGalleryProps) {
             </div>
           )}
         </div>
+
+        {/* Factory Information Rows (2 vertically stacked horizontal rows) */}
+        <FactoryInfoRows />
 
         {/* Empty State */}
         {items.length === 0 || !currentItem ? (

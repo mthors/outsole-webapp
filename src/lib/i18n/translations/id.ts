@@ -224,6 +224,21 @@ export const id: I18nDictionary = {
       title: "Fasilitas Produksi & Pusat Rekayasa ODE",
       intro: "Mulai dari laboratorium formulasi kompon, lini mesin press multi-rongga, hingga gudang penyimpanan bahan baku terstandar — saksikan dedikasi kami dalam menghadirkan outsole berkualitas presisi tinggi.",
       placeholderNotice: "Pratinjau skematik fasilitas ODE (dokumentasi fotografi lapangan resmi sedang dikurasi oleh divisi konten).",
+      infoRows: {
+        placeholderBadge: "Pratinjau Fasilitas",
+        row1: {
+          tag: "01 / Mesin & Peralatan",
+          title: "Lini Pengepresan & Vulkanisasi Outsole",
+          desc: "Pengoperasian mesin press hidrolik multi-rongga dengan kendali temperatur presisi, mendukung stabilitas pematangan kompon karet dan konsistensi dimensi untuk setiap cetakan outsole.",
+          imageAlt: "Skematik mesin press vulkanisasi dan lini peralatan outsole ODE",
+        },
+        row2: {
+          tag: "02 / Proses & Rekayasa Kompon",
+          title: "Formulasi Kompon & Pemrosesan Material",
+          desc: "Proses pencampuran bahan baku karet, penyesuaian elastisitas dan ketahanan aus, serta pemantauan reologi terstandar sebelum dialirkan ke tahap pencetakan outsole.",
+          imageAlt: "Diagram alur proses pencampuran kompon dan pembentukan outsole ODE",
+        },
+      },
       categories: {
         all: "Semua Fasilitas",
         factory_office: "Pabrik & Kantor",
