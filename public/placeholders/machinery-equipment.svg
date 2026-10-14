@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <pattern id="grid2" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#292925" stroke-opacity="0.06" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="metalGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E5DED2"/>
+      <stop offset="100%" stop-color="#D9D0C3"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#metalGrad)"/>
+  <rect width="800" height="600" fill="url(#grid2)"/>
+
+  <!-- Vulcanization Press Machinery Schematic -->
+  <g transform="translate(140, 110)">
+    <!-- Heavy Machine Base & Frame -->
+    <rect x="60" y="320" width="400" height="40" fill="#292925" fill-opacity="0.12" stroke="#292925" stroke-width="3"/>
+    
+    <!-- 4 Hydraulic Tie Columns -->
+    <rect x="80" y="80" width="28" height="240" fill="#77796B" fill-opacity="0.25" stroke="#292925" stroke-width="2"/>
+    <rect x="180" y="80" width="28" height="240" fill="#77796B" fill-opacity="0.25" stroke="#292925" stroke-width="2"/>
+    <rect x="310" y="80" width="28" height="240" fill="#77796B" fill-opacity="0.25" stroke="#292925" stroke-width="2"/>
+    <rect x="410" y="80" width="28" height="240" fill="#77796B" fill-opacity="0.25" stroke="#292925" stroke-width="2"/>
+
+    <!-- Hydraulic Cylinder Top Cap -->
+    <rect x="60" y="40" width="400" height="40" fill="#083B7B" fill-opacity="0.1" stroke="#083B7B" stroke-width="2.5"/>
+    <rect x="130" y="10" width="70" height="30" stroke="#083B7B" stroke-width="2" fill="#FFFFFF"/>
+    <rect x="320" y="10" width="70" height="30" stroke="#083B7B" stroke-width="2" fill="#FFFFFF"/>
+    
+    <!-- Heated Compression Platens & Mold Bed -->
+    <rect x="100" y="140" width="320" height="30" fill="#A86C25" fill-opacity="0.2" stroke="#A86C25" stroke-width="2"/>
+    <rect x="100" y="210" width="320" height="30" fill="#A86C25" fill-opacity="0.2" stroke="#A86C25" stroke-width="2"/>
+
+    <!-- Outsole Cavity Blocks -->
+    <g stroke="#292925" stroke-width="1.5">
+      <rect x="120" y="175" width="60" height="30" fill="#FFFFFF" fill-opacity="0.8"/>
+      <rect x="195" y="175" width="60" height="30" fill="#FFFFFF" fill-opacity="0.8"/>
+      <rect x="270" y="175" width="60" height="30" fill="#FFFFFF" fill-opacity="0.8"/>
+      <rect x="345" y="175" width="60" height="30" fill="#FFFFFF" fill-opacity="0.8"/>
+    </g>
+
+    <!-- Digital Pressure & Temp Gauge Panel -->
+    <g transform="translate(480, 100)">
+      <rect x="0" y="0" width="60" height="120" fill="#FFFFFF" stroke="#292925" stroke-width="2"/>
+      <circle cx="30" cy="35" r="18" fill="none" stroke="#083B7B" stroke-width="2"/>
+      <line x1="30" y1="35" x2="40" y2="28" stroke="#A86C25" stroke-width="2"/>
+      <rect x="10" y="70" width="40" height="8" fill="#77796B" fill-opacity="0.3"/>
+      <rect x="10" y="85" width="40" height="8" fill="#77796B" fill-opacity="0.3"/>
+      <line x1="0" y1="60" x2="-20" y2="60" stroke="#77796B" stroke-width="1.5"/>
+    </g>
+
+    <!-- Ground Baseline -->
+    <line x1="0" y1="360" x2="560" y2="360" stroke="#292925" stroke-width="3"/>
+  </g>
+
+  <!-- Technical Overlay Details -->
+  <g font-family="'IBM Plex Mono', monospace" font-size="11" fill="#77796B" letter-spacing="1.5">
+    <text x="50" y="50">02 / CATEGORY: MACHINERY &amp; EQUIPMENT</text>
+    <text x="750" y="50" text-anchor="end">PRESS: HYDRAULIC 250T</text>
+    <text x="50" y="560">MULTI-CAVITY VULCANIZATION PRESS LINE</text>
+    <text x="750" y="560" text-anchor="end">EQUIP-REF: VP-400</text>
+  </g>
+
+  <!-- Center Watermark Badge -->
+  <g transform="translate(250, 480)">
+    <rect x="0" y="0" width="300" height="34" rx="2" fill="#292925" fill-opacity="0.88"/>
+    <text x="150" y="21" font-family="'IBM Plex Mono', monospace" font-size="10" font-weight="600" fill="#E5DED2" text-anchor="middle" letter-spacing="1.5">
+      [PREVIEW PLACEHOLDER]
+    </text>
+  </g>
+</svg>
