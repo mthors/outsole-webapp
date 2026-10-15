@@ -107,7 +107,10 @@ export function getLocalizedInteriorHero(
   if (locale === "en") {
     return {
       imagePath: sharedImagePath,
-      altText: baseEn.altText || baseId.altText || "ODE Outsole manufacturing facility",
+      altText: (baseEn.altText || baseId.altText || "Outsole by ODE manufacturing facility").replace(
+        /ODE Outsole/gi,
+        "Outsole by ODE",
+      ),
       eyebrow: baseEn.eyebrow || baseId.eyebrow || "",
       title: baseEn.title || baseId.title || "",
       description: baseEn.description || baseId.description || "",
@@ -117,7 +120,10 @@ export function getLocalizedInteriorHero(
   // Indonesian (default)
   return {
     imagePath: sharedImagePath,
-    altText: baseId.altText || "Fasilitas manufaktur ODE Outsole",
+    altText: (baseId.altText || "Fasilitas manufaktur Outsole by ODE").replace(
+      /ODE Outsole/gi,
+      "Outsole by ODE",
+    ),
     eyebrow: baseId.eyebrow || "",
     title: baseId.title || "",
     description: baseId.description || "",

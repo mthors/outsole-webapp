@@ -18,12 +18,22 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-md">
       <div className="shell flex h-16 items-center justify-between gap-6">
-        <Link to="/" className="flex items-center gap-3 group" onClick={() => setOpen(false)}>
-          <span className="grid h-8 w-8 place-items-center rounded-[2px] bg-primary font-mono text-xs font-bold tracking-wider text-primary-foreground transition-opacity group-hover:opacity-90">
-            OS
-          </span>
-          <span className="text-sm font-semibold uppercase tracking-[0.18em] text-foreground">
-            ODE Outsole
+        <Link
+          to="/"
+          className="flex items-center gap-2.5 sm:gap-3 group"
+          onClick={() => setOpen(false)}
+          aria-label="Outsole by ODE"
+        >
+          <img
+            src="/ode-logo.jpeg"
+            alt=""
+            aria-hidden="true"
+            width={1600}
+            height={708}
+            className="h-8 w-auto object-contain rounded-[2px] transition-opacity group-hover:opacity-90"
+          />
+          <span className="text-xs sm:text-sm font-semibold uppercase tracking-[0.14em] sm:tracking-[0.18em] text-foreground whitespace-nowrap">
+            OUTSOLE BY ODE
           </span>
         </Link>
         <nav className="hidden items-center gap-8 md:flex">

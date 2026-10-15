@@ -31,7 +31,8 @@ import { useI18n } from "@/lib/i18n";
 export function InteriorHero({ config, config_en, imageUrl, eyebrow, title, description }: InteriorHeroProps) {
   const { isIndonesian } = useI18n();
   const activeConfig = !isIndonesian && config_en ? config_en : config;
-  const altText = activeConfig.altText || (isIndonesian ? "Fasilitas manufaktur ODE Outsole" : "ODE Outsole manufacturing facility");
+  const rawAlt = activeConfig.altText || (isIndonesian ? "Fasilitas manufaktur Outsole by ODE" : "Outsole by ODE manufacturing facility");
+  const altText = rawAlt.replace(/ODE Outsole/gi, "Outsole by ODE");
   const desc = description ?? activeConfig.description ?? "";
 
   return (

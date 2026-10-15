@@ -22,17 +22,17 @@ const interiorHeroQuery = queryOptions({
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact Us — ODE Outsole | Technical Sales & Facility Inquiries" },
+      { title: "Contact Us — Outsole by ODE | Technical Sales & Facility Inquiries" },
       {
         name: "description",
         content:
-          "Connect with ODE Outsole technical sales, mold engineering, and production teams. Request physical samples or schedule factory tooling consultations.",
+          "Connect with Outsole by ODE technical sales, mold engineering, and production teams. Request physical samples or schedule factory tooling consultations.",
       },
-      { property: "og:title", content: "Contact Us — ODE Outsole" },
+      { property: "og:title", content: "Contact Us — Outsole by ODE" },
       {
         property: "og:description",
         content:
-          "Connect with ODE Outsole technical sales, mold engineering, and factory facilities.",
+          "Connect with Outsole by ODE technical sales, mold engineering, and factory facilities.",
       },
     ],
   }),

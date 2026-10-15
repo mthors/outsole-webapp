@@ -52,7 +52,7 @@ function AdminDashboardError({ error, reset }: { error: unknown; reset: () => vo
     <div className="admin-page" style={{ maxWidth: "1200px" }}>
       <header className="admin-page-header">
         <h1 className="admin-page-title">Dashboard</h1>
-        <p className="admin-page-subtitle">Welcome to the ODE Outsole admin panel.</p>
+        <p className="admin-page-subtitle">Welcome to the Outsole by ODE admin panel.</p>
       </header>
 
       <div
