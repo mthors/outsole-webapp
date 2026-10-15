@@ -841,7 +841,7 @@ function AdminGalleryPage() {
             Factory Gallery Management
           </h1>
           <p className="admin-subtitle" style={{ margin: 0, fontSize: "0.875rem", color: "var(--muted-olive)" }}>
-            Curate photographs of ODE Outsole facilities, machinery, manufacturing processes, and warehouse storage.
+            Curate photographs of Outsole by ODE facilities, machinery, manufacturing processes, and warehouse storage.
           </p>
         </div>
         <button

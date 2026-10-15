@@ -15,7 +15,7 @@ export const interiorHeroSchema = z.object({
     .string()
     .trim()
     .max(300, "Alt text must not exceed 300 characters")
-    .default("ODE Outsole manufacturing facility"),
+    .default("Outsole by ODE manufacturing facility"),
   /** Small uppercase label rendered above the headline */
   eyebrow: z
     .string()
@@ -45,7 +45,7 @@ export type InteriorHeroConfig = InteriorHeroContent;
 
 export const DEFAULT_INTERIOR_HERO: InteriorHeroContent = {
   imagePath: "",
-  altText: "ODE Outsole manufacturing facility",
+  altText: "Outsole by ODE manufacturing facility",
   eyebrow: "",
   title: "",
   description: "",

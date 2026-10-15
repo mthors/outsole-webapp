@@ -804,10 +804,10 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
   }
 
   const initialParsed = useMemo(() => parseContact(entry.content, true), [entry.content]);
-  const initialTitle = entry.title ?? "Kontak ODE Outsole";
+  const initialTitle = entry.title ?? "Kontak Outsole by ODE";
 
   const initialParsedEn = useMemo(() => parseContact(entry.content_en, false), [entry.content_en]);
-  const initialTitleEn = entry.title_en ?? "Contact ODE Outsole";
+  const initialTitleEn = entry.title_en ?? "Contact Outsole by ODE";
 
   const [title, setTitle] = useState(initialTitle);
   const [data, setData] = useState<ContactContent>(initialParsed);
@@ -1248,7 +1248,7 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     disabled={isSubmitting}
-                    placeholder="Kontak ODE Outsole"
+                    placeholder="Kontak Outsole by ODE"
                     maxLength={255}
                   />
                 </div>
@@ -1730,7 +1730,7 @@ function ContactContentCard({ entry, onSaved }: ContactContentCardProps) {
                     value={titleEn}
                     onChange={(e) => setTitleEn(e.target.value)}
                     disabled={isSubmitting}
-                    placeholder="Contact ODE Outsole"
+                    placeholder="Contact Outsole by ODE"
                     maxLength={255}
                   />
                 </div>
@@ -2384,7 +2384,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
           fileName: selectedFile.name,
           contentType: mime,
           fileBase64: base64,
-          altText: altText.trim() || "Fasilitas manufaktur ODE Outsole",
+          altText: altText.trim() || "Fasilitas manufaktur Outsole by ODE",
           eyebrow: eyebrow.trim(),
           title: title.trim(),
           description: description.trim(),
@@ -2423,7 +2423,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
     try {
       await updateInteriorHeroMetadata({
         data: {
-          altText: altText.trim() || "Fasilitas manufaktur ODE Outsole",
+          altText: altText.trim() || "Fasilitas manufaktur Outsole by ODE",
           eyebrow: eyebrow.trim(),
           title: title.trim(),
           description: description.trim(),
@@ -2784,7 +2784,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                       textShadow: "0 1px 3px rgba(0,0,0,0.8)",
                     }}
                   >
-                    Alt: &ldquo;{initialConfig.altText || "ODE Outsole manufacturing facility"}&rdquo;
+                    Alt: &ldquo;{initialConfig.altText || "Outsole by ODE manufacturing facility"}&rdquo;
                   </p>
                 </div>
                 <span
@@ -3183,7 +3183,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                 value={altText}
                 onChange={(e) => setAltText(e.target.value)}
                 disabled={isSavingMeta || isUploading}
-                placeholder="Fasilitas manufaktur ODE Outsole"
+                placeholder="Fasilitas manufaktur Outsole by ODE"
                 maxLength={300}
               />
               <span className="admin-field-hint">
@@ -3210,7 +3210,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                   value={eyebrow}
                   onChange={(e) => setEyebrow(e.target.value)}
                   disabled={isSavingMeta || isUploading}
-                  placeholder="ODE Outsole"
+                  placeholder="Outsole by ODE"
                   maxLength={100}
                 />
               </div>
@@ -3296,7 +3296,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                 value={altTextEn}
                 onChange={(e) => setAltTextEn(e.target.value)}
                 disabled={isSavingMeta || isUploading}
-                placeholder="ODE Outsole manufacturing facility"
+                placeholder="Outsole by ODE manufacturing facility"
                 maxLength={300}
               />
               <span className="admin-field-hint">
@@ -3323,7 +3323,7 @@ function InteriorHeroContentCard({ entry, onSaved }: InteriorHeroContentCardProp
                   value={eyebrowEn}
                   onChange={(e) => setEyebrowEn(e.target.value)}
                   disabled={isSavingMeta || isUploading}
-                  placeholder="ODE Outsole"
+                  placeholder="Outsole by ODE"
                   maxLength={100}
                 />
               </div>

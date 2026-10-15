@@ -37,7 +37,7 @@ function AdminLayout() {
       <aside className="admin-sidebar">
         <div className="admin-logo">
           <span className="admin-logo-mark">ODE</span>
-          <span className="admin-logo-text">ODE Outsole</span>
+          <span className="admin-logo-text">Outsole by ODE</span>
         </div>
         <nav className="admin-nav">
           <Link

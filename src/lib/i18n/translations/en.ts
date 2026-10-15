@@ -250,7 +250,7 @@ export const en: I18nDictionary = {
   },
   contact: {
     eyebrow: "Get in Touch · Facilities & Direct Sales",
-    defaultTitle: "Contact ODE Outsole",
+    defaultTitle: "Contact Outsole by ODE",
     defaultDescription: "Connect directly with our rubber compounding engineers, tooling mold specialists, and commercial sales team for OEM programs and sample dispatch.",
     cardHours: {
       monFri: "Monday – Friday:",
@@ -274,7 +274,7 @@ export const en: I18nDictionary = {
     companyAddress: "Jl. Kidemang Singomenggolo no.20 Buduran Sidoarjo",
     explore: "Explore",
     sampling: "Sampling",
-    copyright: "© {year} ODE Outsole",
+    copyright: "© {year} Outsole by ODE",
     credits: "Created by Thor",
   },
   errors: {

@@ -250,7 +250,7 @@ export const id: I18nDictionary = {
   },
   contact: {
     eyebrow: "Hubungi Kami · Fasilitas Pabrik & Penjualan Langsung",
-    defaultTitle: "Hubungi ODE Outsole",
+    defaultTitle: "Hubungi Outsole by ODE",
     defaultDescription: "Hubungi langsung para insinyur kompon karet, spesialis cetakan mold, dan tim penjualan komersial kami untuk program OEM dan pengiriman sampel fisik.",
     cardHours: {
       monFri: "Senin – Jumat:",
@@ -274,7 +274,7 @@ export const id: I18nDictionary = {
     companyAddress: "Jl. Kidemang Singomenggolo no.20 Buduran Sidoarjo",
     explore: "Jelajahi",
     sampling: "Pengajuan Sampel",
-    copyright: "© {year} ODE Outsole",
+    copyright: "© {year} Outsole by ODE",
     credits: "Dikembangkan oleh Thor",
   },
   errors: {

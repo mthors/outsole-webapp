@@ -30,7 +30,7 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-border/70">
         <div className="shell flex flex-col gap-2 py-5 sm:flex-row sm:justify-between">
-          <p className="label-tech">© {new Date().getFullYear()} ODE Outsole</p>
+          <p className="label-tech">© {new Date().getFullYear()} Outsole by ODE</p>
           <p className="label-tech">{dict.footer.credits}</p>
         </div>
       </div>

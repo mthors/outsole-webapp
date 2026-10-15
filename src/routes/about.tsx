@@ -31,13 +31,13 @@ const factoryGalleryQuery = queryOptions({
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About Us — ODE Outsole | Rubber Outsole Engineering & Manufacturing" },
+      { title: "About Us — Outsole by ODE | Rubber Outsole Engineering & Manufacturing" },
       {
         name: "description",
         content:
-          "ODE Outsole specializes in high-performance rubber outsole engineering, precision compounding, and volume manufacturing for footwear brands.",
+          "Outsole by ODE specializes in high-performance rubber outsole engineering, precision compounding, and volume manufacturing for footwear brands.",
       },
-      { property: "og:title", content: "About Us — ODE Outsole" },
+      { property: "og:title", content: "About Us — Outsole by ODE" },
       {
         property: "og:description",
         content:

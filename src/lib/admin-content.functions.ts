@@ -323,11 +323,11 @@ export const uploadInteriorHeroImage = createServerFn({ method: "POST" })
           errorMap: () => ({ message: "Only JPG, PNG, and WebP images are allowed" }),
         }),
         fileBase64: z.string().min(1, "Image data is required"),
-        altText: z.string().trim().max(300, "Alt text must be 300 characters or fewer").default("Fasilitas manufaktur ODE Outsole"),
+        altText: z.string().trim().max(300, "Alt text must be 300 characters or fewer").default("Fasilitas manufaktur Outsole by ODE"),
         eyebrow: z.string().trim().max(100).default(""),
         title: z.string().trim().max(200).default(""),
         description: z.string().trim().max(500).default(""),
-        altText_en: z.string().trim().max(300).default("ODE Outsole manufacturing facility").optional(),
+        altText_en: z.string().trim().max(300).default("Outsole by ODE manufacturing facility").optional(),
         eyebrow_en: z.string().trim().max(100).default("").optional(),
         title_en: z.string().trim().max(200).default("").optional(),
         description_en: z.string().trim().max(500).default("").optional(),
@@ -413,7 +413,7 @@ export const uploadInteriorHeroImage = createServerFn({ method: "POST" })
 
     const newContentEn = JSON.stringify({
       imagePath: storagePath,
-      altText: data.altText_en ?? prevConfigEn.altText ?? "ODE Outsole manufacturing facility",
+      altText: data.altText_en ?? prevConfigEn.altText ?? "Outsole by ODE manufacturing facility",
       eyebrow: data.eyebrow_en ?? prevConfigEn.eyebrow ?? "",
       title: data.title_en ?? prevConfigEn.title ?? "",
       description: data.description_en ?? prevConfigEn.description ?? "",
@@ -474,7 +474,7 @@ export const uploadInteriorHeroImage = createServerFn({ method: "POST" })
       },
       config_en: {
         imagePath: storagePath,
-        altText: data.altText_en ?? prevConfigEn.altText ?? "ODE Outsole manufacturing facility",
+        altText: data.altText_en ?? prevConfigEn.altText ?? "Outsole by ODE manufacturing facility",
         eyebrow: data.eyebrow_en ?? prevConfigEn.eyebrow ?? "",
         title: data.title_en ?? prevConfigEn.title ?? "",
         description: data.description_en ?? prevConfigEn.description ?? "",
@@ -490,11 +490,11 @@ export const updateInteriorHeroMetadata = createServerFn({ method: "POST" })
   .validator((data: unknown) =>
     z
       .object({
-        altText: z.string().trim().max(300).default("Fasilitas manufaktur ODE Outsole"),
+        altText: z.string().trim().max(300).default("Fasilitas manufaktur Outsole by ODE"),
         eyebrow: z.string().trim().max(100).default(""),
         title: z.string().trim().max(200).default(""),
         description: z.string().trim().max(500).default(""),
-        altText_en: z.string().trim().max(300).default("ODE Outsole manufacturing facility").optional(),
+        altText_en: z.string().trim().max(300).default("Outsole by ODE manufacturing facility").optional(),
         eyebrow_en: z.string().trim().max(100).default("").optional(),
         title_en: z.string().trim().max(200).default("").optional(),
         description_en: z.string().trim().max(500).default("").optional(),
@@ -529,7 +529,7 @@ export const updateInteriorHeroMetadata = createServerFn({ method: "POST" })
 
     const mergedEn = JSON.stringify({
       imagePath: sharedImagePath,
-      altText: data.altText_en ?? currentEn.altText ?? "ODE Outsole manufacturing facility",
+      altText: data.altText_en ?? currentEn.altText ?? "Outsole by ODE manufacturing facility",
       eyebrow: data.eyebrow_en ?? currentEn.eyebrow ?? "",
       title: data.title_en ?? currentEn.title ?? "",
       description: data.description_en ?? currentEn.description ?? "",

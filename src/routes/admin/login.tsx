@@ -75,7 +75,7 @@ function AdminLogin() {
         <div className="admin-login-brand">
           <span className="admin-login-logo-mark">ODE</span>
           <h1 className="admin-login-title">Admin Sign In</h1>
-          <p className="admin-login-subtitle">ODE Outsole · Management Portal</p>
+          <p className="admin-login-subtitle">Outsole by ODE · Management Portal</p>
         </div>
 
         <form id="admin-login-form" className="admin-login-form" onSubmit={handleSubmit} noValidate>
