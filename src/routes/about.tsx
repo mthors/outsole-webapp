@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { getSiteContent, getInteriorHero } from "@/lib/public-catalog.functions";
 import { getPublicGallery } from "@/lib/gallery.functions";
+import { getPublicFactoryInfoRows } from "@/lib/factory-info.functions";
 import { InteriorHero } from "@/components/site/InteriorHero";
 import { FactoryGallery } from "@/components/gallery/FactoryGallery";
 import { useI18n } from "@/lib/i18n";
@@ -28,6 +29,13 @@ const factoryGalleryQuery = queryOptions({
   refetchOnMount: false,
 });
 
+const factoryInfoRowsQuery = queryOptions({
+  queryKey: ["factory-info-rows"],
+  queryFn: () => getPublicFactoryInfoRows(),
+  staleTime: 5 * 60 * 1000,
+  refetchOnMount: false,
+});
+
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
@@ -49,6 +57,7 @@ export const Route = createFileRoute("/about")({
     context.queryClient.ensureQueryData(aboutContentQuery),
     context.queryClient.ensureQueryData(interiorHeroQuery),
     context.queryClient.ensureQueryData(factoryGalleryQuery),
+    context.queryClient.ensureQueryData(factoryInfoRowsQuery),
   ]),
   component: AboutPage,
   pendingComponent: AboutPending,
@@ -88,6 +97,7 @@ function AboutPage() {
   const { data } = useSuspenseQuery(aboutContentQuery);
   const { data: hero } = useSuspenseQuery(interiorHeroQuery);
   const { data: galleryData } = useSuspenseQuery(factoryGalleryQuery);
+  const { data: infoRowsData } = useSuspenseQuery(factoryInfoRowsQuery);
   const contentMap = Object.fromEntries(
     data.content.map((item) => [item.content_key, item]),
   );
@@ -145,7 +155,7 @@ function AboutPage() {
       </section>
 
       {/* Factory Gallery Section (Replaces OEM & ODM sections) */}
-      <FactoryGallery items={galleryData.items} />
+      <FactoryGallery items={galleryData.items} infoRows={infoRowsData.rows} />
 
       {/* Program Call-to-Action */}
       <section className="bg-primary text-primary-foreground">

@@ -229,6 +229,21 @@ export interface I18nDictionary {
       title: string;
       intro: string;
       placeholderNotice: string;
+      infoRows: {
+        placeholderBadge: string;
+        row1: {
+          tag: string;
+          title: string;
+          desc: string;
+          imageAlt: string;
+        };
+        row2: {
+          tag: string;
+          title: string;
+          desc: string;
+          imageAlt: string;
+        };
+      };
       categories: {
         all: string;
         factory_office: string;

@@ -224,6 +224,21 @@ export const en: I18nDictionary = {
       title: "ODE Manufacturing Facilities & Engineering Center",
       intro: "From compound rheology testing and multi-cavity vulcanizing presses to standardized raw material warehousing — take a look inside our high-precision footwear outsole manufacturing operations.",
       placeholderNotice: "ODE facility architectural schematics (official factory site photographs are being curated by our content team).",
+      infoRows: {
+        placeholderBadge: "Facility Preview",
+        row1: {
+          tag: "01 / Machinery & Equipment",
+          title: "Outsole Pressing & Vulcanization Lines",
+          desc: "Multi-cavity hydraulic press lines operated under precise temperature regulation, ensuring uniform rubber compound curing and dimensional consistency across every outsole moulding.",
+          imageAlt: "Schematic of ODE outsole vulcanization press machinery and production line",
+        },
+        row2: {
+          tag: "02 / Process & Compound Engineering",
+          title: "Compound Formulation & Material Processing",
+          desc: "Standardized rubber raw material compounding, elasticity and abrasion tuning, and continuous rheological monitoring prior to high-volume outsole moulding cycles.",
+          imageAlt: "Process flow diagram of ODE outsole compound mixing and moulding operations",
+        },
+      },
       categories: {
         all: "All Facilities",
         factory_office: "Factory & Office",

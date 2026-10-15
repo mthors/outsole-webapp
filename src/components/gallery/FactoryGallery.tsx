@@ -8,10 +8,13 @@ import {
   getLocalizedCategoryName,
 } from "@/lib/gallery-types";
 import { GalleryLightbox } from "./GalleryLightbox";
+import { FactoryInfoRows } from "./FactoryInfoRows";
+import type { FactoryInfoRowItem } from "@/lib/factory-info-types";
 import { useI18n } from "@/lib/i18n";
 
 interface FactoryGalleryProps {
   items: GalleryItem[];
+  infoRows?: FactoryInfoRowItem[] | undefined;
 }
 
 interface TransitionState {
@@ -23,7 +26,7 @@ interface TransitionState {
 
 const SLIDE_DURATION_MS = 5000;
 
-export function FactoryGallery({ items }: FactoryGalleryProps) {
+export function FactoryGallery({ items, infoRows }: FactoryGalleryProps) {
   const { dict, locale } = useI18n();
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -309,6 +312,9 @@ export function FactoryGallery({ items }: FactoryGalleryProps) {
             </div>
           )}
         </div>
+
+        {/* Factory Information Rows (2 vertically stacked horizontal rows) */}
+        <FactoryInfoRows rows={infoRows} />
 
         {/* Empty State */}
         {items.length === 0 || !currentItem ? (
