@@ -31,7 +31,10 @@ export const createOutsoleSchema = z
       .trim()
       .min(2, "Slug must be at least 2 characters")
       .max(150)
-      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be lowercase alphanumeric with hyphens (e.g. trail-grip-x1)"),
+      .regex(
+        /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+        "Slug must be lowercase alphanumeric with hyphens (e.g. trail-grip-x1)",
+      ),
     model_number: z.string().trim().min(2, "Model number / SKU is required").max(50),
     description: z.string().trim().max(5000).optional().nullable(),
     status: z.enum(["draft", "active", "archived"]).default("draft"),
@@ -118,12 +121,10 @@ export const listAdminOutsoles = createServerFn({ method: "GET" }).handler(async
 
   const outsoles: AdminOutsoleListItem[] = (rows ?? []).map((r) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const cats = ((r.outsole_categories ?? []) as any[])
-      .map((c) => c.categories)
-      .filter(Boolean);
+    const cats = ((r.outsole_categories ?? []) as any[]).map((c) => c.categories).filter(Boolean);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const imgs = ((r.outsole_images ?? []) as any[]);
+    const imgs = (r.outsole_images ?? []) as any[];
     const prim = imgs.find((i) => i.is_primary) ?? imgs[0];
 
     return {
@@ -143,7 +144,7 @@ export const listAdminOutsoles = createServerFn({ method: "GET" }).handler(async
       created_at: r.created_at,
       updated_at: r.updated_at,
       categories: cats,
-      primaryImageUrl: prim?.file_path ? urlMap.get(prim.file_path) ?? null : null,
+      primaryImageUrl: prim?.file_path ? (urlMap.get(prim.file_path) ?? null) : null,
       primaryImageAlt: prim?.alt_text ?? null,
     };
   });
@@ -182,7 +183,9 @@ export const createAdminOutsole = createServerFn({ method: "POST" })
       .maybeSingle();
 
     if (existingSlug) {
-      throw new Error(`A product with the slug "${data.slug}" already exists. Please choose a unique slug.`);
+      throw new Error(
+        `A product with the slug "${data.slug}" already exists. Please choose a unique slug.`,
+      );
     }
 
     // 2. Uniqueness check for model_number / SKU
@@ -193,7 +196,9 @@ export const createAdminOutsole = createServerFn({ method: "POST" })
       .maybeSingle();
 
     if (existingModel) {
-      throw new Error(`A product with the SKU / Model Number "${data.model_number}" already exists.`);
+      throw new Error(
+        `A product with the SKU / Model Number "${data.model_number}" already exists.`,
+      );
     }
 
     // 3. Insert primary product record
@@ -217,7 +222,9 @@ export const createAdminOutsole = createServerFn({ method: "POST" })
       .single();
 
     if (insertError || !newOutsole) {
-      throw new Error(`Failed to create product: ${insertError?.message ?? "Unknown database error"}`);
+      throw new Error(
+        `Failed to create product: ${insertError?.message ?? "Unknown database error"}`,
+      );
     }
 
     // 4. Insert junction records with deduplication
@@ -309,7 +316,10 @@ export const updateOutsoleSchema = z
       .trim()
       .min(2, "Slug must be at least 2 characters")
       .max(150)
-      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be lowercase alphanumeric with hyphens (e.g. trail-grip-x1)"),
+      .regex(
+        /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+        "Slug must be lowercase alphanumeric with hyphens (e.g. trail-grip-x1)",
+      ),
     model_number: z.string().trim().min(2, "Model number / SKU is required").max(50),
     description: z.string().trim().max(5000).optional().nullable(),
     status: z.enum(["draft", "active", "archived"]).default("draft"),
@@ -343,9 +353,7 @@ export type UpdateOutsoleInput = z.infer<typeof updateOutsoleSchema>;
  * Server function: Fetches a single outsole by immutable UUID with full taxonomy relationships and signed images.
  */
 export const getAdminOutsole = createServerFn({ method: "GET" })
-  .validator((data: unknown) =>
-    z.object({ id: z.string().uuid("Invalid product ID") }).parse(data),
-  )
+  .validator((data: unknown) => z.object({ id: z.string().uuid("Invalid product ID") }).parse(data))
   .handler(async ({ data }) => {
     const { assertStaffRole } = await import("./admin-auth.server");
     await assertStaffRole();
@@ -376,14 +384,10 @@ export const getAdminOutsole = createServerFn({ method: "GET" })
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const cats = ((row.outsole_categories ?? []) as any[])
-      .map((c) => c.categories)
-      .filter(Boolean);
+    const cats = ((row.outsole_categories ?? []) as any[]).map((c) => c.categories).filter(Boolean);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const mats = ((row.outsole_materials ?? []) as any[])
-      .map((m) => m.materials)
-      .filter(Boolean);
+    const mats = ((row.outsole_materials ?? []) as any[]).map((m) => m.materials).filter(Boolean);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const tracs = ((row.outsole_traction_types ?? []) as any[])
@@ -428,7 +432,7 @@ export const getAdminOutsole = createServerFn({ method: "GET" })
       alt_text: img.alt_text ?? null,
       is_primary: Boolean(img.is_primary),
       display_order: img.display_order ?? 0,
-      url: img.file_path ? urlMap.get(img.file_path) ?? null : null,
+      url: img.file_path ? (urlMap.get(img.file_path) ?? null) : null,
     }));
 
     const outsole: AdminOutsoleDetail = {
@@ -500,7 +504,9 @@ async function syncJunctionTable(params: {
       .in(idColumn as any, toRemove);
 
     if (delError) {
-      throw new Error(`Failed to remove deselected associations from ${tableName}: ${delError.message}`);
+      throw new Error(
+        `Failed to remove deselected associations from ${tableName}: ${delError.message}`,
+      );
     }
   }
 
@@ -553,7 +559,9 @@ export const updateAdminOutsole = createServerFn({ method: "POST" })
       .maybeSingle();
 
     if (existingSlug) {
-      throw new Error(`A product with the slug "${data.slug}" already exists. Please choose a unique slug.`);
+      throw new Error(
+        `A product with the slug "${data.slug}" already exists. Please choose a unique slug.`,
+      );
     }
 
     // 3. Uniqueness check for model_number / SKU (excluding current product)
@@ -565,7 +573,9 @@ export const updateAdminOutsole = createServerFn({ method: "POST" })
       .maybeSingle();
 
     if (existingModel) {
-      throw new Error(`A product with the SKU / Model Number "${data.model_number}" already exists.`);
+      throw new Error(
+        `A product with the SKU / Model Number "${data.model_number}" already exists.`,
+      );
     }
 
     // 4. Update primary product record
@@ -592,12 +602,21 @@ export const updateAdminOutsole = createServerFn({ method: "POST" })
 
     if (updateError || !updatedOutsole) {
       if (updateError?.code === "23505" || updateError?.message.includes("outsoles_slug_key")) {
-        throw new Error(`A product with the slug "${data.slug}" already exists. Please choose a unique slug.`);
+        throw new Error(
+          `A product with the slug "${data.slug}" already exists. Please choose a unique slug.`,
+        );
       }
-      if (updateError?.code === "23505" || updateError?.message.includes("outsoles_model_number_key")) {
-        throw new Error(`A product with the SKU / Model Number "${data.model_number}" already exists.`);
+      if (
+        updateError?.code === "23505" ||
+        updateError?.message.includes("outsoles_model_number_key")
+      ) {
+        throw new Error(
+          `A product with the SKU / Model Number "${data.model_number}" already exists.`,
+        );
       }
-      throw new Error(`Failed to update product: ${updateError?.message ?? "Unknown database error"}`);
+      throw new Error(
+        `Failed to update product: ${updateError?.message ?? "Unknown database error"}`,
+      );
     }
 
     // 5. Synchronize taxonomy relationships
@@ -639,9 +658,7 @@ export const updateAdminOutsole = createServerFn({ method: "POST" })
  * taxonomy junctions, image metadata, or Storage objects.
  */
 export const archiveAdminOutsole = createServerFn({ method: "POST" })
-  .validator((data: unknown) =>
-    z.object({ id: z.string().uuid("Invalid product ID") }).parse(data),
-  )
+  .validator((data: unknown) => z.object({ id: z.string().uuid("Invalid product ID") }).parse(data))
   .handler(async ({ data }) => {
     const { assertStaffRole } = await import("./admin-auth.server");
     await assertStaffRole();
@@ -858,9 +875,7 @@ export const reorderOutsoleImages = createServerFn({ method: "POST" })
     // 4. Build reordered array
     const reordered = [...allImgs];
     // Non-null assertions are safe: swapIdx and targetIdx are bounds-checked above
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const temp = reordered[swapIdx]!;
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     reordered[swapIdx] = reordered[targetIdx]!;
     reordered[targetIdx] = temp;
 
@@ -1237,3 +1252,521 @@ export const uploadOutsoleImage = createServerFn({ method: "POST" })
     }
   });
 
+// ─────────────────────────────────────────────────────────────────────────────
+// BULK OPERATIONS & PERMANENT DELETION
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Server function: Restores an archived outsole product to 'active' status.
+ */
+export const restoreAdminOutsole = createServerFn({ method: "POST" })
+  .validator((data: unknown) => z.object({ id: z.string().uuid("Invalid product ID") }).parse(data))
+  .handler(async ({ data }) => {
+    const { assertStaffRole } = await import("./admin-auth.server");
+    await assertStaffRole();
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // 1. Verify product exists
+    const { data: existing, error: lookupError } = await supabaseAdmin
+      .from("outsoles")
+      .select("id, name, status, model_number")
+      .eq("id", data.id)
+      .maybeSingle();
+
+    if (lookupError) {
+      throw new Error("Failed to verify product existence");
+    }
+
+    if (!existing) {
+      throw new Error("Product not found");
+    }
+
+    if (existing.status === "active") {
+      return { success: true, id: existing.id, name: existing.name, alreadyActive: true };
+    }
+
+    // 2. Update status to active
+    const { data: updated, error: updateError } = await supabaseAdmin
+      .from("outsoles")
+      .update({ status: "active" })
+      .eq("id", data.id)
+      .select("id, name, slug, model_number")
+      .single();
+
+    if (updateError || !updated) {
+      throw new Error("Failed to restore product. Please try again.");
+    }
+
+    return { success: true, id: updated.id, name: updated.name, alreadyActive: false };
+  });
+
+/**
+ * Server function: Bulk archives multiple outsoles by ID.
+ * Skips products that are already archived and reports them clearly.
+ */
+export const bulkArchiveAdminOutsoles = createServerFn({ method: "POST" })
+  .validator((data: unknown) =>
+    z
+      .object({
+        ids: z
+          .array(z.string().uuid("Invalid product ID"))
+          .min(1, "At least one product ID must be provided"),
+      })
+      .parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { assertStaffRole } = await import("./admin-auth.server");
+    await assertStaffRole();
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // M-2: Deduplicate bulk input IDs to prevent skewed reporting
+    const uniqueIds = Array.from(new Set(data.ids));
+
+    const { data: rows, error: lookupError } = await supabaseAdmin
+      .from("outsoles")
+      .select("id, name, model_number, status")
+      .in("id", uniqueIds);
+
+    if (lookupError) {
+      throw new Error(`Failed to query products: ${lookupError.message}`);
+    }
+
+    const foundMap = new Map((rows ?? []).map((r) => [r.id, r]));
+    const eligible: Array<{ id: string; name: string; model_number: string }> = [];
+    const skipped: Array<{ id: string; name: string; model_number: string; reason: string }> = [];
+    const missing: Array<{ id: string; reason: string }> = [];
+
+    for (const id of uniqueIds) {
+      const item = foundMap.get(id);
+      if (!item) {
+        missing.push({ id, reason: "Product not found" });
+      } else if (item.status === "archived") {
+        skipped.push({
+          id: item.id,
+          name: item.name,
+          model_number: item.model_number,
+          reason: "Already archived",
+        });
+      } else {
+        eligible.push({ id: item.id, name: item.name, model_number: item.model_number });
+      }
+    }
+
+    let archived: Array<{ id: string; name: string; model_number: string }> = [];
+
+    if (eligible.length > 0) {
+      const eligibleIds = eligible.map((e) => e.id);
+      const { data: updatedRows, error: updateError } = await supabaseAdmin
+        .from("outsoles")
+        .update({ status: "archived" })
+        .in("id", eligibleIds)
+        .select("id, name, model_number");
+
+      if (updateError) {
+        throw new Error(`Bulk archive failed: ${updateError.message}`);
+      }
+      archived = updatedRows ?? [];
+    }
+
+    return {
+      success: true,
+      archivedCount: archived.length,
+      skippedCount: skipped.length,
+      missingCount: missing.length,
+      archived,
+      skipped,
+      missing,
+    };
+  });
+
+/**
+ * Server function: Bulk restores multiple outsoles by ID to 'active' status.
+ * Skips products that are already active and reports them clearly.
+ */
+export const bulkRestoreAdminOutsoles = createServerFn({ method: "POST" })
+  .validator((data: unknown) =>
+    z
+      .object({
+        ids: z
+          .array(z.string().uuid("Invalid product ID"))
+          .min(1, "At least one product ID must be provided"),
+      })
+      .parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { assertStaffRole } = await import("./admin-auth.server");
+    await assertStaffRole();
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // M-2: Deduplicate bulk input IDs to prevent skewed reporting
+    const uniqueIds = Array.from(new Set(data.ids));
+
+    const { data: rows, error: lookupError } = await supabaseAdmin
+      .from("outsoles")
+      .select("id, name, model_number, status")
+      .in("id", uniqueIds);
+
+    if (lookupError) {
+      throw new Error(`Failed to query products: ${lookupError.message}`);
+    }
+
+    const foundMap = new Map((rows ?? []).map((r) => [r.id, r]));
+    const eligible: Array<{ id: string; name: string; model_number: string }> = [];
+    const skipped: Array<{ id: string; name: string; model_number: string; reason: string }> = [];
+    const missing: Array<{ id: string; reason: string }> = [];
+
+    for (const id of uniqueIds) {
+      const item = foundMap.get(id);
+      if (!item) {
+        missing.push({ id, reason: "Product not found" });
+      } else if (item.status === "active") {
+        skipped.push({
+          id: item.id,
+          name: item.name,
+          model_number: item.model_number,
+          reason: "Already active",
+        });
+      } else {
+        eligible.push({ id: item.id, name: item.name, model_number: item.model_number });
+      }
+    }
+
+    let restored: Array<{ id: string; name: string; model_number: string }> = [];
+
+    if (eligible.length > 0) {
+      const eligibleIds = eligible.map((e) => e.id);
+      const { data: updatedRows, error: updateError } = await supabaseAdmin
+        .from("outsoles")
+        .update({ status: "active" })
+        .in("id", eligibleIds)
+        .select("id, name, model_number");
+
+      if (updateError) {
+        throw new Error(`Bulk restore failed: ${updateError.message}`);
+      }
+      restored = updatedRows ?? [];
+    }
+
+    return {
+      success: true,
+      restoredCount: restored.length,
+      skippedCount: skipped.length,
+      missingCount: missing.length,
+      restored,
+      skipped,
+      missing,
+    };
+  });
+
+/**
+ * Internal core helper to execute permanent deletion of verified archived products.
+ * Guarantees:
+ * 1. Only archived products are deleted. Non-archived products are rejected before any write.
+ * 2. Database deletion (DELETE ... WHERE id IN (...) AND status = 'archived') determines the exact set of confirmed-deleted IDs.
+ * 3. Never deletes Storage files belonging to products that still exist in the database (H-1).
+ * 4. Fails closed on reference queries: any query failure skips Storage cleanup for candidate paths and surfaces an explicit warning (H-2).
+ * 5. Re-checks surviving references after database deletion across outsole_images, factory_gallery, and factory_info_rows.
+ * 6. Concurrency limitation note: While Postgres cascades and reference checks are performed strictly, there is an unavoidable non-transactional gap between Postgres DELETE and Supabase Storage HTTP API calls. If an image upload concurrently writes to an identical path during this window, atomicity across both systems cannot be guaranteed.
+ * 7. Sample inquiries have ON DELETE SET NULL and are preserved in DB.
+ * 8. Returns accurate per-product success/failure and cleanup warning results.
+ */
+export async function executePermanentDeletion(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabaseAdmin: any,
+  products: Array<{ id: string; name: string; model_number: string; status: string }>,
+) {
+  const eligibleIds: string[] = [];
+  const rejected: Array<{
+    id: string;
+    name?: string | undefined;
+    model_number?: string | undefined;
+    reason: string;
+  }> = [];
+
+  for (const p of products) {
+    if (p.status !== "archived") {
+      rejected.push({
+        id: p.id,
+        name: p.name,
+        model_number: p.model_number,
+        reason: `Cannot permanently delete product with status "${p.status}". Product must be archived first.`,
+      });
+    } else {
+      eligibleIds.push(p.id);
+    }
+  }
+
+  if (eligibleIds.length === 0) {
+    return {
+      deleted: [],
+      rejected,
+      storageCleanupErrors: [],
+      deletedImagesCount: 0,
+    };
+  }
+
+  // 1. Gather candidate image file_paths for eligible products BEFORE deleting database rows
+  // (because once outsoles are deleted, cascade delete removes their outsole_images rows)
+  const { data: imgRows, error: imgLookupErr } = await supabaseAdmin
+    .from("outsole_images")
+    .select("id, outsole_id, file_path")
+    .in("outsole_id", eligibleIds);
+
+  if (imgLookupErr) {
+    throw new Error(`Failed to inspect product images prior to deletion: ${imgLookupErr.message}`);
+  }
+
+  const candidateImages = (imgRows ?? []) as Array<{
+    id: string;
+    outsole_id: string;
+    file_path: string;
+  }>;
+
+  // 2. Delete from outsoles database table.
+  // Enforce status = 'archived' in the delete query itself as an extra layer of defense!
+  const { data: deletedRows, error: deleteErr } = await supabaseAdmin
+    .from("outsoles")
+    .delete()
+    .in("id", eligibleIds)
+    .eq("status", "archived")
+    .select("id, name, model_number");
+
+  if (deleteErr) {
+    throw new Error(`Database permanent deletion failed: ${deleteErr.message}`);
+  }
+
+  const actuallyDeleted = (deletedRows ?? []) as Array<{
+    id: string;
+    name: string;
+    model_number: string;
+  }>;
+  const actuallyDeletedIdSet = new Set(actuallyDeleted.map((r) => r.id));
+
+  // Any eligible ID that was not returned by the DELETE query was not deleted (e.g. concurrent status change)
+  for (const id of eligibleIds) {
+    if (!actuallyDeletedIdSet.has(id)) {
+      const orig = products.find((p) => p.id === id);
+      rejected.push({
+        id,
+        name: orig?.name,
+        model_number: orig?.model_number,
+        reason:
+          "Product was not deleted from database (status may have changed concurrently or record no longer exists).",
+      });
+    }
+  }
+
+  // H-1: ONLY consider image paths belonging to products that were confirmed deleted!
+  // Products that still exist in the database MUST NOT have their Storage files deleted.
+  const confirmedDeletedImagePaths = Array.from(
+    new Set(
+      candidateImages
+        .filter((i) => actuallyDeletedIdSet.has(i.outsole_id))
+        .map((i) => i.file_path)
+        .filter(Boolean),
+    ),
+  );
+
+  const storageCleanupErrors: string[] = [];
+  let deletedImagesCount = 0;
+
+  if (confirmedDeletedImagePaths.length > 0) {
+    // H-2: Fail-closed shared reference checks immediately after database deletion
+    const sharedPaths = new Set<string>();
+    let referenceCheckFailed = false;
+
+    // Check surviving outsole_images (from products that were NOT deleted)
+    const { data: remainingOutsoleImgs, error: outsoleImgErr } = await supabaseAdmin
+      .from("outsole_images")
+      .select("file_path")
+      .in("file_path", confirmedDeletedImagePaths);
+
+    if (outsoleImgErr) {
+      referenceCheckFailed = true;
+      storageCleanupErrors.push(
+        `Failed to verify surviving outsole image references: ${outsoleImgErr.message}. Skipped cleanup for affected storage files.`,
+      );
+    } else {
+      for (const oi of remainingOutsoleImgs ?? []) {
+        if (oi.file_path) sharedPaths.add(oi.file_path);
+      }
+    }
+
+    // Check factory_gallery
+    const { data: fgImgs, error: fgErr } = await supabaseAdmin
+      .from("factory_gallery")
+      .select("image_path")
+      .in("image_path", confirmedDeletedImagePaths);
+
+    if (fgErr) {
+      referenceCheckFailed = true;
+      storageCleanupErrors.push(
+        `Failed to verify factory gallery image references: ${fgErr.message}. Skipped cleanup for affected storage files.`,
+      );
+    } else {
+      for (const fg of fgImgs ?? []) {
+        if (fg.image_path) sharedPaths.add(fg.image_path);
+      }
+    }
+
+    // Check factory_info_rows
+    const { data: firImgs, error: firErr } = await supabaseAdmin
+      .from("factory_info_rows")
+      .select("image_path")
+      .in("image_path", confirmedDeletedImagePaths);
+
+    if (firErr) {
+      referenceCheckFailed = true;
+      storageCleanupErrors.push(
+        `Failed to verify factory info image references: ${firErr.message}. Skipped cleanup for affected storage files.`,
+      );
+    } else {
+      for (const fir of firImgs ?? []) {
+        if (fir.image_path) sharedPaths.add(fir.image_path);
+      }
+    }
+
+    // Fail-closed: If ANY reference check failed, we do NOT perform Storage removal for any candidates to prevent accidental data loss.
+    if (!referenceCheckFailed) {
+      const safeStoragePaths = confirmedDeletedImagePaths.filter((path) => !sharedPaths.has(path));
+
+      if (safeStoragePaths.length > 0) {
+        const { error: storageRemoveErr } = await supabaseAdmin.storage
+          .from("outsole-images")
+          .remove(safeStoragePaths);
+
+        if (storageRemoveErr) {
+          storageCleanupErrors.push(
+            `Storage cleanup failed for ${safeStoragePaths.length} file(s): ${storageRemoveErr.message}. Paths requiring manual administrator cleanup: ${safeStoragePaths.join(", ")}`,
+          );
+        } else {
+          deletedImagesCount = safeStoragePaths.length;
+        }
+      }
+    } else {
+      storageCleanupErrors.push(
+        `Reference check failed. Skipped Storage cleanup for ${confirmedDeletedImagePaths.length} candidate file(s) to avoid deleting shared assets. Paths: ${confirmedDeletedImagePaths.join(", ")}`,
+      );
+    }
+  }
+
+  return {
+    deleted: actuallyDeleted,
+    rejected,
+    storageCleanupErrors,
+    deletedImagesCount,
+  };
+}
+
+/**
+ * Server function: Permanently deletes a single archived product.
+ * Validates staff authorization and rejects any active or draft products.
+ */
+export const deleteAdminOutsole = createServerFn({ method: "POST" })
+  .validator((data: unknown) => z.object({ id: z.string().uuid("Invalid product ID") }).parse(data))
+  .handler(async ({ data }) => {
+    const { assertStaffRole } = await import("./admin-auth.server");
+    await assertStaffRole();
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // 1. Verify existence and archived status
+    const { data: product, error: lookupErr } = await supabaseAdmin
+      .from("outsoles")
+      .select("id, name, model_number, status")
+      .eq("id", data.id)
+      .maybeSingle();
+
+    if (lookupErr) {
+      throw new Error(`Failed to query product: ${lookupErr.message}`);
+    }
+
+    if (!product) {
+      throw new Error("Product not found");
+    }
+
+    if (product.status !== "archived") {
+      throw new Error(
+        `Cannot permanently delete product "${product.name}". Only archived products can be permanently deleted. (Current status: "${product.status}")`,
+      );
+    }
+
+    const result = await executePermanentDeletion(supabaseAdmin, [product]);
+
+    if (result.deleted.length === 0) {
+      const failureReason =
+        result.rejected[0]?.reason ?? "Permanent deletion could not be completed.";
+      throw new Error(failureReason);
+    }
+
+    return {
+      success: true,
+      id: product.id,
+      name: product.name,
+      model_number: product.model_number,
+      deletedImagesCount: result.deletedImagesCount,
+      storageCleanupErrors: result.storageCleanupErrors,
+    };
+  });
+
+/**
+ * Server function: Bulk permanently deletes multiple archived outsoles by ID.
+ * Validates staff authorization and rejects any non-archived products.
+ */
+export const bulkDeleteAdminOutsoles = createServerFn({ method: "POST" })
+  .validator((data: unknown) =>
+    z
+      .object({
+        ids: z
+          .array(z.string().uuid("Invalid product ID"))
+          .min(1, "At least one product ID must be provided"),
+      })
+      .parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { assertStaffRole } = await import("./admin-auth.server");
+    await assertStaffRole();
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // M-2: Deduplicate bulk input IDs to prevent skewed reporting
+    const uniqueIds = Array.from(new Set(data.ids));
+
+    // 1. Fetch matching products
+    const { data: rows, error: lookupErr } = await supabaseAdmin
+      .from("outsoles")
+      .select("id, name, model_number, status")
+      .in("id", uniqueIds);
+
+    if (lookupErr) {
+      throw new Error(`Failed to query products: ${lookupErr.message}`);
+    }
+
+    const foundMap = new Map((rows ?? []).map((r) => [r.id, r]));
+    const products: Array<{ id: string; name: string; model_number: string; status: string }> = [];
+    const missing: Array<{ id: string; reason: string }> = [];
+
+    for (const id of uniqueIds) {
+      const item = foundMap.get(id);
+      if (!item) {
+        missing.push({ id, reason: "Product not found" });
+      } else {
+        products.push(item);
+      }
+    }
+
+    const result = await executePermanentDeletion(supabaseAdmin, products);
+
+    return {
+      success: true,
+      deletedCount: result.deleted.length,
+      rejectedCount: result.rejected.length + missing.length,
+      deleted: result.deleted,
+      rejected: [...result.rejected, ...missing],
+      deletedImagesCount: result.deletedImagesCount,
+      storageCleanupErrors: result.storageCleanupErrors,
+    };
+  });
