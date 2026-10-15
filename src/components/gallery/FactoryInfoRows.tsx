@@ -25,7 +25,13 @@ export function FactoryInfoRows({ rows, blocks, className = "" }: FactoryInfoRow
 
   // 1. If explicit blocks passed (e.g. tests or custom overrides)
   if (blocks && blocks.length > 0) {
-    return <RenderRows items={blocks} className={className} placeholderBadge={dict.about.gallery.infoRows.placeholderBadge} />;
+    return (
+      <RenderRows
+        items={blocks}
+        className={className}
+        placeholderBadge={dict.about.gallery.infoRows.placeholderBadge}
+      />
+    );
   }
 
   // 2. If CMS rows passed (defined array)
@@ -39,7 +45,9 @@ export function FactoryInfoRows({ rows, blocks, className = "" }: FactoryInfoRow
     const items: FactoryInfoBlock[] = publishedRows.map((r) => {
       const isEnglish = locale === "en";
       const isRow1 = r.id === "row_1";
-      const fallbackDefault = isRow1 ? dict.about.gallery.infoRows.row1 : dict.about.gallery.infoRows.row2;
+      const fallbackDefault = isRow1
+        ? dict.about.gallery.infoRows.row1
+        : dict.about.gallery.infoRows.row2;
 
       const title = isEnglish
         ? r.title_en?.trim() || r.title_id?.trim() || fallbackDefault.title
@@ -75,7 +83,13 @@ export function FactoryInfoRows({ rows, blocks, className = "" }: FactoryInfoRow
       };
     });
 
-    return <RenderRows items={items} className={className} placeholderBadge={dict.about.gallery.infoRows.placeholderBadge} />;
+    return (
+      <RenderRows
+        items={items}
+        className={className}
+        placeholderBadge={dict.about.gallery.infoRows.placeholderBadge}
+      />
+    );
   }
 
   // 3. Authentic Default Fallback (when rows prop was omitted / undefined)
@@ -100,7 +114,13 @@ export function FactoryInfoRows({ rows, blocks, className = "" }: FactoryInfoRow
     },
   ];
 
-  return <RenderRows items={defaultBlocks} className={className} placeholderBadge={dict.about.gallery.infoRows.placeholderBadge} />;
+  return (
+    <RenderRows
+      items={defaultBlocks}
+      className={className}
+      placeholderBadge={dict.about.gallery.infoRows.placeholderBadge}
+    />
+  );
 }
 
 function RenderRows({
@@ -116,48 +136,88 @@ function RenderRows({
 
   return (
     <div
-      className={`my-12 flex flex-col gap-10 md:my-16 md:gap-14 ${className}`}
+      className={`my-8 md:my-12 flex flex-col gap-3 md:gap-4 ${className}`}
       data-testid="factory-info-rows"
     >
-      {items.map((item) => (
-        <article
-          key={item.id}
-          className="flex flex-col items-center gap-6 sm:flex-row sm:gap-8 md:gap-10 lg:gap-14"
-          data-testid={`factory-info-row-${item.id === "row_2" || item.id === "production-process" ? "2" : "1"}`}
-        >
-          {/* Image Column (Left) */}
-          <div className="w-full shrink-0 sm:w-[44%] md:w-[42%] lg:w-[40%]">
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-sm border border-border bg-[#1F201C]/5">
-              <img
-                src={item.imageSrc}
-                alt={item.imageAlt}
-                loading="lazy"
-                decoding="async"
-                className="h-full w-full object-cover"
-              />
-              {item.isPlaceholder && (
-                <div className="absolute bottom-2 left-2 flex items-center gap-1 rounded-sm border border-sand/20 bg-charcoal/80 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-sand/90 backdrop-blur-xs">
-                  <Sparkles className="h-3 w-3 text-ochre" />
-                  <span>{placeholderBadge}</span>
-                </div>
-              )}
-            </div>
-          </div>
+      {items.map((item, index) => {
+        // Data-driven deterministic alternating layout:
+        // Even index (row 1): image on left (~50%), text on right (~50%).
+        // Odd index (row 2): text on left (~50%), image on right (~50%).
+        const isImageLeft = index % 2 === 0;
+        const testIdRow =
+          item.id === "row_2" || item.id === "production-process" || index === 1 ? "2" : "1";
 
-          {/* Text Column (Right) */}
-          <div className="flex-1 min-w-0">
-            <p className="data-mono text-xs text-primary uppercase tracking-[0.14em]">
+        const imageElement = (
+          <div
+            key="image-col"
+            className={`relative w-full aspect-[16/10] sm:aspect-[16/9] md:aspect-auto h-full min-h-[220px] sm:min-h-[260px] md:min-h-[340px] lg:min-h-[380px] xl:min-h-[420px] overflow-hidden bg-charcoal/5 ${
+              isImageLeft
+                ? "border-b border-border/60 md:border-b-0 md:border-r"
+                : "border-t border-border/60 md:border-t-0 md:border-l"
+            }`}
+          >
+            <img
+              src={item.imageSrc}
+              alt={item.imageAlt}
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover object-center transition duration-300"
+              onError={(e) => {
+                const isRow1 = item.id === "row_1" || item.id === "machinery-equipment";
+                const fallback = isRow1
+                  ? "/placeholders/machinery-equipment.svg"
+                  : "/placeholders/production-process.svg";
+                if (!e.currentTarget.src.endsWith(fallback)) {
+                  e.currentTarget.src = fallback;
+                }
+              }}
+            />
+            {item.isPlaceholder && (
+              <div className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-sm border border-sand/20 bg-charcoal/85 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-sand/90 backdrop-blur-xs">
+                <Sparkles className="h-3 w-3 text-ochre" />
+                <span>{placeholderBadge}</span>
+              </div>
+            )}
+          </div>
+        );
+
+        const textElement = (
+          <div
+            key="text-col"
+            className="flex flex-col justify-center p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14 min-w-0"
+          >
+            <p className="data-mono text-xs font-semibold uppercase tracking-[0.16em] text-primary">
               {item.tag}
             </p>
-            <h3 className="mt-2 text-lg sm:text-xl md:text-2xl font-semibold uppercase tracking-tight text-foreground">
+            <h3 className="mt-2.5 font-sans text-xl sm:text-2xl lg:text-[1.65rem] font-semibold uppercase tracking-tight text-foreground leading-[1.2]">
               {item.title}
             </h3>
-            <p className="mt-3 text-sm md:text-base leading-relaxed text-muted-foreground">
+            <p className="mt-3.5 text-sm sm:text-base leading-relaxed text-muted-foreground max-w-xl">
               {item.description}
             </p>
           </div>
-        </article>
-      ))}
+        );
+
+        return (
+          <article
+            key={item.id}
+            className="grid grid-cols-1 md:grid-cols-2 items-stretch border border-border/80 bg-background/35 rounded-none overflow-hidden"
+            data-testid={`factory-info-row-${testIdRow}`}
+          >
+            {isImageLeft ? (
+              <>
+                {imageElement}
+                {textElement}
+              </>
+            ) : (
+              <>
+                {textElement}
+                {imageElement}
+              </>
+            )}
+          </article>
+        );
+      })}
     </div>
   );
 }
