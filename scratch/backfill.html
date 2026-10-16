@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Backfill Image Variants</title>
+  <script>
+    window.addEventListener('error', e => {
+      fetch('/log', { method: 'POST', body: 'UNCAUGHT ERROR: ' + e.message + ' at ' + e.filename + ':' + e.lineno }).catch(() => {});
+    });
+    window.addEventListener('unhandledrejection', e => {
+      fetch('/log', { method: 'POST', body: 'UNHANDLED REJECTION: ' + (e.reason?.stack || e.reason) }).catch(() => {});
+    });
+  </script>
+  <script src="/supabase.js"></script>
+</head>
+<body style="font-family: monospace; padding: 20px;">
+  <h2>Image Variants Backfill Tool</h2>
+  <div id="status">Initializing...</div>
+  <pre id="log"></pre>
+
+  <script>
+    fetch('/log', { method: 'POST', body: 'PAGE SCRIPT STARTING...' }).catch(() => {});
+    const SUPABASE_URL = "https://jmpzsxctynbdqyysxkah.supabase.co";
+    const SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptcHpzeGN0eW5iZHF5eXN4a2FoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDUyMzQ0MCwiZXhwIjoyMTA2MDk5NDQwfQ.8TiHCaJmx6oMQEPdisePJQ5ZsMQEatCg67HZUGkpnvw";
+
+    const client = window.supabase.createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+
+    const statusEl = document.getElementById("status");
+    const logEl = document.getElementById("log");
+
+    function log(msg) {
+      console.log(msg);
+      logEl.textContent += msg + "\n";
+      fetch("/log", { method: "POST", body: msg }).catch(() => {});
+    }
+
+    function resizeImage(img, maxW) {
+      let w = img.naturalWidth || img.width;
+      let h = img.naturalHeight || img.height;
+      if (w > maxW) {
+        h = Math.round((h * maxW) / w);
+        w = maxW;
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext("2d");
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(img, 0, 0, w, h);
+      return new Promise((resolve) => {
+        canvas.toBlob((blob) => resolve(blob), "image/webp", 0.85);
+      });
+    }
+
+    async function run() {
+      try {
+        log("Fetching all outsole_images...");
+        const { data: images, error } = await client
+          .from("outsole_images")
+          .select("id, file_path");
+
+        if (error) throw error;
+        log(`Found ${images.length} images to process.`);
+
+        for (let i = 0; i < images.length; i++) {
+          const item = images[i];
+          log(`\n[${i + 1}/${images.length}] Processing: ${item.file_path}`);
+          statusEl.textContent = `Processing ${i + 1}/${images.length}: ${item.file_path}`;
+
+          const dotIndex = item.file_path.lastIndexOf(".");
+          const base = dotIndex > -1 ? item.file_path.slice(0, dotIndex) : item.file_path;
+          const displayPath = `${base}-display.webp`;
+          const thumbPath = `${base}-thumb.webp`;
+
+          // Download original
+          const { data: originalBlob, error: dlErr } = await client.storage
+            .from("outsole-images")
+            .download(item.file_path);
+
+          if (dlErr) {
+            log(`  Error downloading original: ${dlErr.message}`);
+            continue;
+          }
+
+          log(`  Original size: ${originalBlob.size} bytes`);
+
+          // Create Image
+          const imgUrl = URL.createObjectURL(originalBlob);
+          const img = new Image();
+          await new Promise((res, rej) => {
+            img.onload = res;
+            img.onerror = rej;
+            img.src = imgUrl;
+          });
+
+          log(`  Original dimensions: ${img.naturalWidth} x ${img.naturalHeight}`);
+
+          // Create display variant (1200w max)
+          const displayBlob = await resizeImage(img, 1200);
+          log(`  Display variant size: ${displayBlob.size} bytes (${displayPath})`);
+
+          // Create thumb variant (240w max)
+          const thumbBlob = await resizeImage(img, 240);
+          log(`  Thumb variant size: ${thumbBlob.size} bytes (${thumbPath})`);
+
+          URL.revokeObjectURL(imgUrl);
+
+          // Upload display variant
+          const { error: upDisplayErr } = await client.storage
+            .from("outsole-images")
+            .upload(displayPath, displayBlob, {
+              contentType: "image/webp",
+              upsert: true,
+            });
+          if (upDisplayErr) log(`  Error uploading display variant: ${upDisplayErr.message}`);
+          else log(`  Display variant uploaded successfully.`);
+
+          // Upload thumb variant
+          const { error: upThumbErr } = await client.storage
+            .from("outsole-images")
+            .upload(thumbPath, thumbBlob, {
+              contentType: "image/webp",
+              upsert: true,
+            });
+          if (upThumbErr) log(`  Error uploading thumb variant: ${upThumbErr.message}`);
+          else log(`  Thumb variant uploaded successfully.`);
+        }
+
+        statusEl.textContent = "ALL VARIANTS GENERATED AND UPLOADED SUCCESSFULLY!";
+        statusEl.style.color = "green";
+        log("\nCOMPLETE!");
+        await fetch("/done", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ success: true, log: logEl.textContent })
+        });
+      } catch (err) {
+        statusEl.textContent = `Error: ${err.message}`;
+        statusEl.style.color = "red";
+        log(`Fatal error: ${err.stack || err.message}`);
+        await fetch("/done", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ success: false, error: err.message, log: logEl.textContent })
+        });
+      }
+    }
+
+    run();
+  </script>
+</body>
+</html>

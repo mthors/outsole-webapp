@@ -22,12 +22,14 @@ export const Route = createFileRoute("/")({
       { title: "Outsole by ODE — Rubber Outsole Manufacturer, OEM & ODM" },
       {
         name: "description",
-        content: "Engineered rubber outsoles for footwear brands. Browse the collection, compare compounds and request samples.",
+        content:
+          "Engineered rubber outsoles for footwear brands. Browse the collection, compare compounds and request samples.",
       },
       { property: "og:title", content: "Outsole by ODE — Rubber Outsole Manufacturer" },
       {
         property: "og:description",
-        content: "Engineered rubber outsoles, OEM and ODM development, and sampling for footwear brands.",
+        content:
+          "Engineered rubber outsoles, OEM and ODM development, and sampling for footwear brands.",
       },
     ],
   }),
@@ -41,7 +43,9 @@ export const Route = createFileRoute("/")({
 function HomePending() {
   const { dict } = useI18n();
   return (
-    <div className="shell py-32"><p className="label-tech">{dict.common.loading}</p></div>
+    <div className="shell py-32">
+      <p className="label-tech">{dict.common.loading}</p>
+    </div>
   );
 }
 
@@ -108,8 +112,15 @@ function Home() {
 
       {/* Featured */}
       <section className="shell py-20 md:py-28">
-        <SectionHead index="01" eyebrow={dict.home.featured.eyebrow} title={dict.home.featured.title}>
-          <Link to="/catalog" className="label-tech inline-flex items-center gap-2 hover:text-primary">
+        <SectionHead
+          index="01"
+          eyebrow={dict.home.featured.eyebrow}
+          title={dict.home.featured.title}
+        >
+          <Link
+            to="/catalog"
+            className="label-tech inline-flex items-center gap-2 hover:text-primary"
+          >
             {dict.home.featured.viewAll} <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </SectionHead>
@@ -128,7 +139,9 @@ function Home() {
                   : "sm:grid-cols-2 lg:grid-cols-3"
             }`}
           >
-            {data.featured.map((o) => <OutsoleCard key={o.id} o={o} />)}
+            {data.featured.map((o) => (
+              <OutsoleCard key={o.id} o={o} />
+            ))}
           </div>
         )}
       </section>
@@ -138,17 +151,35 @@ function Home() {
         <div className="shell py-20 md:py-28">
           <SectionHead index="02" eyebrow={dict.home.tech.eyebrow} title={dict.home.tech.title} />
           <div className="mt-12 grid gap-10 lg:grid-cols-3">
-            <TermList label={dict.home.tech.compounds} terms={data.taxonomy.materials} emptyLabel={dict.home.tech.empty} />
-            <TermList label={dict.home.tech.traction} terms={data.taxonomy.tractionTypes} emptyLabel={dict.home.tech.empty} />
-            <TermList label={dict.home.tech.applications} terms={data.taxonomy.categories} emptyLabel={dict.home.tech.empty} />
+            <TermList
+              label={dict.home.tech.compounds}
+              terms={data.taxonomy.materials}
+              emptyLabel={dict.home.tech.empty}
+            />
+            <TermList
+              label={dict.home.tech.traction}
+              terms={data.taxonomy.tractionTypes}
+              emptyLabel={dict.home.tech.empty}
+            />
+            <TermList
+              label={dict.home.tech.applications}
+              terms={data.taxonomy.categories}
+              emptyLabel={dict.home.tech.empty}
+            />
           </div>
         </div>
       </section>
 
       {/* Capability */}
       <section className="shell py-20 md:py-28">
-        <SectionHead index="03" eyebrow={capsLocalized.title || dict.home.capability.eyebrow} title={dict.home.capability.title} />
-        {capsLocalized.content && <p className="mt-6 max-w-2xl text-muted-foreground">{clean(capsLocalized.content)}</p>}
+        <SectionHead
+          index="03"
+          eyebrow={capsLocalized.title || dict.home.capability.eyebrow}
+          title={dict.home.capability.title}
+        />
+        {capsLocalized.content && (
+          <p className="mt-6 max-w-2xl text-muted-foreground">{clean(capsLocalized.content)}</p>
+        )}
         <div className="mt-12 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
           {[
             ["OEM", dict.home.capability.items.oemDesc],
@@ -169,13 +200,32 @@ function Home() {
       <section className="border-t border-border bg-primary text-primary-foreground">
         <div className="shell flex flex-col gap-10 py-20 lg:flex-row lg:items-end lg:justify-between">
           <div className="min-w-0 flex-1">
-            <p className="font-mono text-xs uppercase tracking-[0.18em] opacity-70">{dict.home.cta.eyebrow}</p>
-            <h2 className="display-lg mt-4 max-w-2xl text-primary-foreground">{dict.home.cta.title}</h2>
+            <p className="font-mono text-xs uppercase tracking-[0.18em] opacity-70">
+              {dict.home.cta.eyebrow}
+            </p>
+            <h2 className="display-lg mt-4 max-w-2xl text-primary-foreground">
+              {dict.home.cta.title}
+            </h2>
           </div>
           <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
-            <Link to="/catalog" className="border border-primary-foreground/40 px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.14em] hover:bg-primary-foreground/10">{dict.home.cta.catalogBtn}</Link>
-            <Link to="/request-sample" className="bg-primary-foreground px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.14em] text-primary hover:opacity-90">{dict.home.cta.sampleBtn}</Link>
-            <Link to="/contact" className="border border-primary-foreground/40 px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.14em] hover:bg-primary-foreground/10">{dict.home.cta.contactBtn}</Link>
+            <Link
+              to="/catalog"
+              className="border border-primary-foreground/40 px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.14em] hover:bg-primary-foreground/10"
+            >
+              {dict.home.cta.catalogBtn}
+            </Link>
+            <Link
+              to="/request-sample"
+              className="bg-primary-foreground px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.14em] text-primary hover:opacity-90"
+            >
+              {dict.home.cta.sampleBtn}
+            </Link>
+            <Link
+              to="/contact"
+              className="border border-primary-foreground/40 px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.14em] hover:bg-primary-foreground/10"
+            >
+              {dict.home.cta.contactBtn}
+            </Link>
           </div>
         </div>
       </section>
@@ -183,11 +233,23 @@ function Home() {
   );
 }
 
-function SectionHead({ index, eyebrow, title, children }: { index: string; eyebrow: string; title: string; children?: React.ReactNode }) {
+function SectionHead({
+  index,
+  eyebrow,
+  title,
+  children,
+}: {
+  index: string;
+  eyebrow: string;
+  title: string;
+  children?: React.ReactNode;
+}) {
   return (
     <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
       <div>
-        <p className="label-tech"><span className="text-primary">{index}</span> / {eyebrow}</p>
+        <p className="label-tech">
+          <span className="text-primary">{index}</span> / {eyebrow}
+        </p>
         <h2 className="display-lg mt-4">{title}</h2>
       </div>
       {children}
@@ -195,7 +257,15 @@ function SectionHead({ index, eyebrow, title, children }: { index: string; eyebr
   );
 }
 
-function TermList({ label, terms, emptyLabel }: { label: string; terms: { id: string; name: string; description?: string | null }[]; emptyLabel?: string }) {
+function TermList({
+  label,
+  terms,
+  emptyLabel,
+}: {
+  label: string;
+  terms: { id: string; name: string; description?: string | null }[];
+  emptyLabel?: string;
+}) {
   return (
     <div>
       <p className="label-tech border-b border-border pb-3">{label}</p>
@@ -206,7 +276,9 @@ function TermList({ label, terms, emptyLabel }: { label: string; terms: { id: st
           {terms.map((t) => (
             <li key={t.id} className="border-b border-border py-4">
               <p className="font-semibold">{t.name}</p>
-              {t.description && <p className="mt-1 text-sm text-muted-foreground">{t.description}</p>}
+              {t.description && (
+                <p className="mt-1 text-sm text-muted-foreground">{t.description}</p>
+              )}
             </li>
           ))}
         </ul>
@@ -220,10 +292,20 @@ function OutsoleCard({ o }: { o: Outsole }) {
   const img = primaryImage(o);
   const hard = hardnessLabel(o);
   return (
-    <Link to="/outsoles/$slug" params={{ slug: o.slug }} className="group -ml-px -mt-px flex flex-col border border-border bg-background">
+    <Link
+      to="/outsoles/$slug"
+      params={{ slug: o.slug }}
+      className="group -ml-px -mt-px flex flex-col border border-border bg-background"
+    >
       <div className="aspect-[4/3] overflow-hidden bg-surface">
         {img?.url ? (
-          <img src={img.url} alt={img.alt_text ?? o.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+          <img
+            src={img.display_url ?? img.url}
+            alt={img.alt_text ?? o.name}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
         ) : (
           <div className="grid h-full place-items-center label-tech">{dict.common.noImage}</div>
         )}
@@ -232,9 +314,24 @@ function OutsoleCard({ o }: { o: Outsole }) {
         <p className="data-mono text-xs text-primary">{o.model_number}</p>
         <h3 className="mt-2 text-xl uppercase">{o.name}</h3>
         <dl className="mt-5 grid grid-cols-2 gap-y-2 text-sm">
-          {hard && (<><dt className="label-tech">{dict.catalog.cardHardness}</dt><dd className="data-mono">{hard}</dd></>)}
-          {o.din_abrasion_mm3 != null && (<><dt className="label-tech">{dict.product.dinAbrasion}</dt><dd className="data-mono">{o.din_abrasion_mm3} mm³</dd></>)}
-          {o.materials[0] && (<><dt className="label-tech">{dict.catalog.cardCompound}</dt><dd>{o.materials[0].name}</dd></>)}
+          {hard && (
+            <>
+              <dt className="label-tech">{dict.catalog.cardHardness}</dt>
+              <dd className="data-mono">{hard}</dd>
+            </>
+          )}
+          {o.din_abrasion_mm3 != null && (
+            <>
+              <dt className="label-tech">{dict.product.dinAbrasion}</dt>
+              <dd className="data-mono">{o.din_abrasion_mm3} mm³</dd>
+            </>
+          )}
+          {o.materials[0] && (
+            <>
+              <dt className="label-tech">{dict.catalog.cardCompound}</dt>
+              <dd>{o.materials[0].name}</dd>
+            </>
+          )}
         </dl>
         <span className="label-tech mt-6 inline-flex items-center gap-2 group-hover:text-primary">
           {dict.common.viewDetails} <ArrowRight className="h-3.5 w-3.5" />

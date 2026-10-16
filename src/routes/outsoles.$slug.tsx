@@ -18,11 +18,20 @@ export const Route = createFileRoute("/outsoles/$slug")({
   loader: async ({ context, params }) => {
     const res = await context.queryClient.ensureQueryData(outsoleQuery(params.slug));
     if (!res.outsole) throw notFound();
-    return { name: res.outsole.name, model: res.outsole.model_number, description: res.outsole.description };
+    return {
+      name: res.outsole.name,
+      model: res.outsole.model_number,
+      description: res.outsole.description,
+    };
   },
   head: ({ loaderData, params }) => {
     if (!loaderData) {
-      return { meta: [{ title: "Outsole not found | Outsole Catalog" }, { name: "robots", content: "noindex" }] };
+      return {
+        meta: [
+          { title: "Outsole not found | Outsole Catalog" },
+          { name: "robots", content: "noindex" },
+        ],
+      };
     }
     const title = `${loaderData.name} | Outsole Catalog`;
     const desc =
@@ -50,7 +59,9 @@ function Crumb({ name }: { name?: string }) {
   const { dict } = useI18n();
   return (
     <nav aria-label={dict.product.breadcrumbCatalog} className="label-tech text-muted-foreground">
-      <Link to="/catalog" className="hover:text-primary">{dict.product.breadcrumbCatalog}</Link>
+      <Link to="/catalog" className="hover:text-primary">
+        {dict.product.breadcrumbCatalog}
+      </Link>
       {name && (
         <>
           <span className="mx-2 opacity-50">/</span>
@@ -68,7 +79,10 @@ function Tags({ label, terms }: { label: string; terms: TaxonomyTerm[] }) {
       <p className="label-tech text-muted-foreground">{label}</p>
       <ul className="mt-2 flex flex-wrap gap-2">
         {terms.map((t) => (
-          <li key={t.id} className="border border-border px-3 py-1 text-xs font-medium uppercase tracking-[0.1em]">
+          <li
+            key={t.id}
+            className="border border-border px-3 py-1 text-xs font-medium uppercase tracking-[0.1em]"
+          >
             {t.name}
           </li>
         ))}
@@ -97,8 +111,9 @@ function Gallery({ outsole }: { outsole: Outsole }) {
     <div className="min-w-0">
       <div className="group overflow-hidden border border-border bg-card">
         <img
-          src={active.url}
+          src={active.display_url ?? active.url}
           alt={active.alt_text ?? outsole.name}
+          decoding="async"
           className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
       </div>
@@ -113,10 +128,18 @@ function Gallery({ outsole }: { outsole: Outsole }) {
                   aria-label={`${dict.product.showImageAria}: ${img.alt_text ?? outsole.name}`}
                   aria-pressed={img.id === active.id}
                   className={`block w-20 overflow-hidden border-2 md:w-24 ${
-                    img.id === active.id ? "border-primary" : "border-border hover:border-muted-foreground"
+                    img.id === active.id
+                      ? "border-primary"
+                      : "border-border hover:border-muted-foreground"
                   }`}
                 >
-                  <img src={img.url} alt="" loading="lazy" className="aspect-square w-full object-cover" />
+                  <img
+                    src={img.thumb_url ?? img.url}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    className="aspect-square w-full object-cover"
+                  />
                 </button>
               </li>
             ) : null,
@@ -136,9 +159,17 @@ function OutsoleDetail() {
 
   const specs = [
     { label: dict.product.shoreHardness, value: hardnessLabel(o) },
-    { label: dict.product.dinAbrasion, value: o.din_abrasion_mm3 != null ? `${o.din_abrasion_mm3} mm³` : null },
+    {
+      label: dict.product.dinAbrasion,
+      value: o.din_abrasion_mm3 != null ? `${o.din_abrasion_mm3} mm³` : null,
+    },
     { label: dict.product.weight, value: o.weight_grams != null ? `${o.weight_grams} g` : null },
-    { label: dict.product.sampling, value: o.is_sampling_available ? dict.product.samplingAvailable : dict.product.samplingUnavailable },
+    {
+      label: dict.product.sampling,
+      value: o.is_sampling_available
+        ? dict.product.samplingAvailable
+        : dict.product.samplingUnavailable,
+    },
   ].filter((s): s is { label: string; value: string } => Boolean(s.value));
 
   return (
@@ -150,7 +181,9 @@ function OutsoleDetail() {
           <span className="rule-accent" />
           <p className="label-tech mt-5 text-primary">{o.model_number}</p>
           <h1 className="display-lg mt-3 break-words">{o.name}</h1>
-          {o.description && <p className="mt-6 text-muted-foreground md:text-lg">{o.description}</p>}
+          {o.description && (
+            <p className="mt-6 text-muted-foreground md:text-lg">{o.description}</p>
+          )}
 
           <div className="mt-8 space-y-5">
             <Tags label={dict.product.category} terms={o.categories} />
@@ -162,7 +195,10 @@ function OutsoleDetail() {
             <p className="label-tech">{dict.product.specifications}</p>
             <dl className="mt-4 border-t border-border">
               {specs.map((s) => (
-                <div key={s.label} className="flex justify-between gap-4 border-b border-border py-3 text-sm">
+                <div
+                  key={s.label}
+                  className="flex justify-between gap-4 border-b border-border py-3 text-sm"
+                >
                   <dt className="text-muted-foreground">{s.label}</dt>
                   <dd className="text-right font-medium">{s.value}</dd>
                 </div>
@@ -227,20 +263,10 @@ function StateMessage({ title, body }: { title: string; body: string }) {
 
 function DetailNotFound() {
   const { dict } = useI18n();
-  return (
-    <StateMessage
-      title={dict.product.notFoundTitle}
-      body={dict.product.notFoundBody}
-    />
-  );
+  return <StateMessage title={dict.product.notFoundTitle} body={dict.product.notFoundBody} />;
 }
 
 function DetailError() {
   const { dict } = useI18n();
-  return (
-    <StateMessage
-      title={dict.product.errorTitle}
-      body={dict.product.errorBody}
-    />
-  );
+  return <StateMessage title={dict.product.errorTitle} body={dict.product.errorBody} />;
 }

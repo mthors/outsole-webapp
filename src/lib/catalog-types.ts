@@ -15,6 +15,8 @@ export type OutsoleImage = {
   display_order: number;
   is_primary: boolean;
   url: string | null;
+  display_url?: string | null;
+  thumb_url?: string | null;
 };
 
 export type Outsole = {
@@ -52,7 +54,9 @@ export type SiteContentEntry = {
   content_en?: string | null;
 };
 
-export function hardnessLabel(o: Pick<Outsole, "shore_min" | "shore_max" | "shore_scale">): string | null {
+export function hardnessLabel(
+  o: Pick<Outsole, "shore_min" | "shore_max" | "shore_scale">,
+): string | null {
   const scale = `Shore ${o.shore_scale || "A"}`;
   if (o.shore_min != null && o.shore_max != null) {
     return o.shore_min === o.shore_max

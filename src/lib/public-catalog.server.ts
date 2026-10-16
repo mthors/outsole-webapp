@@ -25,16 +25,31 @@ const OUTSOLE_SELECT = `
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type RawOutsole = any;
 
+export function getVariantStoragePaths(originalPath: string) {
+  const dotIndex = originalPath.lastIndexOf(".");
+  const base = dotIndex > -1 ? originalPath.slice(0, dotIndex) : originalPath;
+  return {
+    thumb: `${base}-thumb.webp`,
+    display: `${base}-display.webp`,
+  };
+}
+
 async function signImages(
   client: ReturnType<typeof publicClient>,
   rows: RawOutsole[],
 ): Promise<Map<string, string>> {
-  const paths = rows
+  const originalPaths = rows
     .flatMap((r) => (r.outsole_images ?? []) as { file_path: string }[])
     .map((i) => i.file_path);
   const urls = new Map<string, string>();
-  if (paths.length === 0) return urls;
-  const { data } = await client.storage.from(BUCKET).createSignedUrls(paths, SIGNED_URL_TTL);
+  if (originalPaths.length === 0) return urls;
+
+  const allPaths = originalPaths.flatMap((p) => {
+    const v = getVariantStoragePaths(p);
+    return [p, v.display, v.thumb];
+  });
+
+  const { data } = await client.storage.from(BUCKET).createSignedUrls(allPaths, SIGNED_URL_TTL);
   for (const entry of data ?? []) {
     if (entry.path && entry.signedUrl) urls.set(entry.path, entry.signedUrl);
   }
@@ -43,15 +58,23 @@ async function signImages(
 
 function shape(row: RawOutsole, urls: Map<string, string>): Outsole {
   const images: OutsoleImage[] = ((row.outsole_images ?? []) as RawOutsole[])
-    .map((i) => ({
-      id: i.id,
-      file_path: i.file_path,
-      alt_text: i.alt_text ?? null,
-      display_order: i.display_order ?? 0,
-      is_primary: Boolean(i.is_primary),
-      url: urls.get(i.file_path) ?? null,
-    }))
-    .sort((a, b) => Number(b.is_primary) - Number(a.is_primary) || a.display_order - b.display_order);
+    .map((i) => {
+      const v = getVariantStoragePaths(i.file_path);
+      const originalUrl = urls.get(i.file_path) ?? null;
+      return {
+        id: i.id,
+        file_path: i.file_path,
+        alt_text: i.alt_text ?? null,
+        display_order: i.display_order ?? 0,
+        is_primary: Boolean(i.is_primary),
+        url: originalUrl,
+        display_url: urls.get(v.display) ?? originalUrl,
+        thumb_url: urls.get(v.thumb) ?? originalUrl,
+      };
+    })
+    .sort(
+      (a, b) => Number(b.is_primary) - Number(a.is_primary) || a.display_order - b.display_order,
+    );
 
   return {
     id: row.id,
@@ -68,8 +91,12 @@ function shape(row: RawOutsole, urls: Map<string, string>): Outsole {
     is_sampling_available: Boolean(row.is_sampling_available),
     status: row.status,
     created_at: row.created_at,
-    categories: ((row.outsole_categories ?? []) as RawOutsole[]).map((j) => j.categories).filter(Boolean),
-    materials: ((row.outsole_materials ?? []) as RawOutsole[]).map((j) => j.materials).filter(Boolean),
+    categories: ((row.outsole_categories ?? []) as RawOutsole[])
+      .map((j) => j.categories)
+      .filter(Boolean),
+    materials: ((row.outsole_materials ?? []) as RawOutsole[])
+      .map((j) => j.materials)
+      .filter(Boolean),
     tractionTypes: ((row.outsole_traction_types ?? []) as RawOutsole[])
       .map((j) => j.traction_types)
       .filter(Boolean),

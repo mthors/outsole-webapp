@@ -995,10 +995,14 @@ export const removeOutsoleImage = createServerFn({ method: "POST" })
 
     const trustedPath = img.file_path;
 
-    // 2. Delete Storage object first — if this fails we leave the DB intact
+    // 2. Delete Storage object and any variants — if this fails we leave the DB intact
+    const dotIndex = trustedPath.lastIndexOf(".");
+    const base = dotIndex > -1 ? trustedPath.slice(0, dotIndex) : trustedPath;
+    const pathsToRemove = [trustedPath, `${base}-display.webp`, `${base}-thumb.webp`];
+
     const { error: storageErr } = await supabaseAdmin.storage
       .from("outsole-images")
-      .remove([trustedPath]);
+      .remove(pathsToRemove);
 
     if (storageErr) {
       throw new Error(
@@ -1099,6 +1103,12 @@ export const uploadOutsoleImage = createServerFn({ method: "POST" })
           .nullable()
           .optional()
           .transform((v) => v || null),
+        variants: z
+          .object({
+            displayBase64: z.string().optional(),
+            thumbBase64: z.string().optional(),
+          })
+          .optional(),
       })
       .parse(data),
   )
@@ -1158,8 +1168,13 @@ export const uploadOutsoleImage = createServerFn({ method: "POST" })
 
     const timestamp = Date.now();
     const randomSuffix = crypto.randomUUID().slice(0, 8);
-    const safeFilename = `${timestamp}-${randomSuffix}-${safeBase}.${normalizedExt}`;
+    const safeBaseName = `${timestamp}-${randomSuffix}-${safeBase}`;
+    const safeFilename = `${safeBaseName}.${normalizedExt}`;
     const storagePath = `outsoles/${data.outsoleId}/${safeFilename}`;
+    const displayPath = `outsoles/${data.outsoleId}/${safeBaseName}-display.webp`;
+    const thumbPath = `outsoles/${data.outsoleId}/${safeBaseName}-thumb.webp`;
+
+    const uploadedPaths: string[] = [];
 
     // 6. Upload to private Supabase Storage bucket 'outsole-images'
     const { error: uploadErr } = await supabaseAdmin.storage
@@ -1171,6 +1186,31 @@ export const uploadOutsoleImage = createServerFn({ method: "POST" })
 
     if (uploadErr) {
       throw new Error(`Storage upload failed: ${uploadErr.message}`);
+    }
+    uploadedPaths.push(storagePath);
+
+    // Upload display and thumb variants if provided
+    if (data.variants?.displayBase64) {
+      try {
+        const displayBuf = Buffer.from(data.variants.displayBase64, "base64");
+        const { error: dErr } = await supabaseAdmin.storage
+          .from("outsole-images")
+          .upload(displayPath, displayBuf, { contentType: "image/webp", upsert: true });
+        if (!dErr) uploadedPaths.push(displayPath);
+      } catch (err) {
+        console.warn("Failed to upload display variant:", err);
+      }
+    }
+    if (data.variants?.thumbBase64) {
+      try {
+        const thumbBuf = Buffer.from(data.variants.thumbBase64, "base64");
+        const { error: tErr } = await supabaseAdmin.storage
+          .from("outsole-images")
+          .upload(thumbPath, thumbBuf, { contentType: "image/webp", upsert: true });
+        if (!tErr) uploadedPaths.push(thumbPath);
+      } catch (err) {
+        console.warn("Failed to upload thumb variant:", err);
+      }
     }
 
     // 7. Insert outsole_images record with failure cleanup
@@ -1242,9 +1282,9 @@ export const uploadOutsoleImage = createServerFn({ method: "POST" })
       // FAILURE CLEANUP:
       // If Storage upload succeeded but database insertion failed, delete the newly uploaded Storage object
       try {
-        await supabaseAdmin.storage.from("outsole-images").remove([storagePath]);
+        await supabaseAdmin.storage.from("outsole-images").remove(uploadedPaths);
       } catch (cleanupErr) {
-        console.error(`Orphan cleanup error for ${storagePath}:`, cleanupErr);
+        console.error(`Orphan cleanup error for ${uploadedPaths.join(", ")}:`, cleanupErr);
       }
       throw new Error(
         `Failed to save image metadata: ${insertErr instanceof Error ? insertErr.message : "Unknown error"}. Cleaned up uploaded file.`,

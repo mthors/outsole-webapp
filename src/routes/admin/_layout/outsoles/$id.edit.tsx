@@ -120,14 +120,15 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
     [...initialOutsole.images]
       .map((img) => ({ ...img, outsole_id: initialOutsole.id }))
       .sort(
-        (a, b) =>
-          Number(b.is_primary) - Number(a.is_primary) || a.display_order - b.display_order,
+        (a, b) => Number(b.is_primary) - Number(a.is_primary) || a.display_order - b.display_order,
       ),
   );
 
   const refreshImages = useCallback(async () => {
     try {
-      const { images: fresh } = await getAdminOutsoleImages({ data: { outsoleId: initialOutsole.id } });
+      const { images: fresh } = await getAdminOutsoleImages({
+        data: { outsoleId: initialOutsole.id },
+      });
       setImages(
         [...fresh].sort(
           (a, b) =>
@@ -143,7 +144,10 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
     setForm((prev) => ({ ...prev, name }));
   }
 
-  function toggleCheckboxItem(listKey: "category_ids" | "material_ids" | "traction_type_ids", id: string) {
+  function toggleCheckboxItem(
+    listKey: "category_ids" | "material_ids" | "traction_type_ids",
+    id: string,
+  ) {
     setForm((prev) => {
       const currentList = prev[listKey] || [];
       const updated = currentList.includes(id)
@@ -158,9 +162,18 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
     setError(null);
     setSuccess(null);
 
-    if (!form.name.trim()) { setError("Product name is required."); return; }
-    if (!form.slug.trim()) { setError("Slug is required."); return; }
-    if (!form.model_number.trim()) { setError("Model number / SKU is required."); return; }
+    if (!form.name.trim()) {
+      setError("Product name is required.");
+      return;
+    }
+    if (!form.slug.trim()) {
+      setError("Slug is required.");
+      return;
+    }
+    if (!form.model_number.trim()) {
+      setError("Model number / SKU is required.");
+      return;
+    }
     if (form.shore_min != null && form.shore_max != null && form.shore_min > form.shore_max) {
       setError("Shore hardness minimum cannot exceed maximum.");
       return;
@@ -197,7 +210,14 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
   return (
     <div className="admin-page" style={{ maxWidth: "900px" }}>
       <header className="admin-page-header">
-        <div style={{ marginBottom: "0.5rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div
+          style={{
+            marginBottom: "0.5rem",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Link
             to="/admin/outsoles"
             style={{
@@ -236,18 +256,26 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
           <h1 className="admin-page-title" style={{ margin: 0 }}>
             Edit Outsole: {currentName}
           </h1>
-          <span className={`admin-badge admin-badge--${form.status}`}>
-            {form.status}
-          </span>
+          <span className={`admin-badge admin-badge--${form.status}`}>{form.status}</span>
         </div>
-        <p className="admin-page-subtitle" style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.75rem" }}>
+        <p
+          className="admin-page-subtitle"
+          style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.75rem" }}
+        >
           SKU: {form.model_number} • ID: {form.id}
         </p>
       </header>
 
       {error && (
         <div className="admin-login-error" style={{ marginBottom: "1.5rem" }} role="alert">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
             <circle cx="12" cy="12" r="10" />
             <line x1="12" y1="8" x2="12" y2="12" />
             <line x1="12" y1="16" x2="12.01" y2="16" />
@@ -272,7 +300,14 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
           }}
           role="status"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
             <path d="M20 6L9 17l-5-5" />
           </svg>
           <span>{success}</span>
@@ -283,7 +318,9 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
         {/* Basic Information */}
         <div className="admin-form-section">
           <h2 className="admin-form-section-title">Basic Information</h2>
-          <p className="admin-form-section-desc">Identifier, model name, and public visibility settings.</p>
+          <p className="admin-form-section-desc">
+            Identifier, model name, and public visibility settings.
+          </p>
 
           <div className="admin-form-grid-2" style={{ marginBottom: "1rem" }}>
             <div className="admin-field">
@@ -334,7 +371,14 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
                 onChange={(e) => setForm((prev) => ({ ...prev, slug: e.target.value }))}
                 disabled={isSubmitting}
               />
-              <span style={{ fontSize: "0.7rem", color: "var(--admin-text-muted)", marginTop: "0.25rem", display: "block" }}>
+              <span
+                style={{
+                  fontSize: "0.7rem",
+                  color: "var(--admin-text-muted)",
+                  marginTop: "0.25rem",
+                  display: "block",
+                }}
+              >
                 Preserved automatically. Only change if deliberately modifying the public URL.
               </span>
             </div>
@@ -349,7 +393,10 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
                 style={{ width: "100%", padding: "0.625rem 0.75rem" }}
                 value={form.status}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, status: e.target.value as "draft" | "active" | "archived" }))
+                  setForm((prev) => ({
+                    ...prev,
+                    status: e.target.value as "draft" | "active" | "archived",
+                  }))
                 }
                 disabled={isSubmitting}
               >
@@ -391,7 +438,9 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
                 id="edit-outsole-sampling"
                 type="checkbox"
                 checked={form.is_sampling_available}
-                onChange={(e) => setForm((prev) => ({ ...prev, is_sampling_available: e.target.checked }))}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, is_sampling_available: e.target.checked }))
+                }
                 disabled={isSubmitting}
               />
               <span>Physical Sample Available</span>
@@ -402,7 +451,9 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
         {/* Technical Specifications */}
         <div className="admin-form-section">
           <h2 className="admin-form-section-title">Technical Specifications</h2>
-          <p className="admin-form-section-desc">Material hardness, wear resistance, and weight metrics.</p>
+          <p className="admin-form-section-desc">
+            Material hardness, wear resistance, and weight metrics.
+          </p>
 
           <div className="admin-form-grid-3" style={{ marginBottom: "1rem" }}>
             <div className="admin-field">
@@ -515,10 +566,15 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
         {/* Taxonomy Associations */}
         <div className="admin-form-section">
           <h2 className="admin-form-section-title">Taxonomy &amp; Classifications</h2>
-          <p className="admin-form-section-desc">Associate categories, compound materials, and lug traction profiles.</p>
+          <p className="admin-form-section-desc">
+            Associate categories, compound materials, and lug traction profiles.
+          </p>
 
           <div style={{ marginBottom: "1.25rem" }}>
-            <label className="admin-field-label" style={{ marginBottom: "0.5rem", display: "block" }}>
+            <label
+              className="admin-field-label"
+              style={{ marginBottom: "0.5rem", display: "block" }}
+            >
               Categories
             </label>
             <div className="admin-checkbox-group">
@@ -537,7 +593,10 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
           </div>
 
           <div style={{ marginBottom: "1.25rem" }}>
-            <label className="admin-field-label" style={{ marginBottom: "0.5rem", display: "block" }}>
+            <label
+              className="admin-field-label"
+              style={{ marginBottom: "0.5rem", display: "block" }}
+            >
               Materials / Rubber Compounds
             </label>
             <div className="admin-checkbox-group">
@@ -556,7 +615,10 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
           </div>
 
           <div>
-            <label className="admin-field-label" style={{ marginBottom: "0.5rem", display: "block" }}>
+            <label
+              className="admin-field-label"
+              style={{ marginBottom: "0.5rem", display: "block" }}
+            >
               Traction Profiles
             </label>
             <div className="admin-checkbox-group">
@@ -576,8 +638,14 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
         </div>
 
         {/* Submit Actions */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "1rem" }}>
-          <Link to="/admin/outsoles" className="admin-btn admin-btn-secondary" disabled={isSubmitting}>
+        <div
+          style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "1rem" }}
+        >
+          <Link
+            to="/admin/outsoles"
+            className="admin-btn admin-btn-secondary"
+            disabled={isSubmitting}
+          >
             Back to Outsoles
           </Link>
           <button
@@ -618,7 +686,12 @@ interface ProductImagesPanelProps {
   onImagesChanged: () => Promise<void>;
 }
 
-function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }: ProductImagesPanelProps) {
+function ProductImagesPanel({
+  outsoleId,
+  outsoleName,
+  images,
+  onImagesChanged,
+}: ProductImagesPanelProps) {
   const [busy, setBusy] = useState<string | null>(null); // imageId currently processing
   const [panelError, setPanelError] = useState<string | null>(null);
   const [panelSuccess, setPanelSuccess] = useState<string | null>(null);
@@ -689,6 +762,41 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
+  async function createResizedVariant(file: File, maxWidth: number): Promise<string | undefined> {
+    try {
+      const bmp = await createImageBitmap(file);
+      let w = bmp.width;
+      let h = bmp.height;
+      if (w > maxWidth) {
+        h = Math.round((h * maxWidth) / w);
+        w = maxWidth;
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return undefined;
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(bmp, 0, 0, w, h);
+      const blob = await new Promise<Blob | null>((res) => canvas.toBlob(res, "image/webp", 0.85));
+      if (!blob) return undefined;
+      const reader = new FileReader();
+      return new Promise((res) => {
+        reader.onload = () => {
+          const str = reader.result as string;
+          const comma = str.indexOf(",");
+          res(comma !== -1 ? str.slice(comma + 1) : str);
+        };
+        reader.onerror = () => res(undefined);
+        reader.readAsDataURL(blob);
+      });
+    } catch (err) {
+      console.warn("Could not generate client variant:", err);
+      return undefined;
+    }
+  }
+
   async function handleUpload() {
     if (!selectedFile || isUploading) return;
 
@@ -708,6 +816,12 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
         reader.readAsDataURL(selectedFile);
       });
 
+      setUploadStatus("Optimizing display variants…");
+      const [displayBase64, thumbBase64] = await Promise.all([
+        createResizedVariant(selectedFile, 1200),
+        createResizedVariant(selectedFile, 240),
+      ]);
+
       setUploadStatus("Uploading to secure storage…");
 
       const mime =
@@ -726,6 +840,10 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
           contentType: mime as "image/jpeg" | "image/png" | "image/webp",
           fileBase64: base64,
           altText: uploadAlt.trim() || null,
+          variants: {
+            displayBase64,
+            thumbBase64,
+          },
         },
       });
 
@@ -781,7 +899,9 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
     setBusy(imageId + "alt");
     setPanelError(null);
     try {
-      await updateOutsoleImageMetadata({ data: { outsoleId, imageId, alt_text: altDraft || null } });
+      await updateOutsoleImageMetadata({
+        data: { outsoleId, imageId, alt_text: altDraft || null },
+      });
       await onImagesChanged();
       setEditingAlt(null);
       flash("Alt text updated.");
@@ -840,7 +960,9 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
           >
             Product Images
           </h2>
-          <p style={{ margin: "0.2rem 0 0", fontSize: "0.75rem", color: "var(--admin-text-muted)" }}>
+          <p
+            style={{ margin: "0.2rem 0 0", fontSize: "0.75rem", color: "var(--admin-text-muted)" }}
+          >
             {images.length === 0
               ? "No images attached to this product."
               : `${images.length} image${images.length === 1 ? "" : "s"} — manage primary, order, and alt text.`}
@@ -877,7 +999,15 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
             lineHeight: "1.5",
           }}
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0, marginTop: "2px" }}>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            style={{ flexShrink: 0, marginTop: "2px" }}
+          >
             <circle cx="12" cy="12" r="10" />
             <line x1="12" y1="8" x2="12" y2="12" />
             <line x1="12" y1="16" x2="12.01" y2="16" />
@@ -901,7 +1031,14 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
             color: "var(--admin-status-active)",
           }}
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
             <path d="M20 6L9 17l-5-5" />
           </svg>
           <span>{panelSuccess}</span>
@@ -930,7 +1067,9 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
           >
             Upload New Image
           </h3>
-          <p style={{ margin: "0.2rem 0 0", fontSize: "0.75rem", color: "var(--admin-text-muted)" }}>
+          <p
+            style={{ margin: "0.2rem 0 0", fontSize: "0.75rem", color: "var(--admin-text-muted)" }}
+          >
             Supported formats: JPG, PNG, WebP (max 8MB). Uploads directly to private storage.
           </p>
         </div>
@@ -981,10 +1120,18 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
               <polyline points="17 8 12 3 7 8" />
               <line x1="12" y1="3" x2="12" y2="15" />
             </svg>
-            <div style={{ fontSize: "0.8125rem", color: "var(--admin-text-main)", fontWeight: 500 }}>
+            <div
+              style={{ fontSize: "0.8125rem", color: "var(--admin-text-main)", fontWeight: 500 }}
+            >
               Click to choose an image file from your computer
             </div>
-            <div style={{ fontSize: "0.6875rem", color: "var(--admin-text-muted)", marginTop: "0.25rem" }}>
+            <div
+              style={{
+                fontSize: "0.6875rem",
+                color: "var(--admin-text-muted)",
+                marginTop: "0.25rem",
+              }}
+            >
               JPG, PNG, or WebP up to 8MB
             </div>
           </div>
@@ -1029,8 +1176,15 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                 >
                   {selectedFile.name}
                 </div>
-                <div style={{ fontSize: "0.6875rem", color: "var(--admin-text-muted)", marginTop: "0.15rem" }}>
-                  {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB • {selectedFile.type || "image"}
+                <div
+                  style={{
+                    fontSize: "0.6875rem",
+                    color: "var(--admin-text-muted)",
+                    marginTop: "0.15rem",
+                  }}
+                >
+                  {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB •{" "}
+                  {selectedFile.type || "image"}
                 </div>
               </div>
               <button
@@ -1045,7 +1199,11 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
             </div>
 
             <div className="admin-field" style={{ margin: 0 }}>
-              <label htmlFor="outsole-upload-alt-input" className="admin-field-label" style={{ fontSize: "0.75rem" }}>
+              <label
+                htmlFor="outsole-upload-alt-input"
+                className="admin-field-label"
+                style={{ fontSize: "0.75rem" }}
+              >
                 Alt Text (optional)
               </label>
               <input
@@ -1061,7 +1219,14 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
               />
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "0.75rem" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                gap: "0.75rem",
+              }}
+            >
               <button
                 type="button"
                 onClick={handleClearSelectedFile}
@@ -1081,12 +1246,22 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
               >
                 {isUploading ? (
                   <>
-                    <span className="admin-login-spinner" style={{ width: "12px", height: "12px" }} />
+                    <span
+                      className="admin-login-spinner"
+                      style={{ width: "12px", height: "12px" }}
+                    />
                     <span>{uploadStatus || "Uploading…"}</span>
                   </>
                 ) : (
                   <>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                       <polyline points="17 8 12 3 7 8" />
                       <line x1="12" y1="3" x2="12" y2="15" />
@@ -1124,10 +1299,19 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
             <circle cx="8.5" cy="8.5" r="1.5" />
             <polyline points="21 15 16 10 5 21" />
           </svg>
-          <p style={{ margin: 0, fontSize: "0.875rem", color: "var(--admin-text-main)", fontWeight: 500 }}>
+          <p
+            style={{
+              margin: 0,
+              fontSize: "0.875rem",
+              color: "var(--admin-text-main)",
+              fontWeight: 500,
+            }}
+          >
             No images attached
           </p>
-          <p style={{ margin: "0.35rem 0 0", fontSize: "0.75rem", color: "var(--admin-text-muted)" }}>
+          <p
+            style={{ margin: "0.35rem 0 0", fontSize: "0.75rem", color: "var(--admin-text-muted)" }}
+          >
             Use the upload section above to add product images.
           </p>
         </div>
@@ -1149,9 +1333,7 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                   alignItems: "flex-start",
                   gap: "1rem",
                   padding: "1rem",
-                  background: img.is_primary
-                    ? "rgba(8, 59, 123, 0.06)"
-                    : "var(--admin-card-bg)",
+                  background: img.is_primary ? "rgba(8, 59, 123, 0.06)" : "var(--admin-card-bg)",
                   border: img.is_primary
                     ? "1px solid var(--deep-blue)"
                     : "1px solid var(--admin-card-border)",
@@ -1189,7 +1371,14 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                         color: "var(--admin-text-muted)",
                       }}
                     >
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      >
                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
                         <circle cx="8.5" cy="8.5" r="1.5" />
                         <polyline points="21 15 16 10 5 21" />
@@ -1224,7 +1413,15 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                 {/* Content */}
                 <div style={{ flex: 1, minWidth: 0 }}>
                   {/* Filename + order */}
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.35rem", flexWrap: "wrap" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                      marginBottom: "0.35rem",
+                      flexWrap: "wrap",
+                    }}
+                  >
                     <span
                       style={{
                         fontFamily: "var(--font-mono, monospace)",
@@ -1281,7 +1478,14 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
 
                   {/* Alt text */}
                   {isEditingThisAlt ? (
-                    <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", marginBottom: "0.5rem" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "0.5rem",
+                        alignItems: "center",
+                        marginBottom: "0.5rem",
+                      }}
+                    >
                       <input
                         id={`alt-input-${img.id}`}
                         type="text"
@@ -1292,8 +1496,13 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                         maxLength={500}
                         placeholder="Describe the image for screen readers and SEO..."
                         onKeyDown={(e) => {
-                          if (e.key === "Enter") { e.preventDefault(); handleSaveAlt(img.id); }
-                          if (e.key === "Escape") { setEditingAlt(null); }
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            handleSaveAlt(img.id);
+                          }
+                          if (e.key === "Escape") {
+                            setEditingAlt(null);
+                          }
                         }}
                         disabled={isBusyRow}
                         autoFocus
@@ -1348,7 +1557,10 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                         title="Set as primary image"
                       >
                         {busy === img.id ? (
-                          <span className="admin-login-spinner" style={{ width: "10px", height: "10px" }} />
+                          <span
+                            className="admin-login-spinner"
+                            style={{ width: "10px", height: "10px" }}
+                          />
                         ) : (
                           "Set Primary"
                         )}
@@ -1366,7 +1578,10 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                       style={{ opacity: idx === 0 ? 0.35 : 1 }}
                     >
                       {busy === img.id + "up" ? (
-                        <span className="admin-login-spinner" style={{ width: "10px", height: "10px" }} />
+                        <span
+                          className="admin-login-spinner"
+                          style={{ width: "10px", height: "10px" }}
+                        />
                       ) : (
                         "↑ Up"
                       )}
@@ -1383,7 +1598,10 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                       style={{ opacity: idx === images.length - 1 ? 0.35 : 1 }}
                     >
                       {busy === img.id + "down" ? (
-                        <span className="admin-login-spinner" style={{ width: "10px", height: "10px" }} />
+                        <span
+                          className="admin-login-spinner"
+                          style={{ width: "10px", height: "10px" }}
+                        />
                       ) : (
                         "↓ Down"
                       )}
@@ -1419,7 +1637,10 @@ function ProductImagesPanel({ outsoleId, outsoleName, images, onImagesChanged }:
                       title="Remove image permanently"
                     >
                       {busy === img.id + "remove" ? (
-                        <span className="admin-login-spinner" style={{ width: "10px", height: "10px" }} />
+                        <span
+                          className="admin-login-spinner"
+                          style={{ width: "10px", height: "10px" }}
+                        />
                       ) : (
                         "Remove"
                       )}
@@ -1456,7 +1677,13 @@ interface RemoveImageDialogProps {
   isRemoving: boolean;
 }
 
-function RemoveImageDialog({ image, outsoleName, onConfirm, onCancel, isRemoving }: RemoveImageDialogProps) {
+function RemoveImageDialog({
+  image,
+  outsoleName,
+  onConfirm,
+  onCancel,
+  isRemoving,
+}: RemoveImageDialogProps) {
   const filename = image.file_path.split("/").pop() ?? image.file_path;
 
   return (
@@ -1492,7 +1719,14 @@ function RemoveImageDialog({ image, outsoleName, onConfirm, onCancel, isRemoving
         }}
       >
         {/* Icon + Title */}
-        <div style={{ display: "flex", alignItems: "flex-start", gap: "1rem", marginBottom: "1.25rem" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            gap: "1rem",
+            marginBottom: "1.25rem",
+          }}
+        >
           <div
             style={{
               flexShrink: 0,
@@ -1507,7 +1741,16 @@ function RemoveImageDialog({ image, outsoleName, onConfirm, onCancel, isRemoving
               color: "var(--admin-danger-text)",
             }}
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <polyline points="3 6 5 6 21 6" />
               <path d="M19 6l-1 14H6L5 6" />
               <path d="M10 11v6" />
@@ -1543,7 +1786,15 @@ function RemoveImageDialog({ image, outsoleName, onConfirm, onCancel, isRemoving
           </div>
         </div>
 
-        <p id="remove-img-dialog-desc" style={{ margin: "0 0 0.75rem", fontSize: "0.875rem", lineHeight: "1.6", color: "var(--admin-text-secondary)" }}>
+        <p
+          id="remove-img-dialog-desc"
+          style={{
+            margin: "0 0 0.75rem",
+            fontSize: "0.875rem",
+            lineHeight: "1.6",
+            color: "var(--admin-text-secondary)",
+          }}
+        >
           This will permanently remove the image from{" "}
           <strong style={{ color: "var(--admin-text-main)" }}>{outsoleName}</strong>.
         </p>
@@ -1561,10 +1812,12 @@ function RemoveImageDialog({ image, outsoleName, onConfirm, onCancel, isRemoving
           }}
         >
           <strong>This action cannot be undone.</strong> Both the image file in Storage
-          {" ("}outsole-images/{image.file_path}{")"} and its database record will be permanently deleted.
+          {" ("}outsole-images/{image.file_path}
+          {")"} and its database record will be permanently deleted.
           {image.is_primary && (
             <span style={{ display: "block", marginTop: "0.5rem" }}>
-              ⚠ This is the <strong>primary image</strong>. After removal, no primary image will be set for this product.
+              ⚠ This is the <strong>primary image</strong>. After removal, no primary image will be
+              set for this product.
             </span>
           )}
         </div>
