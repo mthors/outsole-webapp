@@ -30,6 +30,7 @@ export type Outsole = {
   shore_scale: string;
   din_abrasion_mm3: number | null;
   weight_grams: number | null;
+  available_sizes: string | null;
   is_featured: boolean;
   is_sampling_available: boolean;
   status: OutsoleStatus;

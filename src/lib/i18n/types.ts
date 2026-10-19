@@ -118,6 +118,7 @@ export interface I18nDictionary {
     shoreHardness: string;
     dinAbrasion: string;
     weight: string;
+    availableSizes: string;
     sampling: string;
     samplingAvailable: string;
     samplingUnavailable: string;

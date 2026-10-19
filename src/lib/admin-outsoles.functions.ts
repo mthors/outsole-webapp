@@ -16,6 +16,7 @@ export type AdminOutsoleListItem = {
   shore_scale: string;
   din_abrasion_mm3: number | null;
   weight_grams: number | null;
+  available_sizes: string | null;
   created_at: string;
   updated_at: string;
   categories: Array<{ id: string; name: string; slug: string }>;
@@ -45,6 +46,7 @@ export const createOutsoleSchema = z
     shore_scale: z.string().trim().min(1).max(10).default("A"),
     din_abrasion_mm3: z.coerce.number().positive("Must be greater than 0").nullable().optional(),
     weight_grams: z.coerce.number().int().positive("Must be greater than 0").nullable().optional(),
+    available_sizes: z.string().trim().max(100).nullable().optional(),
     category_ids: z.array(z.string().uuid()).default([]),
     material_ids: z.array(z.string().uuid()).default([]),
     traction_type_ids: z.array(z.string().uuid()).default([]),
@@ -79,7 +81,7 @@ export const listAdminOutsoles = createServerFn({ method: "GET" }).handler(async
     .select(
       `
       id, model_number, name, slug, description, shore_min, shore_max, shore_scale,
-      din_abrasion_mm3, weight_grams, is_featured, is_sampling_available, status, created_at, updated_at,
+      din_abrasion_mm3, weight_grams, available_sizes, is_featured, is_sampling_available, status, created_at, updated_at,
       outsole_categories ( categories ( id, name, slug ) ),
       outsole_images ( id, file_path, alt_text, is_primary, display_order )
     `,
@@ -141,6 +143,7 @@ export const listAdminOutsoles = createServerFn({ method: "GET" }).handler(async
       shore_scale: r.shore_scale ?? "A",
       din_abrasion_mm3: r.din_abrasion_mm3 == null ? null : Number(r.din_abrasion_mm3),
       weight_grams: r.weight_grams ?? null,
+      available_sizes: r.available_sizes ?? null,
       created_at: r.created_at,
       updated_at: r.updated_at,
       categories: cats,
@@ -217,6 +220,7 @@ export const createAdminOutsole = createServerFn({ method: "POST" })
         shore_scale: data.shore_scale || "A",
         din_abrasion_mm3: data.din_abrasion_mm3 ?? null,
         weight_grams: data.weight_grams ?? null,
+        available_sizes: data.available_sizes?.trim() || null,
       })
       .select("id, slug, model_number, name")
       .single();
@@ -289,6 +293,7 @@ export type AdminOutsoleDetail = {
   shore_scale: string;
   din_abrasion_mm3: number | null;
   weight_grams: number | null;
+  available_sizes: string | null;
   created_at: string;
   updated_at: string;
   category_ids: string[];
@@ -330,6 +335,7 @@ export const updateOutsoleSchema = z
     shore_scale: z.string().trim().min(1).max(10).default("A"),
     din_abrasion_mm3: z.coerce.number().positive("Must be greater than 0").nullable().optional(),
     weight_grams: z.coerce.number().int().positive("Must be greater than 0").nullable().optional(),
+    available_sizes: z.string().trim().max(100).nullable().optional(),
     category_ids: z.array(z.string().uuid()).default([]),
     material_ids: z.array(z.string().uuid()).default([]),
     traction_type_ids: z.array(z.string().uuid()).default([]),
@@ -365,7 +371,7 @@ export const getAdminOutsole = createServerFn({ method: "GET" })
       .select(
         `
         id, model_number, name, slug, description, shore_min, shore_max, shore_scale,
-        din_abrasion_mm3, weight_grams, is_featured, is_sampling_available, status, created_at, updated_at,
+        din_abrasion_mm3, weight_grams, available_sizes, is_featured, is_sampling_available, status, created_at, updated_at,
         outsole_categories ( category_id, categories ( id, name, slug ) ),
         outsole_materials ( material_id, materials ( id, name, description ) ),
         outsole_traction_types ( traction_type_id, traction_types ( id, name, description ) ),
@@ -449,6 +455,7 @@ export const getAdminOutsole = createServerFn({ method: "GET" })
       shore_scale: row.shore_scale ?? "A",
       din_abrasion_mm3: row.din_abrasion_mm3 == null ? null : Number(row.din_abrasion_mm3),
       weight_grams: row.weight_grams ?? null,
+      available_sizes: row.available_sizes ?? null,
       created_at: row.created_at,
       updated_at: row.updated_at,
       category_ids,
@@ -594,6 +601,7 @@ export const updateAdminOutsole = createServerFn({ method: "POST" })
         shore_scale: data.shore_scale || "A",
         din_abrasion_mm3: data.din_abrasion_mm3 ?? null,
         weight_grams: data.weight_grams ?? null,
+        available_sizes: data.available_sizes?.trim() || null,
         updated_at: new Date().toISOString(),
       })
       .eq("id", data.id)

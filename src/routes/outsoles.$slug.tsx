@@ -3,7 +3,7 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, ImageOff } from "lucide-react";
 import { getOutsole } from "@/lib/public-catalog.functions";
-import { hardnessLabel, type Outsole, type TaxonomyTerm } from "@/lib/catalog-types";
+import { type Outsole, type TaxonomyTerm } from "@/lib/catalog-types";
 import { useI18n } from "@/lib/i18n";
 
 const outsoleQuery = (slug: string) =>
@@ -158,17 +158,13 @@ function OutsoleDetail() {
   if (!o) return <DetailNotFound />;
 
   const specs = [
-    { label: dict.product.shoreHardness, value: hardnessLabel(o) },
     {
-      label: dict.product.dinAbrasion,
-      value: o.din_abrasion_mm3 != null ? `${o.din_abrasion_mm3} mm³` : null,
+      label: dict.product.weight,
+      value: o.weight_grams != null ? `${o.weight_grams}` : null,
     },
-    { label: dict.product.weight, value: o.weight_grams != null ? `${o.weight_grams} g` : null },
     {
-      label: dict.product.sampling,
-      value: o.is_sampling_available
-        ? dict.product.samplingAvailable
-        : dict.product.samplingUnavailable,
+      label: dict.product.availableSizes,
+      value: o.available_sizes?.trim() ? o.available_sizes.trim() : null,
     },
   ].filter((s): s is { label: string; value: string } => Boolean(s.value));
 
@@ -191,20 +187,22 @@ function OutsoleDetail() {
             <Tags label={dict.product.traction} terms={o.tractionTypes} />
           </div>
 
-          <section className="mt-10">
-            <p className="label-tech">{dict.product.specifications}</p>
-            <dl className="mt-4 border-t border-border">
-              {specs.map((s) => (
-                <div
-                  key={s.label}
-                  className="flex justify-between gap-4 border-b border-border py-3 text-sm"
-                >
-                  <dt className="text-muted-foreground">{s.label}</dt>
-                  <dd className="text-right font-medium">{s.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </section>
+          {specs.length > 0 && (
+            <section className="mt-10">
+              <p className="label-tech">{dict.product.specifications}</p>
+              <dl className="mt-4 border-t border-border">
+                {specs.map((s) => (
+                  <div
+                    key={s.label}
+                    className="flex justify-between gap-4 border-b border-border py-3 text-sm"
+                  >
+                    <dt className="text-muted-foreground">{s.label}</dt>
+                    <dd className="text-right font-medium">{s.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          )}
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <Link

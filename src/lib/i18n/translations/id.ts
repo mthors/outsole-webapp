@@ -36,7 +36,8 @@ export const id: I18nDictionary = {
     hero: {
       eyebrow: "Rekayasa Outsole · Produksi Skala Industri",
       defaultTitle: "Daya Cengkeram Presisi. Dirancang untuk Performa.",
-      defaultContent: "Tooling outsole, formulasi kompon, dan produksi massal untuk merek alas kaki.",
+      defaultContent:
+        "Tooling outsole, formulasi kompon, dan produksi massal untuk merek alas kaki.",
       exploreCta: "Jelajahi Koleksi",
       sampleCta: "Ajukan Sampel",
       imageAlt: "Detail tapak outsole manufaktur",
@@ -61,13 +62,17 @@ export const id: I18nDictionary = {
       title: "Dari Konsep Hingga Produksi Massal",
       items: {
         oemTitle: "OEM",
-        oemDesc: "Produksi cetak sesuai spesifikasi gambar teknik, tooling, dan target kompon Anda.",
+        oemDesc:
+          "Produksi cetak sesuai spesifikasi gambar teknik, tooling, dan target kompon Anda.",
         odmTitle: "ODM",
-        odmDesc: "Pengembangan desain tapak outsole, pencocokan cetakan sepatu (last), dan pembuatan mold mandiri.",
+        odmDesc:
+          "Pengembangan desain tapak outsole, pencocokan cetakan sepatu (last), dan pembuatan mold mandiri.",
         mfgTitle: "Manufaktur Terpadu",
-        mfgDesc: "Pembuatan mold, pencampuran kompon karet, pengepresan vulkanisasi, dan finishing dalam satu sistem mutu.",
+        mfgDesc:
+          "Pembuatan mold, pencampuran kompon karet, pengepresan vulkanisasi, dan finishing dalam satu sistem mutu.",
         devTitle: "Pengembangan & Sampel",
-        devDesc: "Pembuatan purwarupa cepat dan produksi batch sampel untuk validasi fitting, daya cengkeram, dan ketahanan aus.",
+        devDesc:
+          "Pembuatan purwarupa cepat dan produksi batch sampel untuk validasi fitting, daya cengkeram, dan ketahanan aus.",
       },
     },
     cta: {
@@ -81,7 +86,8 @@ export const id: I18nDictionary = {
   catalog: {
     eyebrow: "Koleksi",
     title: "Katalog Outsole",
-    description: "Jelajahi portofolio outsole kami berdasarkan aplikasi, material, traksi, dan spesifikasi teknis.",
+    description:
+      "Jelajahi portofolio outsole kami berdasarkan aplikasi, material, traksi, dan spesifikasi teknis.",
     searchPlaceholder: "Cari berdasarkan nama, nomor model, atau deskripsi",
     searchAria: "Cari outsole",
     filtersBtn: "Filter",
@@ -97,7 +103,8 @@ export const id: I18nDictionary = {
     noResults: "Tidak ada outsole yang cocok dengan filter saat ini.",
     loading: "Memuat katalog koleksi…",
     unavailableTitle: "Katalog tidak dapat dimuat",
-    unavailableDesc: "Gagal memuat katalog saat ini. Silakan muat ulang halaman atau coba beberapa saat lagi.",
+    unavailableDesc:
+      "Gagal memuat katalog saat ini. Silakan muat ulang halaman atau coba beberapa saat lagi.",
     samplingAvailable: "Tersedia",
     samplingOnRequest: "Sesuai permintaan",
     cardCompound: "Kompon",
@@ -112,7 +119,8 @@ export const id: I18nDictionary = {
     traction: "Traksi",
     shoreHardness: "Kekerasan Shore",
     dinAbrasion: "Ketahanan Abrasi DIN",
-    weight: "Berat",
+    weight: "Berat (gr)",
+    availableSizes: "Ukuran Tersedia",
     sampling: "Ketersediaan Sampel",
     samplingAvailable: "Sampel Tersedia",
     samplingUnavailable: "Sampel Saat Ini Belum Tersedia",
@@ -121,14 +129,17 @@ export const id: I18nDictionary = {
     noImages: "Gambar belum tersedia",
     showImageAria: "Tampilkan gambar: ",
     notFoundTitle: "Outsole tidak ditemukan",
-    notFoundBody: "Outsole yang Anda cari tidak dapat ditemukan. Produk mungkin telah diperbarui atau tidak lagi tersedia.",
+    notFoundBody:
+      "Outsole yang Anda cari tidak dapat ditemukan. Produk mungkin telah diperbarui atau tidak lagi tersedia.",
     errorTitle: "Gagal memuat outsole",
-    errorBody: "Kami tidak dapat memuat rincian outsole ini saat ini. Silakan coba beberapa saat lagi atau telusuri katalog.",
+    errorBody:
+      "Kami tidak dapat memuat rincian outsole ini saat ini. Silakan coba beberapa saat lagi atau telusuri katalog.",
   },
   sample: {
     eyebrow: "Pengajuan Sampel",
     title: "Ajukan Permintaan Sampel",
-    description: "Lengkapi data program sepatu Anda di bawah ini. Tim teknis dan komersial kami akan meninjau permintaan Anda dan segera menghubungi untuk mengatur pengiriman sampel.",
+    description:
+      "Lengkapi data program sepatu Anda di bawah ini. Tim teknis dan komersial kami akan meninjau permintaan Anda dan segera menghubungi untuk mengatur pengiriman sampel.",
     selectedOutsole: "Outsole yang dipilih",
     form: {
       nameLabel: "Nama Lengkap",
@@ -140,8 +151,10 @@ export const id: I18nDictionary = {
       phoneLabel: "Nomor Telepon / WhatsApp",
       phonePlaceholder: "contoh: 081234567890 atau +62 812...",
       messageLabel: "Detail Permintaan Sampel",
-      messageHint: "Sertakan detail program sepatu Anda, perkiraan kuantitas, target aplikasi, dan spesifikasi yang dibutuhkan.",
-      messagePlaceholder: "Kami sedang mengembangkan lini sepatu lari trail untuk musim depan. Kami membutuhkan outsole dengan daya cengkeram tinggi…",
+      messageHint:
+        "Sertakan detail program sepatu Anda, perkiraan kuantitas, target aplikasi, dan spesifikasi yang dibutuhkan.",
+      messagePlaceholder:
+        "Kami sedang mengembangkan lini sepatu lari trail untuk musim depan. Kami membutuhkan outsole dengan daya cengkeram tinggi…",
       submitBtn: "Kirim Permintaan",
       submittingBtn: "Mengirim…",
     },
@@ -154,62 +167,80 @@ export const id: I18nDictionary = {
     success: {
       statusTag: "Terkirim",
       title: "Permintaan Sampel Berhasil Terkirim",
-      message: "Terima kasih. Permintaan sampel Anda telah kami terima. Tim teknis kami akan meninjau kebutuhan Anda dan segera menghubungi Anda.",
+      message:
+        "Terima kasih. Permintaan sampel Anda telah kami terima. Tim teknis kami akan meninjau kebutuhan Anda dan segera menghubungi Anda.",
       backCatalog: "Kembali ke Katalog",
       returnHome: "Kembali ke Beranda",
     },
     error: {
       statusTag: "Pengiriman Gagal",
-      defaultMessage: "Kami tidak dapat mengirimkan permintaan Anda saat ini. Silakan coba beberapa saat lagi.",
+      defaultMessage:
+        "Kami tidak dapat mengirimkan permintaan Anda saat ini. Silakan coba beberapa saat lagi.",
     },
     sidebar: {
       nextHeading: "Proses Selanjutnya",
-      step1: "Kami meninjau permintaan Anda dan mencocokkannya dengan jadwal produksi serta ketersediaan stok cetakan kami.",
-      step2: "Tim kami akan menghubungi Anda dalam 2–5 hari kerja untuk mendiskusikan program alas kaki Anda.",
-      step3: "Kami mengatur pengiriman sampel, uji coba kompon, atau estimasi penawaran sesuai kebutuhan Anda.",
+      step1:
+        "Kami meninjau permintaan Anda dan mencocokkannya dengan jadwal produksi serta ketersediaan stok cetakan kami.",
+      step2:
+        "Tim kami akan menghubungi Anda dalam 2–5 hari kerja untuk mendiskusikan program alas kaki Anda.",
+      step3:
+        "Kami mengatur pengiriman sampel, uji coba kompon, atau estimasi penawaran sesuai kebutuhan Anda.",
       programHeading: "Program Sampel & Pengujian",
-      programDesc: "Kami mendukung pengiriman sampel untuk program pengembangan model baru, evaluasi kompon material, dan verifikasi cetakan (mold). Ketentuan minimum kuantitas dapat berlaku.",
+      programDesc:
+        "Kami mendukung pengiriman sampel untuk program pengembangan model baru, evaluasi kompon material, dan verifikasi cetakan (mold). Ketentuan minimum kuantitas dapat berlaku.",
     },
   },
   about: {
     eyebrow: "Tentang · Latar Belakang Pabrik & Rekayasa",
     defaultTitle: "Tentang Pabrik & Manufaktur",
-    defaultDescription: "Pengembangan outsole performa tinggi, formulasi kompon karet, rekayasa mold, dan produksi massal untuk program alas kaki teknis maupun kasual.",
+    defaultDescription:
+      "Pengembangan outsole performa tinggi, formulasi kompon karet, rekayasa mold, dan produksi massal untuk program alas kaki teknis maupun kasual.",
     highlights: {
       tag1: "01 / Infrastruktur",
       title1: "Tooling & Mold Mandiri",
-      desc1: "Fasilitas pembuatan cetakan mold CNC mandiri, pengukiran laser pola tapak, dan perbaikan cetakan di dalam area pabrik.",
+      desc1:
+        "Fasilitas pembuatan cetakan mold CNC mandiri, pengukiran laser pola tapak, dan perbaikan cetakan di dalam area pabrik.",
       tag2: "02 / Formulasi",
       title2: "Formulasi Kompon Karet",
-      desc2: "Karet alam, polimer sintetis, remah karet daur ulang, dan campuran EVA ringan yang diracik khusus untuk elastisitas dan ketahanan aus optimal.",
+      desc2:
+        "Karet alam, polimer sintetis, remah karet daur ulang, dan campuran EVA ringan yang diracik khusus untuk elastisitas dan ketahanan aus optimal.",
       tag3: "03 / Verifikasi",
       title3: "Pengujian Laboratorium Teknis",
-      desc3: "Jaminan mutu uji abrasi standar DIN 53516, kekerasan durometer Shore A, dan uji ketahanan selip standar SATRA TM144.",
+      desc3:
+        "Jaminan mutu uji abrasi standar DIN 53516, kekerasan durometer Shore A, dan uji ketahanan selip standar SATRA TM144.",
       tag4: "04 / Skalabilitas",
       title4: "Kapasitas Produksi Massal",
-      desc4: "Lini mesin press multi-rongga yang andal menghasilkan sifat fisik konsisten dari produksi percontohan hingga pesanan volume besar.",
+      desc4:
+        "Lini mesin press multi-rongga yang andal menghasilkan sifat fisik konsisten dari produksi percontohan hingga pesanan volume besar.",
     },
     oem: {
       eyebrow: "01 / Produksi Sesuai Spesifikasi",
       requestTrial: "Ajukan Uji Coba OEM",
       feature1Title: "Transfer Tooling",
-      feature1Desc: "Penerimaan dan adaptasi cetakan mold milik klien secara presisi. Kami memeriksa geometri mold, mengoptimalkan lubang ventilasi udara, dan mengkalibrasi susut karet untuk memastikan kesesuaian sempurna dengan midsole Anda.",
+      feature1Desc:
+        "Penerimaan dan adaptasi cetakan mold milik klien secara presisi. Kami memeriksa geometri mold, mengoptimalkan lubang ventilasi udara, dan mengkalibrasi susut karet untuk memastikan kesesuaian sempurna dengan midsole Anda.",
       feature2Title: "Pencocokan Kompon",
-      feature2Desc: "Pencocokan sifat fisik secara presisi untuk tingkat kekerasan (Shore A), ketahanan pantul (rebound), dan formula warna. Setiap batch diverifikasi secara reologis sebelum proses vulkanisasi.",
+      feature2Desc:
+        "Pencocokan sifat fisik secara presisi untuk tingkat kekerasan (Shore A), ketahanan pantul (rebound), dan formula warna. Setiap batch diverifikasi secara reologis sebelum proses vulkanisasi.",
       feature3Title: "Jaminan Kualitas Mutu",
-      feature3Desc: "Pemeriksaan berkelanjutan pada ketajaman pola lug tapak, pemotongan tepian rapi, toleransi ketebalan, dan persiapan permukaan rekat untuk meminimalkan cacat perakitan sepatu.",
+      feature3Desc:
+        "Pemeriksaan berkelanjutan pada ketajaman pola lug tapak, pemotongan tepian rapi, toleransi ketebalan, dan persiapan permukaan rekat untuk meminimalkan cacat perakitan sepatu.",
     },
     odm: {
       eyebrow: "02 / Desain & Purwarupa",
       browseTooling: "Telusuri Cetakan Terbuka",
       step1Title: "Konsep & Rekayasa Pola Lug",
-      step1Desc: "Pemodelan bidang kontak permukaan, penempatan lekukan fleksibilitas, dan sudut traksi tapak yang disesuaikan untuk medan dan dinamika olahraga sasaran.",
+      step1Desc:
+        "Pemodelan bidang kontak permukaan, penempatan lekukan fleksibilitas, dan sudut traksi tapak yang disesuaikan untuk medan dan dinamika olahraga sasaran.",
       step2Title: "CAD 3D & Fitting Cetakan Sepatu",
-      step2Desc: "Integrasi digital unit bawah sepatu secara menyeluruh untuk memastikan pengeleman tepi yang presisi dan transisi yang rapi dengan midsole.",
+      step2Desc:
+        "Integrasi digital unit bawah sepatu secara menyeluruh untuk memastikan pengeleman tepi yang presisi dan transisi yang rapi dengan midsole.",
       step3Title: "Mold Sampel Pilot",
-      step3Desc: "Pembuatan mold prototipe aluminium cepat dalam hitungan hari untuk memvalidasi ketahanan aus fisik, perilaku kompon karet, dan aspek estetika.",
+      step3Desc:
+        "Pembuatan mold prototipe aluminium cepat dalam hitungan hari untuk memvalidasi ketahanan aus fisik, perilaku kompon karet, dan aspek estetika.",
       step4Title: "Tooling Produksi Massal",
-      step4Desc: "Pemeringkatan multi-ukuran (grading) dan pembuatan cetakan baja paduan atau aluminium tempa kokoh untuk siklus pengepresan volume tinggi.",
+      step4Desc:
+        "Pemeringkatan multi-ukuran (grading) dan pembuatan cetakan baja paduan atau aluminium tempa kokoh untuk siklus pengepresan volume tinggi.",
     },
     cta: {
       eyebrow: "Kemitraan Industri Sepatu",
@@ -222,8 +253,10 @@ export const id: I18nDictionary = {
     gallery: {
       eyebrow: "01 / Galeri & Fasilitas Manufaktur",
       title: "Fasilitas Produksi & Pusat Rekayasa ODE",
-      intro: "Mulai dari laboratorium formulasi kompon, lini mesin press multi-rongga, hingga gudang penyimpanan bahan baku terstandar — saksikan dedikasi kami dalam menghadirkan outsole berkualitas presisi tinggi.",
-      placeholderNotice: "Pratinjau skematik fasilitas ODE (dokumentasi fotografi lapangan resmi sedang dikurasi oleh divisi konten).",
+      intro:
+        "Mulai dari laboratorium formulasi kompon, lini mesin press multi-rongga, hingga gudang penyimpanan bahan baku terstandar — saksikan dedikasi kami dalam menghadirkan outsole berkualitas presisi tinggi.",
+      placeholderNotice:
+        "Pratinjau skematik fasilitas ODE (dokumentasi fotografi lapangan resmi sedang dikurasi oleh divisi konten).",
       infoRows: {
         placeholderBadge: "Pratinjau Fasilitas",
         row1: {
@@ -266,7 +299,8 @@ export const id: I18nDictionary = {
   contact: {
     eyebrow: "Hubungi Kami · Fasilitas Pabrik & Penjualan Langsung",
     defaultTitle: "Hubungi Outsole by ODE",
-    defaultDescription: "Hubungi langsung para insinyur kompon karet, spesialis cetakan mold, dan tim penjualan komersial kami untuk program OEM dan pengiriman sampel fisik.",
+    defaultDescription:
+      "Hubungi langsung para insinyur kompon karet, spesialis cetakan mold, dan tim penjualan komersial kami untuk program OEM dan pengiriman sampel fisik.",
     cardHours: {
       monFri: "Senin – Jumat:",
       sat: "Sabtu:",
@@ -276,7 +310,8 @@ export const id: I18nDictionary = {
     ctaCard: {
       eyebrow: "Jalur Cepat Pengiriman Sampel",
       title: "Membutuhkan sampel outsole fisik untuk uji fitting & laboratorium?",
-      description: "Kami menyediakan pasangan sampel kelas produksi dari katalog aktif kami untuk pengujian gesekan, ketahanan lelah lentur, dan uji rekat pada cetakan sepatu brand Anda.",
+      description:
+        "Kami menyediakan pasangan sampel kelas produksi dari katalog aktif kami untuk pengujian gesekan, ketahanan lelah lentur, dan uji rekat pada cetakan sepatu brand Anda.",
       requestBtn: "Ajukan Sampel",
       catalogBtn: "Jelajahi Katalog",
     },
@@ -296,7 +331,8 @@ export const id: I18nDictionary = {
     pageNotFoundTitle: "Halaman Tidak Ditemukan",
     pageNotFoundDesc: "Halaman yang Anda cari tidak tersedia atau telah dipindahkan.",
     pageLoadErrorTitle: "Halaman Gagal Dimuat",
-    pageLoadErrorDesc: "Terjadi kendala pada sistem. Silakan coba muat ulang atau kembali ke beranda.",
+    pageLoadErrorDesc:
+      "Terjadi kendala pada sistem. Silakan coba muat ulang atau kembali ke beranda.",
     tryAgain: "Coba Lagi",
     goHome: "Kembali ke Beranda",
   },

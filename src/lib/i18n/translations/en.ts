@@ -36,7 +36,8 @@ export const en: I18nDictionary = {
     hero: {
       eyebrow: "Outsole engineering · Volume production",
       defaultTitle: "Engineered Grip. Designed for Performance.",
-      defaultContent: "Outsole tooling, compound development and volume production for footwear brands.",
+      defaultContent:
+        "Outsole tooling, compound development and volume production for footwear brands.",
       exploreCta: "Explore Collection",
       sampleCta: "Request a Sample",
       imageAlt: "Close-up of a rubber outsole tread",
@@ -61,7 +62,8 @@ export const en: I18nDictionary = {
       title: "From concept to production",
       items: {
         oemTitle: "OEM",
-        oemDesc: "Build-to-print production from your specifications, tooling and compound targets.",
+        oemDesc:
+          "Build-to-print production from your specifications, tooling and compound targets.",
         odmTitle: "ODM",
         odmDesc: "In-house tread design, last fitting and mold development for your line.",
         mfgTitle: "Manufacturing",
@@ -81,7 +83,8 @@ export const en: I18nDictionary = {
   catalog: {
     eyebrow: "Collection",
     title: "Outsole Catalog",
-    description: "Explore our outsole portfolio by application, material, traction, and technical specification.",
+    description:
+      "Explore our outsole portfolio by application, material, traction, and technical specification.",
     searchPlaceholder: "Search by name, model number or description",
     searchAria: "Search outsoles",
     filtersBtn: "Filters",
@@ -97,7 +100,8 @@ export const en: I18nDictionary = {
     noResults: "No outsoles match your current filters.",
     loading: "Loading collection…",
     unavailableTitle: "Catalog unavailable",
-    unavailableDesc: "We couldn't load the catalog right now. Please refresh the page or try again shortly.",
+    unavailableDesc:
+      "We couldn't load the catalog right now. Please refresh the page or try again shortly.",
     samplingAvailable: "Available",
     samplingOnRequest: "On request",
     cardCompound: "Compound",
@@ -112,7 +116,8 @@ export const en: I18nDictionary = {
     traction: "Traction",
     shoreHardness: "Shore hardness",
     dinAbrasion: "DIN abrasion",
-    weight: "Weight",
+    weight: "Weight (gr)",
+    availableSizes: "Available Sizes",
     sampling: "Sampling",
     samplingAvailable: "Sampling Available",
     samplingUnavailable: "Sampling Currently Unavailable",
@@ -121,14 +126,17 @@ export const en: I18nDictionary = {
     noImages: "No images available",
     showImageAria: "Show image: ",
     notFoundTitle: "Outsole not found",
-    notFoundBody: "The outsole you requested could not be found. It may have been renamed or is no longer available.",
+    notFoundBody:
+      "The outsole you requested could not be found. It may have been renamed or is no longer available.",
     errorTitle: "Something went wrong",
-    errorBody: "We couldn't load this outsole right now. Please try again shortly or browse the catalog.",
+    errorBody:
+      "We couldn't load this outsole right now. Please try again shortly or browse the catalog.",
   },
   sample: {
     eyebrow: "Sampling",
     title: "Request a Sample",
-    description: "Fill in your details below. Our team will review your request and contact you to arrange sampling.",
+    description:
+      "Fill in your details below. Our team will review your request and contact you to arrange sampling.",
     selectedOutsole: "Selected outsole",
     form: {
       nameLabel: "Your name",
@@ -140,8 +148,10 @@ export const en: I18nDictionary = {
       phoneLabel: "Phone",
       phonePlaceholder: "+66 2 123 4567",
       messageLabel: "Message",
-      messageHint: "Include your program details, quantities, target application and any specifications.",
-      messagePlaceholder: "We are developing a trail running shoe line for SS27. We need outsoles with…",
+      messageHint:
+        "Include your program details, quantities, target application and any specifications.",
+      messagePlaceholder:
+        "We are developing a trail running shoe line for SS27. We need outsoles with…",
       submitBtn: "Send Request",
       submittingBtn: "Sending…",
     },
@@ -154,7 +164,8 @@ export const en: I18nDictionary = {
     success: {
       statusTag: "Submitted",
       title: "Sample Request Sent",
-      message: "Thank you. Your sample request has been received. Our team will review your request and contact you shortly.",
+      message:
+        "Thank you. Your sample request has been received. Our team will review your request and contact you shortly.",
       backCatalog: "Back to Catalog",
       returnHome: "Return Home",
     },
@@ -168,48 +179,61 @@ export const en: I18nDictionary = {
       step2: "Our team contacts you within 2–5 business days to discuss your program.",
       step3: "We arrange sampling, development, or a quote based on your needs.",
       programHeading: "Sampling programs",
-      programDesc: "We support sample runs for new development programs, material evaluation and mold verification. Minimum quantities apply.",
+      programDesc:
+        "We support sample runs for new development programs, material evaluation and mold verification. Minimum quantities apply.",
     },
   },
   about: {
     eyebrow: "About · Factory & Engineering Background",
     defaultTitle: "About the Factory",
-    defaultDescription: "High-performance rubber outsole development, compounding, mold engineering, and volume production for technical and lifestyle footwear programs.",
+    defaultDescription:
+      "High-performance rubber outsole development, compounding, mold engineering, and volume production for technical and lifestyle footwear programs.",
     highlights: {
       tag1: "01 / Infrastructure",
       title1: "In-House Tooling",
-      desc1: "Dedicated CNC mold making, pattern laser engraving, and tooling repair facilities on site.",
+      desc1:
+        "Dedicated CNC mold making, pattern laser engraving, and tooling repair facilities on site.",
       tag2: "02 / Chemistry",
       title2: "Compound Formulation",
-      desc2: "Natural rubber, synthetic polymers, recycled crumb, and lightweight EVA blends tuned for specific rebound and abrasion.",
+      desc2:
+        "Natural rubber, synthetic polymers, recycled crumb, and lightweight EVA blends tuned for specific rebound and abrasion.",
       tag3: "03 / Verification",
       title3: "Technical Testing",
-      desc3: "DIN 53516 abrasion, Shore A durometer hardness, and SATRA TM144 slip resistance quality assurance.",
+      desc3:
+        "DIN 53516 abrasion, Shore A durometer hardness, and SATRA TM144 slip resistance quality assurance.",
       tag4: "04 / Production",
       title4: "Volume Scalability",
-      desc4: "Reliable multi-cavity press lines delivering consistent physical properties from pilot run to mass production.",
+      desc4:
+        "Reliable multi-cavity press lines delivering consistent physical properties from pilot run to mass production.",
     },
     oem: {
       eyebrow: "01 / Build to Specification",
       requestTrial: "Request OEM Trial",
       feature1Title: "Tooling Transfer",
-      feature1Desc: "Seamless onboarding of existing client tooling. We inspect mold geometry, optimize venting, and calibrate shrinkage allowances to ensure exact fit with your midsole blueprints.",
+      feature1Desc:
+        "Seamless onboarding of existing client tooling. We inspect mold geometry, optimize venting, and calibrate shrinkage allowances to ensure exact fit with your midsole blueprints.",
       feature2Title: "Compound Matching",
-      feature2Desc: "Exact physical property matching for durometer (Shore A), rebound resilience, and color formulations. Every batch is rheologically verified before vulcanization.",
+      feature2Desc:
+        "Exact physical property matching for durometer (Shore A), rebound resilience, and color formulations. Every batch is rheologically verified before vulcanization.",
       feature3Title: "Quality Assurance",
-      feature3Desc: "Continuous in-line inspection of lug definition, edge trimming, thickness tolerance, and bond-surface preparation, minimizing footwear assembly defect rates.",
+      feature3Desc:
+        "Continuous in-line inspection of lug definition, edge trimming, thickness tolerance, and bond-surface preparation, minimizing footwear assembly defect rates.",
     },
     odm: {
       eyebrow: "02 / Design & Prototyping",
       browseTooling: "Browse Open Tooling",
       step1Title: "Concept & Lug Engineering",
-      step1Desc: "Surface contact modeling, flex notch placements, and traction lug angles tuned for targeted terrain and sport dynamics.",
+      step1Desc:
+        "Surface contact modeling, flex notch placements, and traction lug angles tuned for targeted terrain and sport dynamics.",
       step2Title: "3D CAD & Last Fitting",
-      step2Desc: "Full bottom-unit digital integration to ensure precise perimeter bonding and clean transition to midsoles.",
+      step2Desc:
+        "Full bottom-unit digital integration to ensure precise perimeter bonding and clean transition to midsoles.",
       step3Title: "Pilot Sampling Molds",
-      step3Desc: "Rapid aluminum prototype molds engineered within days to validate physical wear, compound behavior, and aesthetics.",
+      step3Desc:
+        "Rapid aluminum prototype molds engineered within days to validate physical wear, compound behavior, and aesthetics.",
       step4Title: "Production Tooling",
-      step4Desc: "Multi-size grading and hardened steel or forged aluminum production molds built for high-volume press cycles.",
+      step4Desc:
+        "Multi-size grading and hardened steel or forged aluminum production molds built for high-volume press cycles.",
     },
     cta: {
       eyebrow: "Footwear Partnership",
@@ -222,8 +246,10 @@ export const en: I18nDictionary = {
     gallery: {
       eyebrow: "01 / Factory & Facility Showcase",
       title: "ODE Manufacturing Facilities & Engineering Center",
-      intro: "From compound rheology testing and multi-cavity vulcanizing presses to standardized raw material warehousing — take a look inside our high-precision footwear outsole manufacturing operations.",
-      placeholderNotice: "ODE facility architectural schematics (official factory site photographs are being curated by our content team).",
+      intro:
+        "From compound rheology testing and multi-cavity vulcanizing presses to standardized raw material warehousing — take a look inside our high-precision footwear outsole manufacturing operations.",
+      placeholderNotice:
+        "ODE facility architectural schematics (official factory site photographs are being curated by our content team).",
       infoRows: {
         placeholderBadge: "Facility Preview",
         row1: {
@@ -266,7 +292,8 @@ export const en: I18nDictionary = {
   contact: {
     eyebrow: "Get in Touch · Facilities & Direct Sales",
     defaultTitle: "Contact Outsole by ODE",
-    defaultDescription: "Connect directly with our rubber compounding engineers, tooling mold specialists, and commercial sales team for OEM programs and sample dispatch.",
+    defaultDescription:
+      "Connect directly with our rubber compounding engineers, tooling mold specialists, and commercial sales team for OEM programs and sample dispatch.",
     cardHours: {
       monFri: "Monday – Friday:",
       sat: "Saturday:",
@@ -276,7 +303,8 @@ export const en: I18nDictionary = {
     ctaCard: {
       eyebrow: "Fast-Track Sample Dispatch",
       title: "Need physical outsole samples for fit & lab evaluation?",
-      description: "We provide production-grade sample pairs from our active catalog for friction testing, flexural fatigue analysis, and bonding tests on your brand lasts.",
+      description:
+        "We provide production-grade sample pairs from our active catalog for friction testing, flexural fatigue analysis, and bonding tests on your brand lasts.",
       requestBtn: "Request a Sample",
       catalogBtn: "Browse Catalog",
     },

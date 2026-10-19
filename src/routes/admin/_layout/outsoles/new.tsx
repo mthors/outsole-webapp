@@ -1,6 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { getAdminTaxonomy, createAdminOutsole, type CreateOutsoleInput } from "@/lib/admin-outsoles.functions";
+import {
+  getAdminTaxonomy,
+  createAdminOutsole,
+  type CreateOutsoleInput,
+} from "@/lib/admin-outsoles.functions";
 import { slugify } from "@/lib/catalog-types";
 
 export const Route = createFileRoute("/admin/_layout/outsoles/new")({
@@ -27,6 +31,7 @@ function AdminCreateOutsolePage() {
     shore_scale: "A",
     din_abrasion_mm3: null,
     weight_grams: null,
+    available_sizes: "",
     category_ids: [],
     material_ids: [],
     traction_type_ids: [],
@@ -49,7 +54,10 @@ function AdminCreateOutsolePage() {
     });
   }
 
-  function toggleCheckboxItem(listKey: "category_ids" | "material_ids" | "traction_type_ids", id: string) {
+  function toggleCheckboxItem(
+    listKey: "category_ids" | "material_ids" | "traction_type_ids",
+    id: string,
+  ) {
     setForm((prev) => {
       const currentList = prev[listKey] || [];
       const updated = currentList.includes(id)
@@ -94,6 +102,7 @@ function AdminCreateOutsolePage() {
         shore_max: form.shore_max ? Number(form.shore_max) : null,
         din_abrasion_mm3: form.din_abrasion_mm3 ? Number(form.din_abrasion_mm3) : null,
         weight_grams: form.weight_grams ? Number(form.weight_grams) : null,
+        available_sizes: form.available_sizes?.trim() || null,
       };
 
       const result = await createAdminOutsole({ data: payload });
@@ -129,12 +138,21 @@ function AdminCreateOutsolePage() {
           </Link>
         </div>
         <h1 className="admin-page-title">Create Outsole Product</h1>
-        <p className="admin-page-subtitle">Add a new outsole model to the catalog and define technical specs.</p>
+        <p className="admin-page-subtitle">
+          Add a new outsole model to the catalog and define technical specs.
+        </p>
       </header>
 
       {error && (
         <div className="admin-login-error" style={{ marginBottom: "1.5rem" }} role="alert">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
             <circle cx="12" cy="12" r="10" />
             <line x1="12" y1="8" x2="12" y2="12" />
             <line x1="12" y1="16" x2="12.01" y2="16" />
@@ -163,7 +181,9 @@ function AdminCreateOutsolePage() {
         {/* Basic Information */}
         <div className="admin-form-section">
           <h2 className="admin-form-section-title">Basic Information</h2>
-          <p className="admin-form-section-desc">Identifier, name, and public visibility settings.</p>
+          <p className="admin-form-section-desc">
+            Identifier, name, and public visibility settings.
+          </p>
 
           <div className="admin-form-grid-2" style={{ marginBottom: "1rem" }}>
             <div className="admin-field">
@@ -226,7 +246,10 @@ function AdminCreateOutsolePage() {
                 style={{ width: "100%", padding: "0.625rem 0.75rem" }}
                 value={form.status}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, status: e.target.value as "draft" | "active" | "archived" }))
+                  setForm((prev) => ({
+                    ...prev,
+                    status: e.target.value as "draft" | "active" | "archived",
+                  }))
                 }
                 disabled={isSubmitting}
               >
@@ -268,7 +291,9 @@ function AdminCreateOutsolePage() {
                 id="outsole-sampling"
                 type="checkbox"
                 checked={form.is_sampling_available}
-                onChange={(e) => setForm((prev) => ({ ...prev, is_sampling_available: e.target.checked }))}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, is_sampling_available: e.target.checked }))
+                }
                 disabled={isSubmitting}
               />
               <span>Physical Sample Available</span>
@@ -279,93 +304,9 @@ function AdminCreateOutsolePage() {
         {/* Technical Specifications */}
         <div className="admin-form-section">
           <h2 className="admin-form-section-title">Technical Specifications</h2>
-          <p className="admin-form-section-desc">Material hardness, wear resistance, and weight metrics.</p>
-
-          <div className="admin-form-grid-3" style={{ marginBottom: "1rem" }}>
-            <div className="admin-field">
-              <label htmlFor="outsole-shore-min" className="admin-field-label">
-                Shore Min
-              </label>
-              <input
-                id="outsole-shore-min"
-                type="number"
-                min="1"
-                max="100"
-                className="admin-field-input"
-                placeholder="e.g. 60"
-                value={form.shore_min ?? ""}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    shore_min: e.target.value ? Number(e.target.value) : null,
-                  }))
-                }
-                disabled={isSubmitting}
-              />
-            </div>
-
-            <div className="admin-field">
-              <label htmlFor="outsole-shore-max" className="admin-field-label">
-                Shore Max
-              </label>
-              <input
-                id="outsole-shore-max"
-                type="number"
-                min="1"
-                max="100"
-                className="admin-field-input"
-                placeholder="e.g. 65"
-                value={form.shore_max ?? ""}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    shore_max: e.target.value ? Number(e.target.value) : null,
-                  }))
-                }
-                disabled={isSubmitting}
-              />
-            </div>
-
-            <div className="admin-field">
-              <label htmlFor="outsole-shore-scale" className="admin-field-label">
-                Shore Scale
-              </label>
-              <input
-                id="outsole-shore-scale"
-                type="text"
-                maxLength={5}
-                className="admin-field-input"
-                placeholder="A"
-                value={form.shore_scale}
-                onChange={(e) => setForm((prev) => ({ ...prev, shore_scale: e.target.value }))}
-                disabled={isSubmitting}
-              />
-            </div>
-          </div>
+          <p className="admin-form-section-desc">Product weight and available size metrics.</p>
 
           <div className="admin-form-grid-2">
-            <div className="admin-field">
-              <label htmlFor="outsole-din" className="admin-field-label">
-                DIN Abrasion (mm³)
-              </label>
-              <input
-                id="outsole-din"
-                type="number"
-                step="0.1"
-                min="0"
-                className="admin-field-input"
-                placeholder="e.g. 110"
-                value={form.din_abrasion_mm3 ?? ""}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    din_abrasion_mm3: e.target.value ? Number(e.target.value) : null,
-                  }))
-                }
-                disabled={isSubmitting}
-              />
-            </div>
-
             <div className="admin-field">
               <label htmlFor="outsole-weight" className="admin-field-label">
                 Weight (grams)
@@ -386,17 +327,42 @@ function AdminCreateOutsolePage() {
                 disabled={isSubmitting}
               />
             </div>
+
+            <div className="admin-field">
+              <label htmlFor="outsole-available-sizes" className="admin-field-label">
+                Available Sizes / Ukuran Tersedia
+              </label>
+              <input
+                id="outsole-available-sizes"
+                type="text"
+                className="admin-field-input"
+                placeholder="e.g. 38–45"
+                value={form.available_sizes ?? ""}
+                onChange={(e) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    available_sizes: e.target.value,
+                  }))
+                }
+                disabled={isSubmitting}
+              />
+            </div>
           </div>
         </div>
 
         {/* Taxonomy Associations */}
         <div className="admin-form-section">
           <h2 className="admin-form-section-title">Taxonomy & Classifications</h2>
-          <p className="admin-form-section-desc">Associate categories, compound materials, and lug traction profiles.</p>
+          <p className="admin-form-section-desc">
+            Associate categories, compound materials, and lug traction profiles.
+          </p>
 
           {/* Categories */}
           <div style={{ marginBottom: "1.25rem" }}>
-            <label className="admin-field-label" style={{ marginBottom: "0.5rem", display: "block" }}>
+            <label
+              className="admin-field-label"
+              style={{ marginBottom: "0.5rem", display: "block" }}
+            >
               Categories
             </label>
             <div className="admin-checkbox-group">
@@ -416,7 +382,10 @@ function AdminCreateOutsolePage() {
 
           {/* Materials */}
           <div style={{ marginBottom: "1.25rem" }}>
-            <label className="admin-field-label" style={{ marginBottom: "0.5rem", display: "block" }}>
+            <label
+              className="admin-field-label"
+              style={{ marginBottom: "0.5rem", display: "block" }}
+            >
               Materials / Rubber Compounds
             </label>
             <div className="admin-checkbox-group">
@@ -436,7 +405,10 @@ function AdminCreateOutsolePage() {
 
           {/* Traction Types */}
           <div>
-            <label className="admin-field-label" style={{ marginBottom: "0.5rem", display: "block" }}>
+            <label
+              className="admin-field-label"
+              style={{ marginBottom: "0.5rem", display: "block" }}
+            >
               Traction Profiles
             </label>
             <div className="admin-checkbox-group">
@@ -456,8 +428,14 @@ function AdminCreateOutsolePage() {
         </div>
 
         {/* Submit Actions */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "1rem" }}>
-          <Link to="/admin/outsoles" className="admin-btn admin-btn-secondary" disabled={isSubmitting}>
+        <div
+          style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "1rem" }}
+        >
+          <Link
+            to="/admin/outsoles"
+            className="admin-btn admin-btn-secondary"
+            disabled={isSubmitting}
+          >
             Cancel
           </Link>
           <button

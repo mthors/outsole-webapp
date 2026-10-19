@@ -15,7 +15,7 @@ export function publicClient() {
 
 const OUTSOLE_SELECT = `
   id, model_number, name, slug, description, shore_min, shore_max, shore_scale,
-  din_abrasion_mm3, weight_grams, is_featured, is_sampling_available, status, created_at,
+  din_abrasion_mm3, weight_grams, available_sizes, is_featured, is_sampling_available, status, created_at,
   outsole_images ( id, file_path, alt_text, display_order, is_primary ),
   outsole_categories ( categories ( id, name, slug ) ),
   outsole_materials ( materials ( id, name, description ) ),
@@ -87,6 +87,7 @@ function shape(row: RawOutsole, urls: Map<string, string>): Outsole {
     shore_scale: row.shore_scale ?? "A",
     din_abrasion_mm3: row.din_abrasion_mm3 == null ? null : Number(row.din_abrasion_mm3),
     weight_grams: row.weight_grams ?? null,
+    available_sizes: row.available_sizes ?? null,
     is_featured: Boolean(row.is_featured),
     is_sampling_available: Boolean(row.is_sampling_available),
     status: row.status,

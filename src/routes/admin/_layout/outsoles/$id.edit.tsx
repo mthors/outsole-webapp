@@ -104,6 +104,7 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
     shore_scale: initialOutsole.shore_scale || "A",
     din_abrasion_mm3: initialOutsole.din_abrasion_mm3,
     weight_grams: initialOutsole.weight_grams,
+    available_sizes: initialOutsole.available_sizes ?? "",
     category_ids: initialOutsole.category_ids || [],
     material_ids: initialOutsole.material_ids || [],
     traction_type_ids: initialOutsole.traction_type_ids || [],
@@ -191,6 +192,7 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
         shore_max: form.shore_max ? Number(form.shore_max) : null,
         din_abrasion_mm3: form.din_abrasion_mm3 ? Number(form.din_abrasion_mm3) : null,
         weight_grams: form.weight_grams ? Number(form.weight_grams) : null,
+        available_sizes: form.available_sizes?.trim() || null,
       };
 
       const result = await updateAdminOutsole({ data: payload });
@@ -451,95 +453,9 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
         {/* Technical Specifications */}
         <div className="admin-form-section">
           <h2 className="admin-form-section-title">Technical Specifications</h2>
-          <p className="admin-form-section-desc">
-            Material hardness, wear resistance, and weight metrics.
-          </p>
-
-          <div className="admin-form-grid-3" style={{ marginBottom: "1rem" }}>
-            <div className="admin-field">
-              <label htmlFor="edit-outsole-shore-min" className="admin-field-label">
-                Shore Min
-              </label>
-              <input
-                id="edit-outsole-shore-min"
-                type="number"
-                min="1"
-                max="100"
-                className="admin-field-input"
-                placeholder="e.g. 60"
-                value={form.shore_min ?? ""}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    shore_min: e.target.value ? Number(e.target.value) : null,
-                  }))
-                }
-                disabled={isSubmitting}
-              />
-            </div>
-
-            <div className="admin-field">
-              <label htmlFor="edit-outsole-shore-max" className="admin-field-label">
-                Shore Max
-              </label>
-              <input
-                id="edit-outsole-shore-max"
-                type="number"
-                min="1"
-                max="100"
-                className="admin-field-input"
-                placeholder="e.g. 65"
-                value={form.shore_max ?? ""}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    shore_max: e.target.value ? Number(e.target.value) : null,
-                  }))
-                }
-                disabled={isSubmitting}
-              />
-            </div>
-
-            <div className="admin-field">
-              <label htmlFor="edit-outsole-shore-scale" className="admin-field-label">
-                Shore Scale
-              </label>
-              <input
-                id="edit-outsole-shore-scale"
-                type="text"
-                maxLength={5}
-                className="admin-field-input"
-                placeholder="A"
-                value={form.shore_scale}
-                onChange={(e) => setForm((prev) => ({ ...prev, shore_scale: e.target.value }))}
-                disabled={isSubmitting}
-              />
-            </div>
-          </div>
+          <p className="admin-form-section-desc">Product weight and available size metrics.</p>
 
           <div className="admin-form-grid-2">
-            <div className="admin-field">
-              <label htmlFor="edit-outsole-din" className="admin-field-label">
-                DIN Abrasion (mm³)
-              </label>
-              <input
-                id="edit-outsole-din"
-                type="number"
-                step="0.1"
-                min="0"
-                className="admin-field-input"
-                placeholder="e.g. 110"
-                value={form.din_abrasion_mm3 ?? ""}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    din_abrasion_mm3: e.target.value ? Number(e.target.value) : null,
-                  }))
-                }
-                disabled={isSubmitting}
-              />
-            </div>
-
             <div className="admin-field">
               <label htmlFor="edit-outsole-weight" className="admin-field-label">
                 Weight (grams)
@@ -555,6 +471,26 @@ function AdminEditOutsoleForm({ initialOutsole, taxonomy, router }: AdminEditOut
                   setForm((prev) => ({
                     ...prev,
                     weight_grams: e.target.value ? Number(e.target.value) : null,
+                  }))
+                }
+                disabled={isSubmitting}
+              />
+            </div>
+
+            <div className="admin-field">
+              <label htmlFor="edit-outsole-available-sizes" className="admin-field-label">
+                Available Sizes / Ukuran Tersedia
+              </label>
+              <input
+                id="edit-outsole-available-sizes"
+                type="text"
+                className="admin-field-input"
+                placeholder="e.g. 38–45"
+                value={form.available_sizes ?? ""}
+                onChange={(e) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    available_sizes: e.target.value,
                   }))
                 }
                 disabled={isSubmitting}
