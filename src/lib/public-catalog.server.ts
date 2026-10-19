@@ -1,16 +1,20 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 import type { Outsole, OutsoleImage, SiteContentEntry, Taxonomy } from "./catalog-types";
+import { createSupabaseFetch } from "@/integrations/supabase/client.server";
 
 const BUCKET = "outsole-images";
 const SIGNED_URL_TTL = 60 * 60 * 24 * 7;
 
 export function publicClient() {
-  return createClient<Database>(
-    process.env["SUPABASE_URL"]!,
-    process.env["SUPABASE_PUBLISHABLE_KEY"]!,
-    { auth: { storage: undefined, persistSession: false, autoRefreshToken: false } },
-  );
+  const url = process.env["SUPABASE_URL"]!;
+  const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
+  return createClient<Database>(url, key, {
+    global: {
+      fetch: createSupabaseFetch(key),
+    },
+    auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
+  });
 }
 
 const OUTSOLE_SELECT = `
