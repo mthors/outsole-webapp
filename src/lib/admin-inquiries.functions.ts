@@ -385,3 +385,17 @@ export const updateAdminInquiryStatus = createServerFn({ method: "POST" })
 
     return { success: true, inquiry: updated };
   });
+
+/**
+ * Server function: Generates and returns an Excel (.xlsx) export of all sample inquiries.
+ * Restricted to authenticated staff.
+ */
+export const exportAdminInquiriesToExcel = createServerFn({ method: "POST" }).handler(
+  async () => {
+    const { assertStaffRole } = await import("./admin-auth.server");
+    await assertStaffRole();
+
+    const { executeAdminInquiriesExport } = await import("./admin-inquiries-export.server");
+    return await executeAdminInquiriesExport();
+  },
+);

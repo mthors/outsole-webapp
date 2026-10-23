@@ -15,11 +15,13 @@ import {
   Inbox,
   ArrowRight,
   RotateCcw,
+  Download,
 } from "lucide-react";
 import {
   listAdminInquiries,
   getAdminInquiry,
   updateAdminInquiryStatus,
+  exportAdminInquiriesToExcel,
   type AdminInquiryListItem,
   type AdminInquiryDetail,
   type InquiryStatus,
@@ -99,6 +101,7 @@ export function AdminInquiriesPage() {
   const [searchInput, setSearchInput] = useState(search.search ?? "");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [copiedField, setCopiedField] = useState<"email" | "phone" | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
 
   // Sync search input if URL changes externally
   useEffect(() => {
@@ -190,6 +193,45 @@ export function AdminInquiriesPage() {
     }
   }
 
+  async function handleExportToExcel() {
+    if (isExporting) return;
+    setIsExporting(true);
+    try {
+      const res = await exportAdminInquiriesToExcel();
+      if (res.rowCount === 0) {
+        toast.info("No inquiry records found to export.");
+        return;
+      }
+
+      const binaryString = atob(res.base64);
+      const len = binaryString.length;
+      const bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      const blob = new Blob([bytes], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = res.filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast.success(
+        `Exported ${res.rowCount} ${res.rowCount === 1 ? "inquiry" : "inquiries"} to Excel.`,
+      );
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to export inquiries.";
+      toast.error(msg);
+    } finally {
+      setIsExporting(false);
+    }
+  }
+
   const { inquiries, total, page, pageSize, totalPages, statusCounts, selectedInquiry } = data;
   const startIdx = total === 0 ? 0 : (page - 1) * pageSize + 1;
   const endIdx = Math.min(page * pageSize, total);
@@ -225,26 +267,41 @@ export function AdminInquiriesPage() {
           </p>
         </div>
 
-        {statusCounts.pending > 0 && (
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              padding: "0.45rem 0.85rem",
-              background: "var(--admin-badge-bg)",
-              border: "1px solid var(--admin-card-border)",
-              borderRadius: "4px",
-              fontSize: "0.75rem",
-              color: "var(--charcoal)",
-              fontFamily: "var(--font-mono, monospace)",
-              fontWeight: 600,
-            }}
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
+          {statusCounts.pending > 0 && (
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.45rem 0.85rem",
+                background: "var(--admin-badge-bg)",
+                border: "1px solid var(--admin-card-border)",
+                borderRadius: "4px",
+                fontSize: "0.75rem",
+                color: "var(--charcoal)",
+                fontFamily: "var(--font-mono, monospace)",
+                fontWeight: 600,
+              }}
+            >
+              <Sparkles size={14} />
+              <span>{statusCounts.pending} pending sample {statusCounts.pending === 1 ? "request" : "requests"} awaiting review</span>
+            </div>
+          )}
+
+          <button
+            type="button"
+            className="admin-btn admin-btn-secondary"
+            onClick={handleExportToExcel}
+            disabled={isExporting}
+            id="admin-export-inquiries-btn"
+            title="Download all sample inquiries as an Excel (.xlsx) spreadsheet"
+            style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem" }}
           >
-            <Sparkles size={14} />
-            <span>{statusCounts.pending} pending sample {statusCounts.pending === 1 ? "request" : "requests"} awaiting review</span>
-          </div>
-        )}
+            {isExporting ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
+            <span>{isExporting ? "Exporting…" : "Export to Excel"}</span>
+          </button>
+        </div>
       </div>
 
       {/* ── Status Tabs ── */}
