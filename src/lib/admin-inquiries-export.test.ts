@@ -8,6 +8,8 @@ import {
   type ExportInquiryItem,
 } from "./admin-inquiries-export.server";
 
+type ClientType = Parameters<typeof fetchCompleteInquiriesForExport>[0];
+
 describe("Excel Export - Formula Injection Sanitization", () => {
   it("prefixes formula trigger characters (=, +, -, @, \\t, \\r, |) with an apostrophe", () => {
     expect(sanitizeCellValue("=1+1")).toBe("'=1+1");
@@ -99,7 +101,6 @@ describe("Excel Export - Complete Data Retrieval & Pagination", () => {
       }),
     };
 
-    type ClientType = Parameters<typeof fetchCompleteInquiriesForExport>[0];
     const items = await fetchCompleteInquiriesForExport(mockClient as unknown as ClientType, 500);
     expect(items.length).toBe(2);
     expect(items[0]!.client_name).toBe("Alice Smith");
