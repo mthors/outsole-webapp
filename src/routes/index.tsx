@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, type ErrorComponentProps } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
 import heroImg from "@/assets/hero-outsole.jpg";
@@ -49,13 +49,14 @@ function HomePending() {
   );
 }
 
-function HomeError({ error }: { error: Error }) {
+function HomeError({ error }: ErrorComponentProps) {
   const { dict } = useI18n();
+  const errorMessage = error instanceof Error ? error.message : String(error);
   return (
     <div role="alert" className="shell py-32">
       <p className="label-tech">{dict.common.error}</p>
       <h1 className="display-lg mt-4">{dict.catalog.unavailableTitle}</h1>
-      <p className="mt-4 text-muted-foreground">{error.message}</p>
+      <p className="mt-4 text-muted-foreground">{errorMessage}</p>
     </div>
   );
 }

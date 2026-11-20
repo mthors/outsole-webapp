@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, type ErrorComponentProps } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { getSiteContent, getInteriorHero } from "@/lib/public-catalog.functions";
 import { getPublicGallery } from "@/lib/gallery.functions";
@@ -74,13 +74,14 @@ function AboutPending() {
   );
 }
 
-function AboutError({ error }: { error: Error }) {
+function AboutError({ error }: ErrorComponentProps) {
   const { dict } = useI18n();
+  const errorMessage = error instanceof Error ? error.message : String(error);
   return (
     <div role="alert" className="shell py-32">
       <p className="label-tech">{dict.common.error}</p>
       <h1 className="display-lg mt-4">{dict.about.errorTitle}</h1>
-      <p className="mt-4 text-muted-foreground">{error.message}</p>
+      <p className="mt-4 text-muted-foreground">{errorMessage}</p>
     </div>
   );
 }
